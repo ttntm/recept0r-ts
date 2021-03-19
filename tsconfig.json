@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    // Allow default import from modules with no default export set . This does not affect the output of the code , Just for type checking .
+    "allowSyntheticDefaultImports": true,
+    // Resolve the benchmark directory of non relative module names
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    // from tslib Import helper functions （ such as __extends, __rest etc. ）
+    "importHelpers": true,
+    // Specify which module system code to generate
+    "module": "esnext",
+    // Decide what to do with the module .
+    "moduleResolution": "node",
+    // Enable all strict type checking options .
+    // Enable --strict It's equivalent to enabling --noImplicitAny, --noImplicitThis, --alwaysStrict,
+    // --strictNullChecks and --strictFunctionTypes and --strictPropertyInitialization.
+    "strict": true,
+    // Generate corresponding .map file .
+    "sourceMap": true,
+    // Ignore all declaration files （ *.d.ts） Type check of .
+    "skipLibCheck": true,
+    // Appoint ECMAScript Target version
+    "target": "esnext",
+    // List of type declaration filenames to include
+    "types": [],
+    "isolatedModules": true,
+    // Module name to based on baseUrl List of path mappings for .
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    // List of library files to be imported during compilation .
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable",
+      "ScriptHost"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
