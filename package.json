@@ -2,10 +2,12 @@
   "name": "recept0r",
   "version": "2.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "netlify dev",
+    "build": "vite build",
+    "start": "vite"
   },
   "dependencies": {
+    "@tiptap/vue-3": "*",
     "gotrue-js": "^0.9.29",
     "secure-ls": "^1.2.6",
     "vue": "^3.0.4",
