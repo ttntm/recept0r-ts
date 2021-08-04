@@ -1,5 +1,5 @@
 import { InjectionKey } from 'vue'
-import { createStore, Store } from 'vuex'
+import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
 export interface State {
   count: number
@@ -8,10 +8,8 @@ export interface State {
 export const key: InjectionKey<Store<State>> = Symbol()
 
 export const store = createStore<State>({
-  state() {
-    return {
-      count: 0
-    }
+  state: {
+    count: 0
   },
   mutations: {
     increment(state) {
@@ -19,3 +17,8 @@ export const store = createStore<State>({
     }
   }
 })
+
+// define your own `useStore` composition function
+export function useStore() {
+  return baseUseStore(key)
+}

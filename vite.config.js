@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   build: {
@@ -9,13 +9,12 @@ export default defineConfig({
       output: {
         entryFileNames: `assets/[name].js`,
         chunkFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`,
+        assetFileNames: `assets/[name].[ext]`
       }
     }
   },
   optimizeDeps: {
     include: [
-      '@tiptap/vue-3',
       'gotrue-js',
       'secure-ls',
       'vue',
@@ -25,7 +24,5 @@ export default defineConfig({
       'vuex-persistedstate'
     ]
   },
-  plugins: [
-    vue()
-  ]
-});
+  plugins: [vue()]
+})

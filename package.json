@@ -4,10 +4,10 @@
   "scripts": {
     "dev": "netlify dev",
     "build": "vite build",
-    "start": "vite"
+    "start": "vite",
+    "format": "prettier .  --write"
   },
   "dependencies": {
-    "@tiptap/vue-3": "*",
     "gotrue-js": "^0.9.29",
     "secure-ls": "^1.2.6",
     "vue": "^3.0.4",

@@ -2,7 +2,7 @@
 
 If you're into cooking, you may find some inspiration here 😁
 
-recept0r is a minimal recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like  database access and user authentication.
+recept0r is a minimal recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like database access and user authentication.
 
 At the moment, recept0r is a semi-public personal service. That means, that even though public signup is technically possible, it's currently disabled in favor of an invite only signup process.
 

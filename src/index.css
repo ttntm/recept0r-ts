@@ -2,145 +2,162 @@
 
 @tailwind components;
 
-  /* nunito-regular - latin */
-  @font-face {
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Nunito Regular'), local('Nunito-Regular'),
-        url('./assets/fonts/nunito-v12-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-        url('./assets/fonts/nunito-v12-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  }
-  /* nunito-600 - latin */
-  @font-face {
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 600;
-    src: local('Nunito SemiBold'), local('Nunito-SemiBold'),
-        url('./assets/fonts/nunito-v12-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-        url('./assets/fonts/nunito-v12-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  }
-  /* nunito-700 - latin */
-  @font-face {
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 700;
-    src: local('Nunito Bold'), local('Nunito-Bold'),
-        url('./assets/fonts/nunito-v12-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-        url('./assets/fonts/nunito-v12-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-  }
+/* nunito-regular - latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito Regular'), local('Nunito-Regular'),
+    url('./assets/fonts/nunito-v12-latin-regular.woff2') format('woff2'),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./assets/fonts/nunito-v12-latin-regular.woff')
+      format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* nunito-600 - latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Nunito SemiBold'), local('Nunito-SemiBold'),
+    url('./assets/fonts/nunito-v12-latin-600.woff2') format('woff2'),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./assets/fonts/nunito-v12-latin-600.woff')
+      format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* nunito-700 - latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito Bold'), local('Nunito-Bold'),
+    url('./assets/fonts/nunito-v12-latin-700.woff2') format('woff2'),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./assets/fonts/nunito-v12-latin-700.woff')
+      format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
 
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
   * {
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-    -webkit-tap-highlight-color: transparent;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
+*:hover {
+  transition: all 0.35s ease;
+}
 
-  *:hover {
-    transition: all .35s ease;
-  }
+*:focus {
+  @apply outline-none;
+  @apply shadow-outline;
+}
 
-  *:focus {
-    @apply outline-none;
-    @apply shadow-outline;
-  }
+body,
+html {
+  @apply text-blue-600;
+}
 
-  body, html {
-    @apply text-blue-600;
-  }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply tracking-wide;
+  @apply text-blue-500;
+  @apply font-bold;
+  @apply mt-0;
+  @apply mb-4;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply tracking-wide;
-    @apply text-blue-500;
-    @apply font-bold;
-    @apply mt-0;
-    @apply mb-4;
-  }
+h1 {
+  font-size: calc(1.375rem + 1.5vw);
+}
 
+@media (min-width: 1200px) {
   h1 {
-    font-size: calc(1.375rem + 1.5vw);
+    @apply text-4xl;
   }
+}
 
-  @media (min-width: 1200px) {
-    h1 {
-      @apply text-4xl;
-    }
-  }
+h2 {
+  font-size: calc(1.325rem + 0.9vw);
+}
 
+@media (min-width: 1200px) {
   h2 {
-    font-size: calc(1.325rem + 0.9vw);
+    @apply text-3xl;
   }
+}
 
-  @media (min-width: 1200px) {
-    h2 {
-      @apply text-3xl;
-    }
-  }
+h3 {
+  font-size: calc(1.3rem + 0.6vw);
+}
 
+@media (min-width: 1200px) {
   h3 {
-    font-size: calc(1.3rem + 0.6vw);
+    @apply text-2xl;
   }
-
-  @media (min-width: 1200px) {
-    h3 {
-      @apply text-2xl;
-    }
-    h4 {
-      @apply text-xl;
-    }
+  h4 {
+    @apply text-xl;
   }
+}
 
-  p {
-    @apply mt-0;
-    @apply mb-4;
-  }
+p {
+  @apply mt-0;
+  @apply mb-4;
+}
 
-  ol, ul {
-    @apply pl-8;
-  }
+ol,
+ul {
+  @apply pl-8;
+}
 
-  ul {
-    list-style-type: square;
-  }
+ul {
+  list-style-type: square;
+}
 
-  ol {
-    list-style-type: decimal;
-  }
+ol {
+  list-style-type: decimal;
+}
 
-  ol, ul, dl {
-    @apply mt-0;
-    @apply mb-4;
-  }
+ol,
+ul,
+dl {
+  @apply mt-0;
+  @apply mb-4;
+}
 
-  ol ol, ul ul, ol ul, ul ol {
-    @apply mb-0;
-  }
+ol ol,
+ul ul,
+ol ul,
+ul ol {
+  @apply mb-0;
+}
 
-  b, strong {
-    @apply font-bold;
-  }
+b,
+strong {
+  @apply font-bold;
+}
 
-  i, em {
-    @apply italic;
-  }
+i,
+em {
+  @apply italic;
+}
 
-  small {
-    @apply text-sm;
-  }
+small {
+  @apply text-sm;
+}
 
-  /* OTHER */
+/* OTHER */
 
-  hr {
-    @apply border-gray-500;
-    @apply my-8;
-  }
+hr {
+  @apply border-gray-500;
+  @apply my-8;
+}
 
 @tailwind utilities;

@@ -59,4 +59,4 @@ module.exports = {
     quotes: ['error', 'single'],
     'comma-dangle': ['error', 'never']
   }
-};
+}

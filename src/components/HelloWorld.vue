@@ -1,13 +1,14 @@
 <template>
   <h1>{{ msg }}</h1>
-  <button @click="inCrement"> count is: </button>
+  <button @click="increment"> count is: </button>
   <p>{{ count }}</p>
 </template>
 
 <script>
-  import { defineComponent, computed } from 'vue';
-  import { useStore } from 'vuex';
-  import { key } from '../store';
+  import { defineComponent, computed } from 'vue'
+  import { useStore } from '../store'
+
+  import { temp } from '../utils'
 
   export default defineComponent({
     name: 'HelloWorld',
@@ -18,13 +19,15 @@
       }
     },
     setup() {
-      const store = useStore(key);
+      const store = useStore()
 
-      const count = computed(() => store.state.count);
+      const count = computed(() => store.state.count)
+
+      temp()
 
       return {
         count,
-        inCrement: () => store.commit('increment')
+        increment: () => store.commit('increment')
       }
     }
   })

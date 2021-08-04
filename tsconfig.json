@@ -26,24 +26,11 @@
     "isolatedModules": true,
     // Module name to based on baseUrl List of path mappings for .
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     // List of library files to be imported during compilation .
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "ScriptHost"
-    ]
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules"]
 }

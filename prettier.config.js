@@ -2,12 +2,12 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   useTabs: false,
-  semi: true, // Open comma
+  semi: false, // semicolon at the end of lines; if false, it'll only fix things that will break otherwise
   vueIndentScriptAndStyle: true,
   singleQuote: true, // Single quotation marks
   quoteProps: 'as-needed',
   bracketSpacing: true,
-  trailingComma: 'es5', // The last semicolon
+  trailingComma: 'none', // last comma for object definitions
   jsxBracketSameLine: false,
   jsxSingleQuote: false,
   arrowParens: 'always',
