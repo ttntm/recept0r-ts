@@ -9,3 +9,13 @@
   functions = "functions"
   publish = "dist"
   targetPort = 3000
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Content-Security-Policy = "default-src *; font-src 'self'; img-src *; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none'"
+    Referrer-Policy = "same-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"

@@ -1,6 +1,6 @@
 <template>
-  <h1>{{ msg }}</h1>
-  <button @click="increment"> count is: </button>
+  <h1 v-esc="logESC">{{ msg }}</h1>
+  <button @click="increment" v-click-blur> count is: </button>
   <p>{{ count }}</p>
 </template>
 
@@ -23,11 +23,14 @@
 
       const count = computed(() => store.state.count)
 
+      const logESC = () => console.log('esc')
+
       temp()
 
       return {
         count,
-        increment: () => store.commit('increment')
+        increment: () => store.commit('increment'),
+        logESC
       }
     }
   })

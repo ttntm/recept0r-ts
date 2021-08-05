@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    // allows JS modules, i.e. Vuex store modules
+    "allowJs": true,
     // Allow default import from modules with no default export set . This does not affect the output of the code , Just for type checking .
     "allowSyntheticDefaultImports": true,
     // Resolve the benchmark directory of non relative module names
@@ -11,6 +13,7 @@
     "module": "esnext",
     // Decide what to do with the module .
     "moduleResolution": "node",
+    "outDir": "./dist",
     // Enable all strict type checking options .
     // Enable --strict It's equivalent to enabling --noImplicitAny, --noImplicitThis, --alwaysStrict,
     // --strictNullChecks and --strictFunctionTypes and --strictPropertyInitialization.
@@ -22,7 +25,9 @@
     // Appoint ECMAScript Target version
     "target": "esnext",
     // List of type declaration filenames to include
-    "types": [],
+    "types": [
+      "vite/client"
+    ],
     "isolatedModules": true,
     // Module name to based on baseUrl List of path mappings for .
     "paths": {
@@ -32,5 +37,5 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./dist/**/*"]
 }
