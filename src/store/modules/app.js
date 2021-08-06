@@ -4,42 +4,38 @@ export default {
 
   state() {
     return {
-      isDevEnvironment: false,
-      siteURL: 'recept0r.com',
-      menuOpen: false,
-      toastMessage: null,
       functions: {
         api: import.meta.env.VITE_APP_API
-      }
+      },
+      menuOpen: false,
+      toastMessage: null,
+      windowOpen: 0
     }
   },
 
   getters: {
-    isDevEnvironment: state => state.isDevEnvironment,
-    siteURL: state => state.siteURL,
+    functions: state => state.functions,
     menuOpen: state => state.menuOpen,
     toastMessage: state => state.toastMessage,
-    functions: state => state.functions,
+    windowOpen: state => state.windowOpen
   },
 
   mutations: {
-    SET_DEV_ENV(state, value) {
-      state.isDevEnvironment = value
-    },
-    SET_SITE_URL(state, value) {
-      state.siteURL = value
-    },
     SET_MENU_OPEN(state, value) {
       state.menuOpen = value
     },
     SET_TOAST_MESSAGE(state, value) {
       state.toastMessage = value
+    },
+    SET_WINDOW_OPEN(state, value) {
+      state.windowOpen = value
     }
   },
 
   actions: {
-    toggleMenu({ commit }, newState) {
-      commit('SET_MENU_OPEN', newState)
+    initialize({ dispatch }) {
+      // global state reset action triggering module actions to keep things separate
+      dispatch('user/initializeUser', null, { root: true });
     },
 
     /**
@@ -55,6 +51,14 @@ export default {
       timer = setTimeout(() => {
         commit('SET_TOAST_MESSAGE', null)
       }, 5000)
+    },
+
+    toggleMenu({ commit }, newState) {
+      commit('SET_MENU_OPEN', newState)
+    },
+
+    windowActive({ commit }, id) {
+      commit('SET_WINDOW_OPEN', id)
     }
   }
 }

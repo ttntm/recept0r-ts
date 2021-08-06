@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import router from './router'
 import { store, key } from './store'
+import detectTokens from './utils/token'
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
@@ -11,6 +12,10 @@ import './index.css'
 const app = createApp(App)
   app.use(router)
   app.use(store, key)
+
+// store.dispatch('user/initAuth');
+
+detectTokens();
 
 const clickBlurExclude: String[] = ['INPUT','SELECT','TEXTAREA'];
 let escHandler: any = null

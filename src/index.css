@@ -9,8 +9,7 @@
   font-weight: 400;
   src: local('Nunito Regular'), local('Nunito-Regular'),
     url('./assets/fonts/nunito-v12-latin-regular.woff2') format('woff2'),
-    /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./assets/fonts/nunito-v12-latin-regular.woff')
-      format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('./assets/fonts/nunito-v12-latin-regular.woff') format('woff');
 }
 /* nunito-600 - latin */
 @font-face {
@@ -19,8 +18,7 @@
   font-weight: 600;
   src: local('Nunito SemiBold'), local('Nunito-SemiBold'),
     url('./assets/fonts/nunito-v12-latin-600.woff2') format('woff2'),
-    /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./assets/fonts/nunito-v12-latin-600.woff')
-      format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('./assets/fonts/nunito-v12-latin-600.woff') format('woff');
 }
 /* nunito-700 - latin */
 @font-face {
@@ -29,13 +27,15 @@
   font-weight: 700;
   src: local('Nunito Bold'), local('Nunito-Bold'),
     url('./assets/fonts/nunito-v12-latin-700.woff2') format('woff2'),
-    /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./assets/fonts/nunito-v12-latin-700.woff')
-      format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('./assets/fonts/nunito-v12-latin-700.woff') format('woff');
 }
+
+/* ---------- NORMALIZE ---------- */
 
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
+  @apply outline-none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -52,8 +52,7 @@
 }
 
 *:focus {
-  @apply outline-none;
-  @apply shadow-outline;
+  @apply outline-none shadow-outline;
 }
 
 body,
@@ -67,11 +66,7 @@ h3,
 h4,
 h5,
 h6 {
-  @apply tracking-wide;
-  @apply text-blue-500;
-  @apply font-bold;
-  @apply mt-0;
-  @apply mb-4;
+  @apply tracking-wide text-blue-500 font-bold mt-0 mb-4;
 }
 
 h1 {
@@ -107,11 +102,6 @@ h3 {
   }
 }
 
-p {
-  @apply mt-0;
-  @apply mb-4;
-}
-
 ol,
 ul {
   @apply pl-8;
@@ -125,11 +115,11 @@ ol {
   list-style-type: decimal;
 }
 
+p,
 ol,
 ul,
 dl {
-  @apply mt-0;
-  @apply mb-4;
+  @apply mt-0 mb-4;
 }
 
 ol ol,
@@ -153,11 +143,124 @@ small {
   @apply text-sm;
 }
 
-/* OTHER */
-
 hr {
-  @apply border-gray-500;
-  @apply my-8;
+  @apply border-gray-500 my-8;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.btn {
+  @apply inline-block font-bold rounded-lg shadow-sm px-6 py-2;
+}
+
+.btn:focus {
+  @apply outline-none shadow-outline;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+.btn-gray {
+  @apply bg-gray-500 text-blue-500;
+}
+
+.btn-gray:hover, 
+.btn-gray:focus {
+  @apply bg-cool-gray-500;
+}
+
+.btn-green {
+  border: 1px solid;
+  @apply border-green-700 text-green-700;
+}
+
+.btn-green:not(:disabled):hover, 
+.btn-green:focus {
+  @apply bg-green-700 text-gray-500;
+}
+
+.btn-red {
+  @apply border border-red-600 text-red-600;
+}
+
+.btn-red:hover, 
+.btn-red:focus {
+  @apply bg-red-600 text-white;
+}
+
+.modal-btn {
+  @apply block font-bold border border-blue-500 text-blue-500 rounded-lg shadow-sm;
+}
+
+.modal-btn:hover, .modal-btn:focus {
+  @apply bg-cool-gray-500 border-cool-gray-500 shadow-none;
+}
+
+.modal-btn:focus {
+  @apply outline-none shadow-outline;
+}
+
+/* ---------- INPUTS & FORM STYLES ---------- */
+
+.form-control {
+  @apply border border-gray-600 rounded-lg px-3 py-1;
+}
+
+.form-group {
+  @apply flex flex-col border-b border-cool-gray-500 mb-8;
+}
+
+.form-group label {
+  @apply tracking-wide text-sm text-blue-600 mb-1;
+}
+
+.auth-form-control {
+  @apply bg-gray-500 px-3 py-1;
+}
+
+.auth-form-control:focus {
+  outline: 0;
+  @apply shadow-outline bg-white;
+}
+
+.error { color: salmon; }
+
+/* ---------- TRANSITIONS ---------- */
+
+.fade-enter-active, 
+.fade-leave-active { 
+  opacity: 1;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.fade-enter-from, 
+.fade-leave-to { 
+  opacity: 0;
+}
+
+.modal-enter-active, 
+.modal-leave-active { 
+  opacity: 1;
+  transform: translateY(0px);
+  transition: opacity 0.25s ease-in-out, transform 0.35s ease-in-out; 
+}
+
+.modal-enter-from, 
+.modal-leave-to { 
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: all 0.75s;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  transform: translateX(400px);
+  opacity: 0;
 }
 
 @tailwind utilities;

@@ -9,6 +9,7 @@ import SecureLS from 'secure-ls'
 // TODO: properly type the Vuex modules...
 import app from './modules/app.js'
 import data from './modules/data.js'
+import user from './modules/user.js'
 
 var ls = new SecureLS({ isCompression: false })
 
@@ -19,17 +20,10 @@ export interface State {
 export const key: InjectionKey<Store<State>> = Symbol()
 
 export const store = createStore<State>({
-  state: {
-    count: 0
-  },
-  mutations: {
-    increment(state) {
-      state.count++
-    }
-  },
   modules: {
     app,
-    data
+    data, 
+    user
   },
   // plugins: [
   //   createMultiTabState({

@@ -19,6 +19,26 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/create',
+    name: 'Create',
+    component: () => import('./views/RecipeCreate.vue'),
+    meta: {
+      authRequired: true,
+      menuPosition: 2,
+      menuVisible: true
+    }
+  },
+  {
+    path: '/my-recipes',
+    name: 'My Recipes',
+    component: () => import('./views/UserRecipes.vue'),
+    meta: {
+      authRequired: true,
+      menuPosition: 4,
+      menuVisible: true
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('./views/About.vue'),
