@@ -1,6 +1,9 @@
 import { store } from '../store'
 import { Credentials } from '@/types'
 
+/**
+ * Set authorization headers based on GoTrue's current user session
+ */
 export async function getAuthHeaders() {
   const now = Date.now();
   const user = store.getters['user/currentUser'];
@@ -19,6 +22,9 @@ export async function getAuthHeaders() {
   return headers
 }
 
+/**
+ * Sorts objects based on a specific key using an optional `primer` function
+ */
 export function objSort (field: any, reverse: number, primer: Function) {
   //generic sorting function for object keys
   const key = primer ?
@@ -35,6 +41,16 @@ export function objSort (field: any, reverse: number, primer: Function) {
   }
 }
 
+/**
+ * Returns an URL slug based on text input
+ */
+export function slugify (text: string) {
+  return text.replace(/[^a-z0-9]+/gi, '-').replace(/^-*|-*$/g, '').toLowerCase()
+}
+
+/**
+ * Validates a Credentials object used for signup and login procedures
+ */
 export function validateCredentials (input: Credentials) {
   // check for empty keys on our credentials object
   let emptyKeys = Object.keys(input).filter((key: string) => input[key].length < 1)
@@ -48,6 +64,9 @@ export function validateCredentials (input: Credentials) {
   }
 }
 
+/**
+ * Validates an email address syntactically
+ */
 export function validateEmail(email: string) {
   const rx = RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
   return rx.test(email);

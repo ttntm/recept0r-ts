@@ -1,4 +1,5 @@
-import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { store } from './store'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -20,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/create',
-    name: 'Create',
+    name: 'Add Recipe',
     component: () => import('./views/RecipeCreate.vue'),
     meta: {
       authRequired: true,
@@ -34,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('./views/UserRecipes.vue'),
     meta: {
       authRequired: true,
-      menuPosition: 4,
+      menuPosition: 3,
       menuVisible: true
     }
   },
@@ -46,12 +47,43 @@ const routes: Array<RouteRecordRaw> = [
       menuPosition: 4,
       menuVisible: true
     }
+  },
+  {
+    path: '/recipe/:id/:refId',
+    name: 'Recipe',
+    component: () => import('./views/Recipe.vue'),
+    meta: {
+      menuVisible: false
+    }
+  },
+  {
+    path: '/:pathMatch(.*)',
+    name: '404',
+    redirect: { name: 'Home' },
+    meta: {
+      menuVisible: false
+    }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes
+  routes: routes,
+  scrollBehavior (to, from, savedPosition) {
+    // always scroll to top
+    return { top: 0 }
+  }
 })
+
+router.beforeEach((to, from, next) => {
+  // global navigation guard for all routes that require user authentication
+  if (!to.meta.authRequired) return next();
+
+  if (to.meta.authRequired && store.getters['user/loggedIn']) {
+    return next();
+  } else {
+    router.push({ name: 'Home' });
+  }
+});
 
 export default router

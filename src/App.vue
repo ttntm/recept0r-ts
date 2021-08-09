@@ -17,9 +17,9 @@
       ToastMessage
     },
     setup() {
-      const route = useRoute();
-      const router = useRouter();
-      const store = useStore();
+      const route = useRoute()
+      const router = useRouter()
+      const store = useStore()
 
       const authShown = computed(() => store.getters['app/windowOpen'])
       const loggedIn = computed(() => store.getters['user/loggedIn'])
@@ -33,7 +33,7 @@
             return loggedIn.value ? item.meta.menuVisible : false
           }
         })
-      });
+      })
 
       return {
         authShown,
