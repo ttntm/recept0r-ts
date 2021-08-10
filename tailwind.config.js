@@ -113,8 +113,8 @@ module.exports = {
     },
     borderWidth: {
       default: '1px',
-      0: '0'
-      // '2': '2px',
+      0: '0',
+      '2': '2px',
       // '4': '4px',
       // '8': '8px',
     },
@@ -629,6 +629,10 @@ module.exports = {
     gridRowEnd: ['responsive'],
     transform: ['responsive'],
     transformOrigin: ['responsive'],
+    transitionProperty: ['responsive'],
+    transitionTimingFunction: ['responsive'],
+    transitionDuration: ['responsive'],
+    transitionDelay: ['responsive'],
     translate: ['responsive', 'hover', 'focus']
   },
   corePlugins: {
@@ -647,10 +651,6 @@ module.exports = {
     scale: false,
     skew: false,
     tableLayout: false,
-    transitionProperty: false,
-    transitionTimingFunction: false,
-    transitionDuration: false,
-    transitionDelay: false,
     userSelect: false,
     verticalAlign: false,
     whitespace: false,

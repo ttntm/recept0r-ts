@@ -25,7 +25,7 @@ export async function getAuthHeaders() {
 /**
  * Sorts objects based on a specific key using an optional `primer` function
  */
-export function objSort (field: any, reverse: number, primer: Function) {
+export function objSort(field: any, reverse: number, primer: Function) {
   //generic sorting function for object keys
   const key = primer ?
     function(x: any) {
@@ -34,6 +34,7 @@ export function objSort (field: any, reverse: number, primer: Function) {
     function(x: any) {
       return x[field]
     }
+  
   reverse = !reverse ? 1 : -1;
 
   return function(a: any, b:any) {
@@ -44,23 +45,23 @@ export function objSort (field: any, reverse: number, primer: Function) {
 /**
  * Returns an URL slug based on text input
  */
-export function slugify (text: string) {
+export function slugify(text: string) {
   return text.replace(/[^a-z0-9]+/gi, '-').replace(/^-*|-*$/g, '').toLowerCase()
 }
 
 /**
  * Validates a Credentials object used for signup and login procedures
  */
-export function validateCredentials (input: Credentials) {
-  // check for empty keys on our credentials object
+export function validateCredentials(input: Credentials) {
+  // check for empty keys on our credentials object -- otherwise an empty user name might not get caught
   let emptyKeys = Object.keys(input).filter((key: string) => input[key].length < 1)
 
-  if(emptyKeys.length > 0) {
-    return false
-  } else if (input.password && input.email && validateEmail(input.email)) {
+  if (emptyKeys.length > 0) return false
+
+  if (input.password && input.email && validateEmail(input.email)) {
     return true
-  } else { 
-    return false 
+  } else {
+    return false
   }
 }
 

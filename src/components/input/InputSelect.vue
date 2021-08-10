@@ -1,0 +1,37 @@
+<script lang="ts">
+  import { defineComponent, ref } from 'vue'
+
+  export default defineComponent({
+    name: 'InputSelect',
+    props: {
+      current: {
+        type: String,
+        default: ''
+      },
+      data: Array,
+      name: String
+    },
+    emits: ['update:select'],
+    setup(props) {
+      const selected = ref('')
+
+      selected.value = props.current
+
+      return { selected }
+    }
+  })
+</script>
+
+<template>
+  <div class="relative mb-4">
+    <select :name="name" :id="`select${name}`" v-model="selected" class="form-control text-sm appearance-none" @change="$emit('update:select', selected)">
+      <option disabled value="">
+        <slot></slot>
+      </option>
+      <option v-for="(item, index) in data" :key="index" :value="item">{{ item }}</option>
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-cool-gray-500">
+      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+    </div>
+  </div>
+</template>

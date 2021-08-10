@@ -7,20 +7,36 @@
   import { slugify } from '../utils'
 
   import ButtonDefault from '../components/button/ButtonDefault.vue'
+  import InputSelect from '../components/input/InputSelect.vue'
+  import InputToggle from '../components/input/InputToggle.vue'
+  import RecipeIngredients from '../components/recipe/RecipeIngredients.vue'
 
   export default defineComponent({
     name: 'Create',
     components: {
-      ButtonDefault
+      ButtonDefault,
+      InputSelect,
+      InputToggle,
+      RecipeIngredients
+    },
+    directives: {
+      focus: {
+        mounted(el) {
+          el.focus();
+        }
+      }
     },
     setup() {
       const router = useRouter()
       const store = useStore()
 
-      const me = computed(() => store.getters['user/currentUser'])
+      const isEmpty = ref(true)
+      const isSaving = ref(false)
       const loggedIn = computed(() => store.getters['user/loggedIn'])
+      const me = computed(() => store.getters['user/currentUser'])
       const newRecipe: Recipe = reactive({
         id: '',
+        draft: true,
         title: '',
         category: '',
         description: '',
@@ -33,11 +49,13 @@
         body: {}
       })
 
-      const isEmpty = ref(true)
-      const isSaving = ref(false)
-
       const cancelCreate = () => router.push({ name: 'Home' })
+      
       const setRecipeId = () => newRecipe.id = slugify(newRecipe.title)
+
+      const submitRecipe = () => alert(JSON.stringify(newRecipe))
+
+      const updateRecipe = (key: string, value: any) => newRecipe[key] = value
 
       watch(loggedIn, () => {
         if (!loggedIn.value) cancelCreate()
@@ -59,10 +77,15 @@
 
       return {
         cancelCreate,
+        category: computed(() => store.getters['data/recipeCategory']),
+        diet: computed(() => store.getters['data/recipeDiet']),
+        draftText: computed(() => newRecipe.draft ? 'Draft mode active' : 'Draft mode disabled'),
         isDisabled: computed(() => isEmpty.value || isSaving.value ? true : false),
         newRecipe,
-        saveBtnText: computed(() => isSaving.value ? 'Saving...' : 'Save'),
-        setRecipeId
+        saveBtnText: computed(() => newRecipe.draft ? 'Save Draft' : isSaving.value ? 'Saving...' : 'Save'),
+        setRecipeId,
+        submitRecipe,
+        updateRecipe
       }
     },
   })
@@ -77,35 +100,34 @@
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
       <h3 class="">Recipe Title</h3>
-      <input type="text" v-model="newRecipe.title" ref="recipeTitle" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId">
+      <input type="text" v-model="newRecipe.title" ref="recipeTitle" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId" v-focus>
       <h4 class="mb-4">Description</h4>
       <input type="text" v-model="newRecipe.description" class="form-control mb-4" placeholder="A fancy description...">
     </div>
     <div class="w-full md:w-1/2">
       <h4 class="mb-4">Metadata</h4>
+      <InputToggle v-model="newRecipe.draft" name="draft" @update:modelValue="updateRecipe('draft', $event)">{{ draftText }}</InputToggle>
       <input type="text" v-model="newRecipe.portions" class="form-control text-sm mb-4" placeholder="Portions; how many people does this recipe serve?">
       <input type="text" v-model="newRecipe.duration" class="form-control text-sm mb-4" placeholder="Duration; how long does it take to cook this?">
-      <!-- <RecipeDiet :diet="newRecipe.diet" @diet:update="dietUpdate" class="relative mb-4" />
-      <RecipeCategory :category="newRecipe.category" @category:update="categoryUpdate" class="relative mb-4" /> -->
+      <InputSelect :current="newRecipe.diet" :data="diet" @update:select="updateRecipe('diet', $event)" class="relative mb-4">
+        Please select a diet
+      </InputSelect>
+      <InputSelect :current="newRecipe.category" :data="category" @update:select="updateRecipe('category', $event)" class="relative mb-4">
+        Please select a category
+      </InputSelect>
     </div>
     <div class="w-full md:w-1/2 md:pl-8 mb-4">
       <h4 class="mb-4">Ingredients</h4>
-      <!-- <RecipeIngredients :editing="true" :input="newRecipe.ingredients" @ing:update="ingUpdate" /> -->
+      <RecipeIngredients :input="newRecipe.ingredients" @update:ingredients="updateRecipe('ingredients', $event)" />
     </div>
     <div class="w-full">
       <h4 class="mb-4">Instructions</h4>
       <!-- <RecipeEditor :editing="true" :editorContent="newRecipe.body" @editor:update="editorUpdate" /> -->
       <hr class="my-8">
       <div class="flex flex-row justify-center lg:justify-start">
-        <ButtonDefault class="mr-4" :disabled="isDisabled">{{ saveBtnText }}</ButtonDefault>
+        <ButtonDefault class="mr-4" :disabled="isDisabled" @click="submitRecipe">{{ saveBtnText }}</ButtonDefault>
         <ButtonDefault @click="cancelCreate">Cancel</ButtonDefault>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="postcss" scoped>
-  .form-control {
-    @apply block w-full;
-  }
-</style>

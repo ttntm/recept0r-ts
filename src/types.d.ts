@@ -1,12 +1,14 @@
-export interface Credentials {
+export type Credentials = {
   [CKey: string]: string
   name?: string
   email: string
   password: string
 }
 
-export interface Recipe {
+export type Recipe = {
+  [RKey: string]: any
   id: string
+  draft?: boolean
   title: string
   category: string
   description: string

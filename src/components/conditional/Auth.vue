@@ -41,24 +41,22 @@
     <div class="form px-12 pb-8">
       <div class="w-3/4 flex flex-row justify-around mt-4 mb-6 mx-auto">
         <h3 class="">
-          <a href="#"
-            class="text-cool-gray-500 text-lg pb-1 border-b border-transparent"
-            :class="{ 'border-blue-500 text-blue-500 font-bold': mode === 'signup' }"
+          <button class="text-cool-gray-500 font-bold text-lg pb-1 border-b border-transparent focus:outline-none shadow-none"
+            :class="{ 'border-blue-500 text-blue-500': mode === 'signup' }"
             @click="toggleMode('signup')"
             v-click-blur
           >
             Sign Up
-          </a>
+          </button>
         </h3>
         <h3 class="">
-          <a href="#"
-            class="text-cool-gray-500 text-lg pb-1 border-b border-transparent"
-            :class="{ 'border-blue-500 text-blue-500 font-bold': mode === 'login' }"
+          <button class="text-cool-gray-500 font-bold text-lg pb-1 border-b border-transparent focus:outline-none shadow-none"
+            :class="{ 'border-blue-500 text-blue-500': mode === 'login' }"
             @click="toggleMode('login')"
             v-click-blur
           >
             Login
-          </a>
+          </button>
         </h3>
       </div>
       <AuthLogin v-if="mode === 'login'" />
