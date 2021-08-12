@@ -3,9 +3,10 @@ import { store } from './store'
 
 declare module 'vue-router' {
   interface RouteMeta {
-    authRequired?: Boolean,
-    menuPosition?: Number,
-    menuVisible?: Boolean
+    authRequired?: boolean,
+    menuPosition?: number,
+    menuVisible?: boolean,
+    mode?: string
   }
 }
 
@@ -22,11 +23,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create',
     name: 'Add Recipe',
-    component: () => import('./views/RecipeCreate.vue'),
+    component: () => import('./views/RecipeEditable.vue'),
     meta: {
       authRequired: true,
       menuPosition: 2,
-      menuVisible: true
+      menuVisible: true,
+      mode: 'create'
     }
   },
   {
@@ -51,9 +53,19 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/recipe/:id/:refId',
     name: 'Recipe',
-    component: () => import('./views/Recipe.vue'),
+    component: () => import('./views/RecipeReadonly.vue'),
     meta: {
       menuVisible: false
+    }
+  },
+  {
+    path: '/edit/:refId',
+    name: 'Edit Recipe',
+    component: () => import('./views/RecipeEditable.vue'),
+    meta: {
+      authRequired: true,
+      menuVisible: false,
+      mode: 'edit'
     }
   },
   {

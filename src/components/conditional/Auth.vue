@@ -4,12 +4,14 @@
 
   import AuthLogin from './AuthLogin.vue'
   import AuthSignup from './AuthSignup.vue'
+  import ButtonX from '../button/ButtonX.vue'
 
   export default defineComponent({
     name: 'Auth',
     components: {
       AuthLogin,
-      AuthSignup
+      AuthSignup,
+      ButtonX
     },
     props: {
       loggedIn: Boolean
@@ -36,7 +38,7 @@
 <template>
   <div class="user-modal" v-click-outside="closeAuth" v-esc="closeAuth" v-scroll-lock>
     <div class="flex items-center justify-end">
-      <button class="text-3xl text-cool-gray-500 hover:text-blue-500 leading-none p-2 mt-2 mx-4" @click="closeAuth">&times;</button>
+      <ButtonX class="rounded-full p-2 mt-2 mx-2" @click="closeAuth" />
     </div>
     <div class="form px-12 pb-8">
       <div class="w-3/4 flex flex-row justify-around mt-4 mb-6 mx-auto">

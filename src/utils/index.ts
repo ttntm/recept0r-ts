@@ -50,6 +50,30 @@ export function slugify(text: string) {
 }
 
 /**
+ * Uploads an image to Cloudinary
+ * @param data String representation of the image coming from file reader
+ */
+export async function uploadImage(url: string, data: FormData) {
+  const error = {
+    message: 'Error uploading image.',
+    data: null
+  }
+
+  try {
+    const req = await fetch(url, {
+      body: data,
+      method: 'POST'
+    })
+
+    const res = await req.json()
+
+    return res ? { message: 'Image successfully uploaded.', data: res.secure_url } : error
+  } catch (err) {
+    return error
+  }
+}
+
+/**
  * Validates a Credentials object used for signup and login procedures
  */
 export function validateCredentials(input: Credentials) {

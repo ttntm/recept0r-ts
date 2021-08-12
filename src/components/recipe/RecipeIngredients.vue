@@ -2,11 +2,13 @@
   import { defineComponent, nextTick, ref } from 'vue'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
+  import ButtonX from '../button/ButtonX.vue'
 
   export default defineComponent({
     name: 'RecipeIngredients',
     components: {
-      ButtonDefault
+      ButtonDefault,
+      ButtonX
     },
     directives: {
       focus: {
@@ -71,7 +73,7 @@
             @keydown.enter="addItem(index)"
             v-focus
           >
-          <button class="inline-block text-lg focus:outline-none opacity-75 hover:opacity-100 ml-2" @click="removeItem(index)">&times;</button>
+          <ButtonX size="20" class="rounded-full p-1 ml-2" @click="removeItem(index)" />
         </span>
       </li>
     </ul>

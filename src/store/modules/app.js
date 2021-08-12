@@ -4,6 +4,8 @@ export default {
 
   state() {
     return {
+      cdnryUpreset: import.meta.env.VITE_APP_CDNRY_UPRESET,
+      cdnryURL: import.meta.env.VITE_APP_CDNRY,
       functions: {
         api: import.meta.env.VITE_APP_API
       },
@@ -14,6 +16,8 @@ export default {
   },
 
   getters: {
+    cdnryUpreset: state => state.cdnryUpreset,
+    cdnryURL: state => state.cdnryURL,
     functions: state => state.functions,
     menuOpen: state => state.menuOpen,
     toastMessage: state => state.toastMessage,

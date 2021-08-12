@@ -26,7 +26,7 @@
         :id="name" 
         :name="name" 
         :checked="modelValue" 
-        class="appearance-none w-full h-full outline-none cursor-pointer" 
+        class="appearance-none w-full h-full outline-none cursor-pointer rounded-full" 
         @click="$emit('update:modelValue', $event.target.checked)"
       />
     </div>
