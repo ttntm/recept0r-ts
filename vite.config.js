@@ -21,7 +21,9 @@ export default defineConfig({
       'vue-router',
       'vuex',
       'vuex-multi-tab-state',
-      'vuex-persistedstate'
+      'vuex-persistedstate',
+      '@vueup/vue-quill',
+      'body-scroll-lock'
     ]
   },
   plugins: [vue()]
