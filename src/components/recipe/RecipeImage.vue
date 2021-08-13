@@ -4,6 +4,8 @@
 
   import { uploadImage } from '../../utils'
 
+  import ButtonDefault from '../button/ButtonDefault.vue'
+
   const props = defineProps<{
     currentImage: string,
     recipe: string
@@ -108,8 +110,8 @@
       />
     </transition>
     <div v-if="currentImage" class="flex flex-row align-items-center justify-content-start">
-      <button v-click-blur class="btn btn-green text-sm mr-4" @click="uploadCurrentImage">Upload Image</button>
-      <button v-click-blur class="btn btn-red text-sm" @click="removeImage">Remove Image</button>
+      <ButtonDefault v-click-blur class="text-sm mr-4" @click="uploadCurrentImage">Upload Image</ButtonDefault>
+      <ButtonDefault v-click-blur class="opacity-50 hover:opacity-100 text-sm" @click="removeImage">Remove Image</ButtonDefault>
     </div>
   </section>
 </template>

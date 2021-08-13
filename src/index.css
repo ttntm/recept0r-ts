@@ -226,6 +226,77 @@ hr {
 
 .error { color: salmon; }
 
+/* ---------- QUILL EDITOR OVERRIDES ---------- */
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow,
+.ql-editor.ql-snow {
+  @apply font-sans text-blue-600 text-base !important;
+}
+
+.ql-toolbar.ql-snow {
+  @apply border border-gray-600 rounded-full px-3 mb-4 !important;
+}
+
+.ql-toolbar.ql-snow * {
+  @apply rounded !important;
+}
+
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected {
+  @apply bg-gray-500 !important;
+  @apply text-blue-500 !important;
+}
+
+.ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
+.ql-snow.ql-toolbar button.ql-active .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
+  @apply text-blue-500 !important;
+}
+
+.ql-container.ql-snow {
+  @apply border-none !important;
+}
+
+.ql-editor {
+  @apply border border-gray-600 rounded-lg !important;
+}
+
+.ql-snow a,
+.ql-snow a:hover {
+  @apply text-blue-500 !important;
+}
+
+.ql-editor {
+  min-height: 25vh;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.ql-editor p, 
+.ql-editor ol, 
+.ql-editor ul, 
+.ql-editor pre, 
+.ql-editor blockquote, 
+.ql-editor h1, 
+.ql-editor h2, 
+.ql-editor h3, 
+.ql-editor h4, 
+.ql-editor h5, 
+.ql-editor h6 {
+  @apply mb-4 !important;
+}
+
 /* ---------- TRANSITIONS ---------- */
 
 .fade-enter-active, 

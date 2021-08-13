@@ -18,5 +18,5 @@ export type Recipe = {
   ingredients: string[]
   owner: string
   portions: string
-  //body: QuillEditorObject
+  body: string
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import { validateCredentials } from '../../utils'
-  import { Credentials } from '@/types'
+  import { Credentials } from '../../types'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
 

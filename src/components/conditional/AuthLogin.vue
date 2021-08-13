@@ -2,7 +2,7 @@
   import { reactive, ref } from 'vue'
   import { useStore } from '../../store'
   import { validateCredentials } from '../../utils'
-  import { Credentials } from '@/types'
+  import { Credentials } from '../../types'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
 

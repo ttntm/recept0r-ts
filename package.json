@@ -8,6 +8,7 @@
     "format": "prettier . --write"
   },
   "dependencies": {
+    "@vueup/vue-quill": "^1.0.0-beta.7",
     "body-scroll-lock": "^4.0.0-beta.0",
     "gotrue-js": "^0.9.29",
     "secure-ls": "^1.2.6",

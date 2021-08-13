@@ -11,6 +11,7 @@
   import InputToggle from '../components/input/InputToggle.vue'
   import RecipeImage from '../components/recipe/RecipeImage.vue'
   import RecipeIngredients from '../components/recipe/RecipeIngredients.vue'
+  import RecipeTextEditor from '../components/recipe/RecipeTextEditor.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -36,7 +37,7 @@
     ingredients: [],
     owner: me.value ? me.value.id : '', // empty ID should technically be impossible (can't be seeing this omponent without login), this is just for DEV purposes
     portions: '4 portions',
-    body: {}
+    body: '<h1>About this Recipe</h1><p>About text</p><h1>Instructions</h1><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h1>Notes</h1><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
   const saveBtnText = computed(() => recipe.draft ? 'Save as Draft' : isSaving.value ? 'Saving...' : 'Save & Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
@@ -116,9 +117,8 @@
     </div>
     <div class="w-full">
       <h4 class="mb-4">Instructions</h4>
-      <!-- <RecipeEditor :editing="true" :editorContent="recipe.body" @editor:update="editorUpdate" /> -->
-      <hr class="my-8">
-      <div class="flex flex-row justify-center lg:justify-start">
+      <RecipeTextEditor :input="recipe.body" @update:editor="updateRecipe('body', $event)" />
+      <div class="flex flex-row justify-center lg:justify-start mt-8">
         <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
         <ButtonDefault @click="cancelCreate">Cancel</ButtonDefault>
         <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 ml-4" @click="deleteRecipe">Delete</ButtonDefault>
