@@ -1,31 +1,21 @@
-<script lang="ts">
-  import { defineComponent } from 'vue'
+<script setup lang="ts">
+  import { RouteRecordNormalized } from 'vue-router'
   import { useStore } from '../store'
 
   import ButtonDefault from './button/ButtonDefault.vue'
 
-  export default defineComponent({
-    name: 'Navbar',
-    components: {
-      ButtonDefault
-    },
-    props: {
-      loggedIn: Boolean,
-      menuItems: Array
-    },
-    setup() {
-      const store = useStore();
+  const props = defineProps<{
+    loggedIn: boolean,
+    menuItems: RouteRecordNormalized[]
+  }>()
 
-      const handleLogout = () => {
-        // trigger logout
-      }
-      
-      return {
-        handleLogout,
-        showAuth: () => store.dispatch('app/windowActive', 1)
-      }
-    }
-  })
+  const store = useStore();
+
+  const handleLogout = () => {
+    // trigger logout
+  }
+
+  const showAuth = () => store.dispatch('app/windowActive', 1)
 </script>
 
 <template>

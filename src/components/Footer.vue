@@ -1,17 +1,6 @@
-<script lang="ts">
-  import { defineComponent } from 'vue'
-
-  export default defineComponent({
-    name: 'Footer',
-    setup() {
-      const date: Date = new Date()
-      const year: Number = date.getFullYear()
-
-      return {
-        year
-      }
-    }
-  })
+<script setup lang="ts">
+  const date: Date = new Date()
+  const year: number = date.getFullYear()
 </script>
 
 <template>

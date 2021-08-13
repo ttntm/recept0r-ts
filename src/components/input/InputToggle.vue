@@ -1,14 +1,14 @@
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  
-  export default defineComponent({
-    name: 'InputToggle',
-    props: {
-      modelValue: Boolean,
-      name: String
-    },
-    emits: ['update:modelValue']
-  })
+<script setup lang="ts">
+    const props = defineProps<{
+      modelValue: boolean | undefined,
+      name: string
+    }>()
+
+    const emit = defineEmits<{
+      (e: 'update:modelValue', val: boolean): void
+    }>()
+
+    const handleInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).checked)
 </script>
 
 <template>
@@ -27,7 +27,7 @@
         :name="name" 
         :checked="modelValue" 
         class="appearance-none w-full h-full outline-none cursor-pointer rounded-full" 
-        @click="$emit('update:modelValue', $event.target.checked)"
+        @click="handleInput"
       />
     </div>
     <span :class="{ 'text-blue-500 font-bold' : modelValue, 'text-cool-gray-500' : !modelValue }" class="block transition-all duration-200 ml-4">

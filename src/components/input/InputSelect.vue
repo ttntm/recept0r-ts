@@ -1,25 +1,19 @@
-<script lang="ts">
-  import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+  import { ref } from 'vue'
+  
+  const props = defineProps<{
+    current: string,
+    data: string[],
+    name: string
+  }>()
 
-  export default defineComponent({
-    name: 'InputSelect',
-    props: {
-      current: {
-        type: String,
-        default: ''
-      },
-      data: Array,
-      name: String
-    },
-    emits: ['update:select'],
-    setup(props) {
-      const selected = ref('')
+  const emit = defineEmits<{
+    (e: 'update:select', val: string): void
+  }>()
+  
+  const selected = ref('')
 
-      selected.value = props.current
-
-      return { selected }
-    }
-  })
+  selected.value = props.current
 </script>
 
 <template>

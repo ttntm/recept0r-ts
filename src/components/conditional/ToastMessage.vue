@@ -1,18 +1,12 @@
-<script lang="ts">
-  import { computed, defineComponent } from 'vue'
+<script setup lang="ts">
+  import { computed } from 'vue'
   import { useStore } from '../../store'
 
-  export default defineComponent({
-    name: 'ToastMessage',
-    setup() {
-      const store = useStore();
-
-      return {
-        closeToastMessage: () => store.dispatch('app/sendToastMessage', null),
-        toastMessage: computed(() => store.getters['app/toastMessage'])
-      }
-    },
-  })
+  const store = useStore();
+  
+  const toastMessage = computed(() => store.getters['app/toastMessage'])
+  
+  const closeToastMessage = () => store.dispatch('app/sendToastMessage', null)
 </script>
 
 <template>
@@ -42,7 +36,7 @@
   </transition>
 </template>
 
-<style lang="postcss" scoped>
+<style lang="css" scoped>
   .smiley {
     animation: roll 1.25s linear infinite;
   }

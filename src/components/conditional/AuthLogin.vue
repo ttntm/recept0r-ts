@@ -1,51 +1,32 @@
-<script lang="ts">
-  import { computed, defineComponent, reactive, ref } from 'vue'
+<script setup lang="ts">
+  import { reactive, ref } from 'vue'
   import { useStore } from '../../store'
   import { validateCredentials } from '../../utils'
   import { Credentials } from '@/types'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
 
-  export default defineComponent({
-    name: 'AuthLogin',
-    components: {
-      ButtonDefault
-    },
-    setup() {
-      const store = useStore()
+  const store = useStore()
 
-      const btnText = ref('Login')
-
-      const credentials: Credentials = reactive({
-        email: '',
-        password: ''
-      })
-
-      const spinner = `<img src="/img/loading.svg" alt="Loading..." class="mx-auto">`
-
-      const validationMsg = ref('')
-      
-      const clearMsg = () => validationMsg.value = ''
-
-      const handleLogin = () => {
-        if (validateCredentials(credentials)) {
-          btnText.value = 'Logging in...'
-          validationMsg.value = spinner
-          store.dispatch('app/sendToastMessage', { text: JSON.stringify(credentials), type: 'error' })
-        } else {
-          validationMsg.value = 'Please enter valid information.'
-        }
-      }
-
-      return {
-        btnText,
-        clearMsg,
-        credentials,
-        handleLogin,
-        validationMsg
-      }
-    },
+  const btnText = ref('Login')
+  const credentials: Credentials = reactive({
+    email: '',
+    password: ''
   })
+  const spinner = `<img src="/img/loading.svg" alt="Loading..." class="mx-auto">`
+  const validationMsg = ref('')
+  
+  const clearMsg = () => validationMsg.value = ''
+
+  const handleLogin = () => {
+    if (validateCredentials(credentials)) {
+      btnText.value = 'Logging in...'
+      validationMsg.value = spinner
+      store.dispatch('app/sendToastMessage', { text: JSON.stringify(credentials), type: 'error' })
+    } else {
+      validationMsg.value = 'Please enter valid information.'
+    }
+  }
 </script>
 
 <template>

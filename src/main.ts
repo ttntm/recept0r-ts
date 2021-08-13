@@ -3,7 +3,7 @@ import router from './router'
 import { store, key } from './store'
 import detectTokens from './utils/token'
 
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 
 import App from './App.vue'
 
@@ -13,11 +13,11 @@ const app = createApp(App)
   app.use(router)
   app.use(store, key)
 
-// store.dispatch('user/initAuth');
+// store.dispatch('user/initAuth')
 
-detectTokens();
+detectTokens()
 
-const clickBlurExclude: String[] = ['INPUT','SELECT','TEXTAREA'];
+const clickBlurExclude: string[] = ['INPUT','SELECT','TEXTAREA']
 let escHandler: any = null
 let handleClickBlur: Function | null = null
 let handleOutsideClick: any = null
@@ -26,57 +26,63 @@ app.directive('click-blur', {
   beforeMount(el, binding, vnode) {
     handleClickBlur = (e: { target: HTMLInputElement }) => {
       if(clickBlurExclude.indexOf(e.target.nodeName) === -1) {
-        e.target.blur();
+        e.target.blur()
       }
     }
-    el.addEventListener('click', handleClickBlur);
-    el.addEventListener('touchstart', handleClickBlur);
+    el.addEventListener('click', handleClickBlur)
+    el.addEventListener('touchstart', handleClickBlur)
   },
   beforeUnmount(el) {
-    el.removeEventListener('click', handleClickBlur);
-    el.removeEventListener('touchstart', handleClickBlur);
+    el.removeEventListener('click', handleClickBlur)
+    el.removeEventListener('touchstart', handleClickBlur)
   }
-});
+})
 
 app.directive('click-outside', {
   beforeMount(el, binding, vnode) {
     handleOutsideClick = (e: Event & { target: HTMLInputElement }) => {
-      e.stopPropagation();
+      e.stopPropagation()
       if(!el.contains(e.target) && !e.target.classList.contains('click-outside-ignore')) {
-        binding.value();
+        binding.value()
       }
     }
-    document.addEventListener('click', handleOutsideClick);
-    document.addEventListener('touchstart', handleOutsideClick);
+    document.addEventListener('click', handleOutsideClick)
+    document.addEventListener('touchstart', handleOutsideClick)
   },
   beforeUnmount() {
-    document.removeEventListener('click', handleOutsideClick);
-    document.removeEventListener('touchstart', handleOutsideClick);
+    document.removeEventListener('click', handleOutsideClick)
+    document.removeEventListener('touchstart', handleOutsideClick)
   }
-});
+})
 
 app.directive('esc', {
   beforeMount(el, binding, vnode) {
     escHandler = (e: KeyboardEvent) => {
       if (e.key=='Escape' || e.key=='Esc') {
-        binding.value();
+        binding.value()
       }
     }
-    document.addEventListener('keydown', escHandler);
+    document.addEventListener('keydown', escHandler)
   },
   beforeUnmount() {
-    document.removeEventListener('keydown', escHandler);
+    document.removeEventListener('keydown', escHandler)
   }
-});
+})
+
+app.directive('focus', {
+  mounted(el) {
+    el.focus()
+  }
+})
 
 app.directive('scroll-lock', {
   // there could be issues with iOS at some point: https://github.com/willmcpo/body-scroll-lock#allowtouchmove
   beforeMount(el, binding, vnode) {
-    disableBodyScroll(el); // desirable, but causes body twitch: { reserveScrollBarGap: true }
+    disableBodyScroll(el) // desirable, but causes body twitch: { reserveScrollBarGap: true }
   },
   beforeUnmount(el) {
-    enableBodyScroll(el);
+    enableBodyScroll(el)
   }
-});
+})
 
 app.mount('#app')

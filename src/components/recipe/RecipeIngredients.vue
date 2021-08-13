@@ -1,62 +1,43 @@
-<script lang="ts">
+<script setup lang="ts">
   import { defineComponent, nextTick, ref } from 'vue'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
   import ButtonX from '../button/ButtonX.vue'
 
-  export default defineComponent({
-    name: 'RecipeIngredients',
-    components: {
-      ButtonDefault,
-      ButtonX
-    },
-    directives: {
-      focus: {
-        mounted(el) {
-          el.focus();
-        }
-      }
-    },
-    props: {
-      input: Array
-    },
-    emits: ['update:ingredients'],
-    setup(props, { emit }) {
-      // create a new array based on the input prop
-      const ingredients = ref(Array.prototype.concat(props.input))
-      
-      // the Vue 3 way of handling refs based on v-for -- see:
-      // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
-      const inputs: {[el: string]: any} = ref([])
+  const props = defineProps<{
+    input: string[]
+  }>()
 
-      const addItem = async (index: number) => {
-        let ing = ingredients.value
-        let inputEls = inputs.value
-        
-        if (index > -1) {
-          ing.splice(index + 1, 0, '')
-          // await next tick to avoid 'x is undefined...' errors
-          await nextTick()
-          // set focus on the spliced item
-          inputEls[index+1].focus()
-        } else {
-          ing.push('')
-        }
-      }
+  const emit = defineEmits<{
+    (e: 'update:ingredients', val?: string[]): void
+  }>()
 
-      const removeItem = (index: number) => {
-        let ing = ingredients.value
-        return index > -1 ? ing.splice(index, 1) : ing.splice(ing.length - 1)
-      }
+  // create a new array based on the input prop so we don't run into problems with reactivity
+  const ingredients = ref(Array.prototype.concat(props.input))
+  
+  // the Vue 3 way of handling refs based on v-for -- see:
+  // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
+  const inputs: {[el: string]: any} = ref([])
 
-      return {
-        addItem,
-        ingredients,
-        inputs,
-        removeItem
-      }
-    },
-  })
+  const addItem = async (index?: number) => {
+    let ing = ingredients.value
+    let inputEls = inputs.value
+    
+    if (index !== undefined && index > -1) {
+      ing.splice(index + 1, 0, '')
+      // await next tick to avoid 'x is undefined...' errors
+      await nextTick()
+      // set focus on the spliced item
+      inputEls[index+1].focus()
+    } else {
+      ing.push('')
+    }
+  }
+
+  const removeItem = (index: number) => {
+    let ing = ingredients.value
+    return index > -1 ? ing.splice(index, 1) : ing.splice(ing.length - 1)
+  }
 </script>
 
 <template>
@@ -73,7 +54,7 @@
             @keydown.enter="addItem(index)"
             v-focus
           >
-          <ButtonX size="20" class="rounded-full p-1 ml-2" @click="removeItem(index)" />
+          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="removeItem(index)" />
         </span>
       </li>
     </ul>

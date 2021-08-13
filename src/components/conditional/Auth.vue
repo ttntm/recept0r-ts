@@ -1,38 +1,25 @@
-<script lang="ts">
-  import { defineComponent, ref, watch } from 'vue'
+<script setup lang="ts">
+  import { ref, watch } from 'vue'
   import { useStore } from '../../store'
 
   import AuthLogin from './AuthLogin.vue'
   import AuthSignup from './AuthSignup.vue'
   import ButtonX from '../button/ButtonX.vue'
 
-  export default defineComponent({
-    name: 'Auth',
-    components: {
-      AuthLogin,
-      AuthSignup,
-      ButtonX
-    },
-    props: {
-      loggedIn: Boolean
-    },
-    setup(props) {
-      const store = useStore()
-      const mode = ref('login')
+  const props = defineProps<{
+    loggedIn: boolean
+  }>()
 
-      const closeAuth = () => store.dispatch('app/windowActive', 0)
+  const store = useStore()
+  const mode = ref('login')
 
-      watch(() => props.loggedIn, (currentVal) => {
-        if (currentVal) closeAuth()
-      })
+  const closeAuth = () => store.dispatch('app/windowActive', 0)
 
-      return {
-        closeAuth,
-        mode,
-        toggleMode: (newMode: string) => mode.value = newMode
-      }
-    },
+  watch(() => props.loggedIn, (currentVal) => {
+    if (currentVal) closeAuth()
   })
+
+  const toggleMode = (newMode: string) => mode.value = newMode
 </script>
 
 <template>

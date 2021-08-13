@@ -1,14 +1,10 @@
-<script lang="ts">
-  import { defineComponent } from 'vue'
+<script setup lang="ts">
+  interface Props {
+    size?: string
+  }
 
-  export default defineComponent({
-    name: 'ButtonX',
-    props: {
-      size: {
-        type: String,
-        default: '24'
-      }
-    }
+  const props = withDefaults(defineProps<Props>(), {
+    size: '24'
   })
 </script>
 

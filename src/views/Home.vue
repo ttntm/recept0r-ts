@@ -1,17 +1,7 @@
-<script lang="ts">
-  import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+  import { ref } from 'vue'
 
-  export default defineComponent({
-    name: 'Home',
-    components: {},
-    setup() {
-      const isLoading = ref(true)
-
-      return {
-        isLoading
-      }
-    }
-  })
+  const isLoading = ref(true)
 </script>
 
 <template>

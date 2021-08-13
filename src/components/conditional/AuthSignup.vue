@@ -1,42 +1,26 @@
-<script lang="ts">
-  import { defineComponent, reactive, ref } from 'vue'
+<script setup lang="ts">
+  import { reactive, ref } from 'vue'
   import { validateCredentials } from '../../utils'
   import { Credentials } from '@/types'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
 
-  export default defineComponent({
-    name: 'AuthSignup',
-    components: {
-      ButtonDefault
-    },
-    setup() {
-      const clearMsg = () => validationMsg.value = ''
-
-      const credentials: Credentials = reactive({
-        name: '',
-        email: '',
-        password: ''
-      })
-
-      const validationMsg = ref('')
-
-      const handleSignup = () => {
-        if (validateCredentials(credentials)) {
-          alert(JSON.stringify(credentials))
-        } else {
-          validationMsg.value = 'Please enter valid information.'
-        }
-      }
-
-      return {
-        clearMsg,
-        credentials,
-        handleSignup,
-        validationMsg
-      }
-    },
+  const credentials: Credentials = reactive({
+    name: '',
+    email: '',
+    password: ''
   })
+  const validationMsg = ref('')
+
+  const clearMsg = () => validationMsg.value = ''
+
+  const handleSignup = () => {
+    if (validateCredentials(credentials)) {
+      alert(JSON.stringify(credentials))
+    } else {
+      validationMsg.value = 'Please enter valid information.'
+    }
+  }
 </script>
 
 <template>

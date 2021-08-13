@@ -1,102 +1,88 @@
-<script lang="ts">
-  import { computed, defineComponent, reactive } from 'vue'
+<script setup lang="ts">
+  import { computed, reactive } from 'vue'
   import { useStore } from '../../store'
 
   import { uploadImage } from '../../utils'
 
-  export default defineComponent({
-    name: 'RecipeImage',
-    props: {
-      currentImage: {
-        type: String,
-        default: ''
-      },
-      recipe: {
-        type: String,
-        default: 'new'
-      }
-    },
-    emits: ['update:image'],
-    setup(props, { emit }) {
-      const store = useStore()
+  const props = defineProps<{
+    currentImage: string,
+    recipe: string
+  }>()
 
-      const imageStatus = reactive({
-        type: '',
-        body: ''
-      })
-      
-      const isUploaded = computed(() => {
-        const checkImgSrc = RegExp(/^https:\/\//);
-        return checkImgSrc.test(props.currentImage);
-      })
+  const emit = defineEmits<{
+    (e: 'update:image', val?: string): void
+  }>()
 
-      const addImage = (evt: Event & { target: HTMLInputElement }) => {
-        const selectedImage = evt.target.files?.length ? evt.target.files[0] : null //get the first file
-        
-        if (selectedImage) {
-          const reader = new FileReader()
-          
-          reader.onload = e => {
-            if (e.target) {
-              emit('update:image', e.target.result)
-              imageStatus.type = 'info'
-              imageStatus.body = 'Image received, please press "Upload Image" now.'
-            }
-          }
-          
-          reader.readAsDataURL(selectedImage)
-        } else {
-          //cancel if there's no image or if the image is removed
-          return
-        }
-      }
+  const store = useStore()
 
-      const removeImage = () => {
-				if (props.currentImage) {
-					emit('update:image', '')
-					imageStatus.type = 'info'
-					imageStatus.body = 'Image removed.'
-				} else {
-					imageStatus.type = 'error'
-					imageStatus.body = 'Please select an image first'
-				}
-			}
-
-      const uploadCurrentImage = async () => {
-        const uPreset = store.getters['app/cdnryUpreset']
-        const uploadUrl = store.getters['app/cdnryURL']
-
-        if (props.currentImage && !isUploaded.value) {
-          imageStatus.type = 'info'
-          imageStatus.body = `<img src="/img/loading.svg" class="w-6 inline-block"><span class="inline-block ml-2">Uploading...</span>`
-          
-          let uData = new FormData()
-            uData.append('upload_preset', uPreset)
-            uData.append('tags', props.recipe)
-            uData.append('file', props.currentImage)
-
-          let uploaded = await uploadImage(uploadUrl, uData)
-
-          uploaded.data ? emit('update:image', uploaded.data) : imageStatus.type = 'error'
-          
-          return imageStatus.body = uploaded.message
-        } else {
-          imageStatus.type = 'error'
-          return isUploaded
-            ? imageStatus.body = 'This image was uploaded already. Please remove it first if you want to change it.'
-            : imageStatus.body = 'Please select an image first'
-        }
-      }
-
-      return {
-        addImage,
-        imageStatus,
-        isUploaded,
-        removeImage,
-        uploadCurrentImage
-      }
-    },
+  const imageStatus = reactive({
+    type: '',
+    body: ''
   })
+  
+  const isUploaded = computed(() => {
+    const checkImgSrc = RegExp(/^https:\/\//);
+    return checkImgSrc.test(props.currentImage);
+  })
+
+  const addImage = (evt: Event) => {
+    const eTarget = evt.target as HTMLInputElement
+    const selectedImage = eTarget.files?.length ? eTarget.files[0] : null //get the first file
+    
+    if (selectedImage) {
+      const reader = new FileReader()
+      
+      reader.onload = e => {
+        if (e.target) {
+          emit('update:image', e.target.result?.toString())
+          imageStatus.type = 'info'
+          imageStatus.body = 'Image received, please press "Upload Image" now.'
+        }
+      }
+      
+      reader.readAsDataURL(selectedImage)
+    } else {
+      //cancel if there's no image or if the image is removed
+      return
+    }
+  }
+
+  const removeImage = () => {
+    if (props.currentImage) {
+      emit('update:image', '')
+      imageStatus.type = 'info'
+      imageStatus.body = 'Image removed.'
+    } else {
+      imageStatus.type = 'error'
+      imageStatus.body = 'Please select an image first'
+    }
+  }
+
+  const uploadCurrentImage = async () => {
+    const uPreset = store.getters['app/cdnryUpreset']
+    const uploadUrl = store.getters['app/cdnryURL']
+
+    if (props.currentImage && !isUploaded.value) {
+      imageStatus.type = 'info'
+      imageStatus.body = `<img src="/img/loading.svg" class="w-6 inline-block"><span class="inline-block ml-2">Uploading...</span>`
+      
+      let uData = new FormData()
+        uData.append('upload_preset', uPreset)
+        uData.append('tags', props.recipe)
+        uData.append('file', props.currentImage)
+
+      let uploaded = await uploadImage(uploadUrl, uData)
+
+      uploaded.data ? emit('update:image', uploaded.data) : imageStatus.type = 'error'
+      
+      return imageStatus.body = uploaded.message
+    } else {
+      imageStatus.type = 'error'
+      return isUploaded
+        ? imageStatus.body = 'This image was uploaded already. Please remove it first if you want to change it.'
+        : imageStatus.body = 'Please select an image first'
+    }
+  }
 </script>
 
 <template>

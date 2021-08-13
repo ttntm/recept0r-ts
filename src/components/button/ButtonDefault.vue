@@ -1,19 +1,13 @@
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+  interface Props {
+    title?: string
+    type?: 'button' | 'submit' | 'reset' | undefined
+  }
 
-export default defineComponent({
-  name: 'ButtonDefault',
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String,
-      default: 'button'
-    }
-  },
-})
+  const props = withDefaults(defineProps<Props>(), {
+    title: '',
+    type: 'button'
+  })
 </script>
 
 <template>
