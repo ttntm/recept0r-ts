@@ -10,7 +10,7 @@ export default {
     }
   },
   getters: {
-    loggedIn: () => true,// state => !!state.currentUser,
+    loggedIn: state => !!state.currentUser,
     currentUser: state => state.currentUser,
     GoTrueAuth: state => state.GoTrueAuth
   },
