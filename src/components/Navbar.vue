@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { RouteRecordNormalized } from 'vue-router'
+  import { RouteRecordNormalized, useRoute, useRouter } from 'vue-router'
   import { useStore } from '../store'
 
   import ButtonDefault from './button/ButtonDefault.vue'
@@ -9,13 +9,16 @@
     menuItems: RouteRecordNormalized[]
   }>()
 
-  const store = useStore();
+  const route = useRoute()
+  const router = useRouter()
+  const store = useStore()
 
-  const handleLogout = () => {
-    // trigger logout
+  const handleLogout = () => { 
+    store.dispatch('user/attemptLogout')
+    if (route.meta.authRequired) router.push({ name: 'Home' })
   }
 
-  const showAuth = () => store.dispatch('app/windowActive', 1)
+  const showAuth = () => store.dispatch('app/setWindowOpen', 2)
 </script>
 
 <template>
@@ -39,7 +42,9 @@
         class="block font-bold text-lg text-blue-500 rounded-lg hover:bg-gray-500 px-4 py-2 mx-4"
       >{{ item.name }}</router-link>
     </div>
-    <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showAuth">Login</ButtonDefault>
-    <ButtonDefault v-else class="hidden lg:block click-outside-ignore" @click="handleLogout">Logout</ButtonDefault>
+    <div class="flex flex-row items-center justify-end" style="width: 160px;">
+      <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showAuth">Login</ButtonDefault>
+      <ButtonDefault v-else class="hidden lg:block click-outside-ignore" @click="handleLogout">Logout</ButtonDefault>
+    </div>
   </nav>
 </template>

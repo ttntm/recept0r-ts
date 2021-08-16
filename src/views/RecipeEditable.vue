@@ -42,33 +42,78 @@
   const saveBtnText = computed(() => recipe.draft ? 'Save as Draft' : isSaving.value ? 'Saving...' : 'Save & Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
 
-  const cancelCreate = () => router.push({ name: 'Home' })
+  const cancel = () => router.push({ name: 'Home' })
 
   const deleteRecipe = () => alert('Deleting...')
+
+  const getRecipeData = () => {
+    // on component creation: check mode and get recipe data from Vuex or DB if we're in `edit` mode
+    if (mode.value && mode.value === 'edit') {
+      const currentId = route.params.refId.toString()
+      // const existing = await getRecipeData(currentId)
+      // if (existing.refId === currentId) {
+      //   Object.assign(recipe, existing)
+      //   recipe.draft = false
+      // }
+      recipe.title = currentId
+      recipe.draft = false
+    }
+  }
   
   // this function must:
-  //    - distinguish between `mode` values
   //    - redirect to the readonly recipe when done
-  const saveRecipe = () => alert(JSON.stringify(recipe))
+  const saveRecipe = async () => {
+    // check for empty fields if not a draft!!!
+    if (!recipe.draft && !validateInput()) {
+      return alert('missing fields!')
+    } else {
+      return alert('all good')
+    }
+    
+    let publishedId = ''
+    isSaving.value = true
+
+    switch (mode.value) {
+      case 'create':
+        publishedId = await store.dispatch('data/create', recipe) // returns: new refId
+        console.log('recipe created', publishedId)
+        break
+
+      case 'edit':
+        publishedId = recipe.ref['@ref'].id
+        store.dispatch('data/update', recipe)
+        console.log('recipe updated', publishedId)
+        break
+    
+      default:
+        break
+    }
+
+    // redirect to published recipe if not editing a draft
+    if (!recipe.draft) router.push({ path: `/recipe/${recipe.id}/${publishedId}` })
+  }
   
   const setRecipeId = () => recipe.id = slugify(recipe.title)
 
   const updateRecipe = (key: string, value: any) => recipe[key] = value
 
-  // on component creation: check mode and get recipe data from Vuex or DB if we're in `edit` mode
-  if (mode.value && mode.value === 'edit') {
-    const currentId = route.params.refId.toString()
-    // const existing = await getRecipeData(currentId)
-    // if (existing.refId === currentId) {
-    //   Object.assign(recipe, existing)
-    //   recipe.draft = false
-    // }
-    recipe.title = currentId
-    recipe.draft = false
+  const validateInput = () => {
+    const required = ['title', 'ingredients']
+    let missing = 0
+    
+    required.forEach((reqKey) => {
+      if (recipe[reqKey].length <= 0) return missing += 1
+    })
+
+    // check recipe for empty fields that should be filled
+    // return false if anything's missing
+    return missing <= 0 ? true : false
   }
 
+  getRecipeData()
+
   watch(loggedIn, () => {
-    if (!loggedIn.value) cancelCreate()
+    if (!loggedIn.value) cancel()
   })
 
   // check for changes to the initial state of the `recipe` object
@@ -120,7 +165,7 @@
       <RecipeTextEditor :input="recipe.body" @update:editor="updateRecipe('body', $event)" />
       <div class="flex flex-row justify-center lg:justify-start mt-8">
         <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
-        <ButtonDefault @click="cancelCreate">Cancel</ButtonDefault>
+        <ButtonDefault @click="cancel">Cancel</ButtonDefault>
         <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 ml-4" @click="deleteRecipe">Delete</ButtonDefault>
       </div>
     </div>

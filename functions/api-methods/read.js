@@ -3,7 +3,8 @@ const fnHeaders = require('../_shared/headers.js')
 
 module.exports = (event, context) => {
   const client = new faunadb.Client({
-    secret: process.env.FAUNA_SECRET
+    secret: process.env.FAUNA_SECRET,
+    domain: 'db.us.fauna.com'
   })
   const q = faunadb.query
   

@@ -1,3 +1,5 @@
+import { API, getAuthHeaders } from '../../utils'
+
 export default {
   strict: false,
   namespaced: true,
@@ -40,14 +42,14 @@ export default {
     SET_ALL_RECIPES(state, value) {
       state.allRecipes = value
     },
-    SET_FILTER_STATE(state, value) {
-      state.filterActive = value
-    },
     SET_FILTER_CACHE(state, value) {
       state.filterCache = value
     },
     SET_FILTER_DATA(state, value) {
       state.filterData = value
+    },
+    SET_FILTER_STATE(state, value) {
+      state.filterActive = value
     },
   },
 
@@ -63,11 +65,11 @@ export default {
 
       let filtered = new Array
       let mode = args[0].toLowerCase() // strig value
-      let selection = args[1].map(item => item.toLowerCase()) //array based on 'RecipeFilter.vue' component state lowercased just to make sure
+      let selection = args[1].map(item => item.toLowerCase()) // array based on 'RecipeFilter.vue' component state lowercased just to make sure
 
-      //format the data for filtering
+      // format the data for filtering
       let currentFilterData = Object.assign(fData, { [mode]: selection })
-      //commit the filter settings
+      // commit the filter settings
       commit('SET_FILTER_DATA', currentFilterData)
 
       const findIndex = (arr, el) => {
@@ -85,10 +87,10 @@ export default {
         let fDataLength = Object.keys(fData).length
 
         result = input.filter((item) => {
-          //prepare the data
+          // prepare the data
           let cat = findIndex(fData.category, item.category.toLowerCase())
           let dt = findIndex(fData.diet, item.diet.toLowerCase())
-          //handle the possibilities
+          // handle the possibilities
           switch(fDataLength) {
             case 2:
               // fDataLength = 2 -- BOTH conditions are set
@@ -108,31 +110,81 @@ export default {
               return false
           }
         })
-        //return the filtered array
+        // return the filtered array
         return result
       }
 
       if(!fState) {
-        //if there is NO active filter
+        // if there is NO active filter
         commit('SET_FILTER_STATE', true)
-        //apply to the current state of 'allRecies'
+        // apply to the current state of 'allRecies'
         filtered = doFilter(recipes)
       } else {
-        //apply to previously filtered selection
+        // apply to previously filtered selection
         filtered = doFilter(fromCache)
       }
 
       commit('SET_ALL_RECIPES', filtered)
     },
 
-    clearFilter({ commit, getters}) {
-      //get state from before applying a filter
+    clearFilter({ commit, getters }) {
+      // get state from before applying a filter
       const fromCache = getters.filterCache
-      //restore that state
+      // restore that state
       commit('SET_ALL_RECIPES', fromCache)
-      //set filter state and clear filter data
+      // set filter state and clear filter data
       commit('SET_FILTER_STATE', false)
       commit('SET_FILTER_DATA', {})
     },
+
+    async create({ dispatch }, recipe) {
+      let response
+
+      try {
+        const reqHeaders = await getAuthHeaders()
+        const data = await fetch(API(), {
+          body: JSON.stringify(recipe),
+          headers: reqHeaders,
+          method: 'POST'
+        });
+        response = await data.json()
+      } catch (err) {
+        console.error(err)
+      }
+
+      if (response) {
+        // dispatch('readList', mode)
+        dispatch('app/sendToastMessage', { text: `"${response.data.title}" successfully created.`, type: 'success' }, { root: true })
+        return response.ref['@ref'].id
+      } else {
+        // error
+        dispatch('app/sendToastMessage', { text: `An error occurred. Please try again later.`, type: 'error' }, { root: true })
+      }
+    },
+
+    // async read({ commit, getters, rootGetters }) {
+      
+
+    // },
+
+    // async readAll({ commit, getters, rootGetters }) {
+      
+
+    // },
+
+    // async readUser({ commit, getters, rootGetters }) {
+      
+
+    // },
+
+    // async update({ commit, getters, rootGetters }) {
+      
+
+    // },
+
+    // async delete({ commit, getters, rootGetters }) {
+      
+
+    // },
   }
 }

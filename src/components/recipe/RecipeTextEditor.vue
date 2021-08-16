@@ -15,7 +15,7 @@
 
   const editorOptions = {
     bounds: '#editor',
-    debug: 'info',
+    debug: 'error',
     placeholder: 'Compose an epic...',
     readOnly: false,
     theme: 'snow'

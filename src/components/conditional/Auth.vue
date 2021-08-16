@@ -13,7 +13,7 @@
   const store = useStore()
   const mode = ref('login')
 
-  const closeAuth = () => store.dispatch('app/windowActive', 0)
+  const closeAuth = () => store.dispatch('app/setWindowOpen', 0)
 
   watch(() => props.loggedIn, (currentVal) => {
     if (currentVal) closeAuth()

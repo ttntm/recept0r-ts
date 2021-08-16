@@ -107,7 +107,7 @@ export default {
     },
 
     initAuth({ commit, rootGetters }) {
-      const APIUrl = 'https://next.recept0r.com/.netlify/identity'
+      const APIUrl = rootGetters['app/identityURL']
 
       const initNewGoTrue = APIUrl => {
         return new GoTrue({

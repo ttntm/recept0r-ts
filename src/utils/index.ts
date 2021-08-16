@@ -1,23 +1,28 @@
 import { store } from '../store'
 import { Credentials } from '@/types'
 
+export function API() {
+  const url = import.meta.env.VITE_APP_API
+  return url?.toString()
+}
+
 /**
  * Set authorization headers based on GoTrue's current user session
  */
 export async function getAuthHeaders() {
-  const now = Date.now();
-  const user = store.getters['user/currentUser'];
+  const now = Date.now()
+  const user = store.getters['user/currentUser']
 
   let headers: any = {
     'Content-Type': 'application/json'
-  };
+  }
 
   // only get a new token if the old one has expired
   const token = user.token && user.token.expires_at < now
     ? await store.dispatch('user/refreshUserToken')
-    : user.token.access_token;
+    : user.token.access_token
 
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) headers['Authorization'] = `Bearer ${token}`
 
   return headers
 }
@@ -35,7 +40,7 @@ export function objSort(field: any, reverse: number, primer: Function) {
       return x[field]
     }
   
-  reverse = !reverse ? 1 : -1;
+  reverse = !reverse ? 1 : -1
 
   return function(a: any, b:any) {
     return a = key(a), b = key(b), reverse * (Number(a > b) - Number(b > a)) // keep this Number() in mind in case there are issues with this sorting function
@@ -93,6 +98,6 @@ export function validateCredentials(input: Credentials) {
  * Validates an email address syntactically
  */
 export function validateEmail(email: string) {
-  const rx = RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
-  return rx.test(email);
+  const rx = RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)
+  return rx.test(email)
 }

@@ -6,10 +6,10 @@ export default {
     return {
       cdnryUpreset: import.meta.env.VITE_APP_CDNRY_UPRESET,
       cdnryURL: import.meta.env.VITE_APP_CDNRY,
+      identityURL: import.meta.env.VITE_APP_IDENTITY,
       functions: {
         api: import.meta.env.VITE_APP_API
       },
-      menuOpen: false,
       toastMessage: null,
       windowOpen: 0
     }
@@ -19,15 +19,12 @@ export default {
     cdnryUpreset: state => state.cdnryUpreset,
     cdnryURL: state => state.cdnryURL,
     functions: state => state.functions,
-    menuOpen: state => state.menuOpen,
+    identityURL: state => state.identityURL,
     toastMessage: state => state.toastMessage,
     windowOpen: state => state.windowOpen
   },
 
   mutations: {
-    SET_MENU_OPEN(state, value) {
-      state.menuOpen = value
-    },
     SET_TOAST_MESSAGE(state, value) {
       state.toastMessage = value
     },
@@ -39,7 +36,7 @@ export default {
   actions: {
     initialize({ dispatch }) {
       // global state reset action triggering module actions to keep things separate
-      dispatch('user/initializeUser', null, { root: true });
+      dispatch('user/initializeUser', null, { root: true })
     },
 
     /**
@@ -57,11 +54,11 @@ export default {
       }, 5000)
     },
 
-    toggleMenu({ commit }, newState) {
-      commit('SET_MENU_OPEN', newState)
-    },
-
-    windowActive({ commit }, id) {
+    /**
+     * Toggle open modals and windows
+     * @param {*} id WindowID: 1 = Mobile Nav || 2 = Login/Signup
+     */
+    setWindowOpen({ commit }, id) {
       commit('SET_WINDOW_OPEN', id)
     }
   }

@@ -12,9 +12,9 @@
   const router = useRouter()
   const store = useStore()
 
-  const authShown = computed(() => store.getters['app/windowOpen'])
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const routeFull = computed(() => route.fullPath)
+  const windowOpen = computed(() => store.getters['app/windowOpen'])
 
   const menuItems = computed(() => {
     const routes = router.getRoutes()
@@ -32,7 +32,7 @@
   <div id="app" class="flex h-full flex-col">
     <Navbar :loggedIn="loggedIn" :menuItems="menuItems" />
     <transition name="modal">
-      <Auth v-if="authShown === 1" :loggedIn="loggedIn" />
+      <Auth v-if="windowOpen === 2" :loggedIn="loggedIn" />
     </transition>
     <div class="container flex-grow flex-shrink-0 px-4 md:mt-6 lg:mt-12 mx-auto">
       <router-view :key="routeFull" />
