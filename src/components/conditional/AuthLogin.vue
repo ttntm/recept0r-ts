@@ -33,7 +33,7 @@
   <form class="" @submit.prevent="handleLogin">
     <div class="form-group">
       <label for="email">Email</label>
-      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" ref="firstInput" placeholder="hey@email.com" @input="clearMsg" />
+      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="hey@email.com" @input="clearMsg" />
     </div>
     <div class="form-group">
       <label for="password">Password</label>
