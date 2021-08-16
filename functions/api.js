@@ -1,9 +1,11 @@
 const api = require('./api-methods');
 const fnHeaders = require('./_shared/headers.js');
 
-const getPath = (urlPath) => {
-  return urlPath.match(/([^\/]*)\/*$/)[0]
-}
+// get the last element from the URL, i.e. example.com/last => 'last'
+const getPath = (urlPath) => urlPath.match(/([^\/]*)\/*$/)[0]
+
+// get the last 2 elements from the URL, i.e. example.com/one/two => [one,two]
+const getMethodPath = (urlPath) => urlPath.match(/\w+\/([^\/]*)\/*$/)[0].split('/')
 
 const pathError = { statusCode: 500, headers: { ...fnHeaders }, body: 'No path specified' };
 
@@ -18,21 +20,32 @@ exports.handler = async (event, context) => {
 
     switch (event.httpMethod) {
       case 'GET':
-        // need to treat the path differently here as GET requests can't have a request body
-        const getMethodPath = () => event.path.match(/\w+\/([^\/]*)\/*$/)[0].split('/'); // results in [listname,userId]
-        [event.list, event.user] = getMethodPath();
-        return event.list && event.user ? api.read(event, context) : pathError
+        // need to handle 'get all' and 'get one' differently here
+        if (target === 'all-recipes') {
+          return api.readAll(event, context)
+        } else {
+          const [tgt, usr] = getMethodPath(event.path)
+
+          if (tgt === 'author' && usr) {
+            event.target = tgt // target = sub-path for method distinction
+            event.user = usr // user id for the DB index
+            return api.readUser(event, context)
+          } else {
+            // target = recipe refId
+            return event.target ? api.read(event, context) : pathError
+          }
+        }
 
       case 'POST':
         // target = listname
-        return event.target ? api.create(event, context) : pathError
+        return api.create(event, context)
 
       case 'PUT':
-        // target = list item RefId
+        // target = recipe refId
         return event.target ? api.update(event, context) : pathError
 
       case 'DELETE':
-        // target = listname
+        // target = recipe refId
         return event.target ? api.delete(event, context) : pathError
 
       default:
