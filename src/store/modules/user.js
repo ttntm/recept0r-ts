@@ -91,7 +91,7 @@ export default {
       })
     },
 
-    attemptSignup({ getters, state }, credentials) {
+    attemptSignup({ dispatch, getters, state }, credentials) {
       const userOptions = getters['userOptions']
       return new Promise((resolve, reject) => {
         state.GoTrueAuth.signup(credentials.email, credentials.password)
