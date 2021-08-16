@@ -22,7 +22,7 @@
     if (validateCredentials(credentials)) {
       btnText.value = 'Logging in...'
       validationMsg.value = spinner
-      store.dispatch('app/sendToastMessage', { text: JSON.stringify(credentials), type: 'error' })
+      store.dispatch('user/attemptLogin', credentials)
     } else {
       validationMsg.value = 'Please enter valid information.'
     }

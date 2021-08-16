@@ -1,9 +1,12 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
+  import { useStore } from '../../store'
   import { validateCredentials } from '../../utils'
   import { Credentials } from '../../types'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
+
+  const store = useStore()
 
   const credentials: Credentials = reactive({
     name: '',
@@ -16,7 +19,7 @@
 
   const handleSignup = () => {
     if (validateCredentials(credentials)) {
-      alert(JSON.stringify(credentials))
+      store.dispatch('user/attemptSignup', credentials)
     } else {
       validationMsg.value = 'Please enter valid information.'
     }

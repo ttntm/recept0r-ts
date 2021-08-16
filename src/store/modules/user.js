@@ -94,18 +94,13 @@ export default {
     attemptSignup({ getters, state }, credentials) {
       const userOptions = getters['userOptions']
       return new Promise((resolve, reject) => {
-        state.GoTrueAuth.signup(credentials.email, credentials.password, {
-          // set defaults
-          user_explore: userOptions.showExploreLinks,
-          user_imdb: userOptions.showIMDbLinks,
-          user_sort: userOptions.sortPreset,
-          user_start: userOptions.startPage
-        })
+        state.GoTrueAuth.signup(credentials.email, credentials.password)
           .then(response => {
+            dispatch('app/sendToastMessage', { text: `Signup successful, check your emails.`, type: 'success' }, { root: true })
             resolve(response) // Confirmation email sent
           })
           .catch(error => {
-            console.error('An error occurred trying to sign up', error)
+            dispatch('app/sendToastMessage', { text: `Something's gone wrong signing up, please try again later.`, type: 'error' }, { root: true })
             reject(error)
           })
       })
