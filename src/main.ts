@@ -13,7 +13,7 @@ const app = createApp(App)
   app.use(router)
   app.use(store, key)
 
-// store.dispatch('user/initAuth')
+store.dispatch('user/initAuth')
 
 detectTokens()
 
