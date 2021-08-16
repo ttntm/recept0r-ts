@@ -95,7 +95,7 @@
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
       <h3 class="">Recipe Title</h3>
-      <input type="text" v-model="recipe.title" ref="recipeTitle" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId" v-focus>
+      <input type="text" v-model="recipe.title" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId" v-focus>
       <h4 class="mb-4">Description</h4>
       <input type="text" v-model="recipe.description" class="form-control mb-4" placeholder="A fancy description...">
     </div>
