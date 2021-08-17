@@ -18,12 +18,12 @@
     if (route.meta.authRequired) router.push({ name: 'Home' })
   }
 
-  const showAuth = () => store.dispatch('app/setWindowOpen', 2)
+  const showWindow = (id: number) => store.dispatch('app/setWindowOpen', id)
 </script>
 
 <template>
   <nav class="container flex flex-row justify-start lg:justify-center items-center pt-4 lg:pt-12 pb-8 px-6 lg:px-4 mx-auto z-10">
-    <button class="block lg:hidden focus:outline-none focus:shadow-outline mr-8" type="button" aria-label="Open Menu">
+    <button class="block lg:hidden focus:outline-none focus:shadow-outline mr-8" type="button" aria-label="Open Menu" @click="showWindow(1)">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2 pointer-events-none" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
         <line x1="4" y1="6" x2="20" y2="6" />
@@ -43,7 +43,7 @@
       >{{ item.name }}</router-link>
     </div>
     <div class="flex flex-row items-center justify-end" style="width: 160px;">
-      <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showAuth">Login</ButtonDefault>
+      <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showWindow(2)">Login</ButtonDefault>
       <ButtonDefault v-else class="hidden lg:block click-outside-ignore" @click="handleLogout">Logout</ButtonDefault>
     </div>
   </nav>
