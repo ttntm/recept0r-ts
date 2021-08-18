@@ -39,7 +39,7 @@
     portions: '4 portions',
     body: '<h1>About this Recipe</h1><p>About text</p><h1>Instructions</h1><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h1>Notes</h1><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
-  const saveBtnText = computed(() => recipe.draft ? 'Save as Draft' : isSaving.value ? 'Saving...' : 'Save & Publish')
+  const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save as Draft' : 'Save & Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
 
   const cancel = () => router.push({ name: 'Home' })
@@ -59,49 +59,55 @@
       recipe.draft = false
     }
   }
-  
-  // this function must:
-  //    - redirect to the readonly recipe when done
+
   const saveRecipe = async () => {
-    // check for empty fields if not a draft!!!
-    if (!recipe.draft && !validateInput()) {
-      return alert('missing fields!')
+    const required = ['title', 'description', 'category', 'diet', 'ingredients', 'body']
+    if (!recipe.draft && !validateInput(required)) {
+      return alert(`Please make sure that the image was uploaded and fill all of the following fields: ${required.toString().replace(/\W/g,', ')}!`)
     } else {
-      return alert('all good')
+      let publishedId = ''
+      isSaving.value = true
+  
+      switch (mode.value) {
+        case 'create':
+          publishedId = await store.dispatch('data/create', recipe) // returns: new refId
+          if (publishedId !== 'error') {
+            if (!recipe.draft) {
+              router.push({ path: `/recipe/${recipe.id}/${publishedId}` })
+            } else {
+              router.push({ path: `/edit/${publishedId}` })
+            }
+          } else {
+            // error; there will be a toast and the next line will re-enable the save button to try again
+            isSaving.value = false
+          }
+          break
+  
+        case 'edit':
+          publishedId = recipe.ref['@ref'].id
+          store.dispatch('data/update', recipe)
+          if (recipe.draft) {
+            // stay on the page and work with local state
+            isSaving.value = false
+          } else {
+            router.push({ path: `/edit/${publishedId}` })
+          }
+          break
+      
+        default:
+          break
+      }
     }
-    
-    let publishedId = ''
-    isSaving.value = true
-
-    switch (mode.value) {
-      case 'create':
-        publishedId = await store.dispatch('data/create', recipe) // returns: new refId
-        console.log('recipe created', publishedId)
-        break
-
-      case 'edit':
-        publishedId = recipe.ref['@ref'].id
-        store.dispatch('data/update', recipe)
-        console.log('recipe updated', publishedId)
-        break
-    
-      default:
-        break
-    }
-
-    // redirect to published recipe if not editing a draft
-    if (!recipe.draft) router.push({ path: `/recipe/${recipe.id}/${publishedId}` })
   }
   
   const setRecipeId = () => recipe.id = slugify(recipe.title)
 
   const updateRecipe = (key: string, value: any) => recipe[key] = value
 
-  const validateInput = () => {
-    const required = ['title', 'ingredients']
+  const validateInput = (requiredFields: string[]) => {
     let missing = 0
     
-    required.forEach((reqKey) => {
+    requiredFields.forEach((reqKey) => {
       if (recipe[reqKey].length <= 0) return missing += 1
     })
 

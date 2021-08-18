@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { reactive, ref } from 'vue'
+  import { onMounted, reactive, ref } from 'vue'
   import { useStore } from '../../store'
   import { validateCredentials } from '../../utils'
   import { Credentials } from '../../types'
@@ -33,7 +33,7 @@
   <form class="" @submit.prevent="handleLogin">
     <div class="form-group">
       <label for="email">Email</label>
-      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="hey@email.com" @input="clearMsg" />
+      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="hey@email.com" autocomplete="off" @input="clearMsg" v-focus />
     </div>
     <div class="form-group">
       <label for="password">Password</label>

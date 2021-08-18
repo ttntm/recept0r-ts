@@ -30,7 +30,7 @@
   <form class="" @submit.prevent="handleSignup">
     <div class="form-group">
       <label for="name">Name</label>
-      <input class="auth-form-control" id="name" v-model="credentials.name" type="text" placeholder="Arnold Schwarzenegger" @input="clearMsg" />
+      <input class="auth-form-control" id="name" v-model="credentials.name" type="text" placeholder="Arnold Schwarzenegger" autocomplete="off" @input="clearMsg" v-focus />
     </div>
     <div class="form-group">
       <label for="email">Email</label>

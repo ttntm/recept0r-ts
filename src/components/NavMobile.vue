@@ -3,6 +3,8 @@
   import { useStore } from '../store';
   import { RouteRecordNormalized } from 'vue-router'
 
+  import { showWindow } from '../utils'
+
   import ButtonX from './button/ButtonX.vue';
 
   const props = defineProps<{
@@ -10,23 +12,25 @@
     menuItems: RouteRecordNormalized[]
   }>()
 
-  const store = useStore()
-
-  const closeMenu = () => store.dispatch('app/setWindowOpen', 0)
+  const emit = defineEmits<{
+    (e: 'action:logout'): void
+  }>()
 </script>
 
 <template>
-  <div class="w-full min-h-screen absolute top-0 bg-white flex flex-col justify-start items-start px-6 py-4 z-10">
+  <div class="w-full min-h-screen absolute top-0 bg-white flex flex-col justify-start items-start px-6 py-4 z-10" v-scroll-lock>
     <div class="w-full flex items-center justify-end">
-      <ButtonX class="rounded-full p-2 mt-2 mx-2" @click="closeMenu" />
+      <ButtonX class="rounded-full p-2 mt-2 mx-2" @click="showWindow(0)" />
     </div>
     <nav class="w-full flex flex-col justify-center">
       <router-link
         v-for="item in menuItems"
         :key="item.name"
         :to="{ name: item.name }"
-        class="block font-bold text-lg text-blue-500 rounded-lg hover:bg-gray-500 px-4 py-2 mx-auto my-8"
+        class="menu-item mx-auto my-8"
       >{{ item.name }}</router-link>
+      <button v-if="!loggedIn" class="menu-item mx-auto my-8 click-outside-ignore" @click="showWindow(2)">Login</button>
+      <button v-else class="menu-item mx-auto my-8" @click="$emit('action:logout')">Logout</button>
     </nav>
   </div>
 </template>

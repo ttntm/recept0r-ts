@@ -1,4 +1,4 @@
-import { API, getAuthHeaders } from '../../utils'
+import { apiRequest } from '../../utils'
 
 export default {
   strict: false,
@@ -138,27 +138,16 @@ export default {
     },
 
     async create({ dispatch }, recipe) {
-      let response
+      const apiResponse = await apiRequest('POST', recipe)
+      const created = apiResponse.ref['@ref'].id
 
-      try {
-        const reqHeaders = await getAuthHeaders()
-        const data = await fetch(API(), {
-          body: JSON.stringify(recipe),
-          headers: reqHeaders,
-          method: 'POST'
-        });
-        response = await data.json()
-      } catch (err) {
-        console.error(err)
-      }
-
-      if (response) {
+      if (created) {
         // dispatch('readList', mode)
-        dispatch('app/sendToastMessage', { text: `"${response.data.title}" successfully created.`, type: 'success' }, { root: true })
-        return response.ref['@ref'].id
+        dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
+        return created
       } else {
-        // error
         dispatch('app/sendToastMessage', { text: `An error occurred. Please try again later.`, type: 'error' }, { root: true })
+        return 'error'
       }
     },
 

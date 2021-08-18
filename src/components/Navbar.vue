@@ -1,36 +1,24 @@
 <script setup lang="ts">
-  import { RouteRecordNormalized, useRoute, useRouter } from 'vue-router'
-  import { useStore } from '../store'
+  import { RouteRecordNormalized } from 'vue-router'
+
+  import { showWindow } from '../utils'
 
   import ButtonDefault from './button/ButtonDefault.vue'
+  import ButtonMenu from './button/ButtonMenu.vue'
 
   const props = defineProps<{
     loggedIn: boolean,
     menuItems: RouteRecordNormalized[]
   }>()
 
-  const route = useRoute()
-  const router = useRouter()
-  const store = useStore()
-
-  const handleLogout = () => { 
-    store.dispatch('user/attemptLogout')
-    if (route.meta.authRequired) router.push({ name: 'Home' })
-  }
-
-  const showWindow = (id: number) => store.dispatch('app/setWindowOpen', id)
+  const emit = defineEmits<{
+    (e: 'action:logout'): void
+  }>()
 </script>
 
 <template>
   <nav class="container flex flex-row justify-start lg:justify-center items-center pt-4 lg:pt-12 pb-8 px-6 lg:px-4 mx-auto z-10">
-    <button class="block lg:hidden focus:outline-none focus:shadow-outline mr-8" type="button" aria-label="Open Menu" @click="showWindow(1)">
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2 pointer-events-none" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <line x1="4" y1="6" x2="20" y2="6" />
-        <line x1="4" y1="12" x2="20" y2="12" />
-        <line x1="4" y1="18" x2="20" y2="18" />
-      </svg>
-    </button>
+    <ButtonMenu @click="showWindow(1)" />
     <router-link :to="{ name: 'Home' }" class="focus:shadow-none">
       <img src="/img/logo.svg" class="hover:opacity-75 mb-3" alt="recept0r logo" width="160">
     </router-link>
@@ -39,12 +27,12 @@
         v-for="item in menuItems"
         :key="item.name"
         :to="{ name: item.name }"
-        class="block font-bold text-lg text-blue-500 rounded-lg hover:bg-gray-500 px-4 py-2 mx-4"
+        class="menu-item mx-4"
       >{{ item.name }}</router-link>
     </div>
     <div class="flex flex-row items-center justify-end" style="width: 160px;">
       <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showWindow(2)">Login</ButtonDefault>
-      <ButtonDefault v-else class="hidden lg:block click-outside-ignore" @click="handleLogout">Logout</ButtonDefault>
+      <ButtonDefault v-else class="hidden lg:block" @click="$emit('action:logout')">Logout</ButtonDefault>
     </div>
   </nav>
 </template>

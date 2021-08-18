@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { store } from './store'
 
+import { showWindow } from './utils'
+
 declare module 'vue-router' {
   interface RouteMeta {
     authRequired?: boolean,
@@ -88,14 +90,16 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // close open windows
+  showWindow(0)
   // global navigation guard for all routes that require user authentication
-  if (!to.meta.authRequired) return next();
+  if (!to.meta.authRequired) return next()
 
   if (to.meta.authRequired && store.getters['user/loggedIn']) {
-    return next();
+    return next()
   } else {
-    router.push({ name: 'Home' });
+    router.push({ name: 'Home' })
   }
-});
+})
 
 export default router

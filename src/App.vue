@@ -1,7 +1,9 @@
 <script setup lang="ts">
-  import { computed, defineComponent } from 'vue'
+  import { computed } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from './store'
+
+  import { showWindow } from './utils'
 
   import Auth from './components/conditional/Auth.vue'
   import Footer from './components/Footer.vue'
@@ -17,6 +19,12 @@
   const routeFull = computed(() => route.fullPath)
   const windowOpen = computed(() => store.getters['app/windowOpen'])
 
+  const handleLogout = () => { 
+    store.dispatch('user/attemptLogout')
+    showWindow(0)
+    if (route.meta.authRequired) router.push({ name: 'Home' })
+  }
+
   const menuItems = computed(() => {
     const routes = router.getRoutes()
     return routes.filter(item => { 
@@ -31,9 +39,9 @@
 
 <template>
   <div id="app" class="flex h-full flex-col">
-    <Navbar :loggedIn="loggedIn" :menuItems="menuItems" />
-    <transition name="modal">
-      <NavMobile v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" />
+    <Navbar :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
+    <transition name="fade">
+      <NavMobile v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
     </transition>
     <transition name="modal">
       <Auth v-if="windowOpen === 2" :loggedIn="loggedIn" />

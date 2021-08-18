@@ -1,9 +1,23 @@
 import { store } from '../store'
 import { Credentials } from '@/types'
 
-export function API() {
+export async function apiRequest(reqMethod: string, payload?: any) {
   const url = import.meta.env.VITE_APP_API
-  return url?.toString()
+  const body = payload ? JSON.stringify(payload) : undefined
+  const headers = await getAuthHeaders()
+  const method = reqMethod
+  const reqData = { body, headers, method }
+
+  let response
+
+  try {
+    const request = url ? await fetch(url.toString(), reqData) : null
+    response = request ? await request.json() : null
+  } catch (err) {
+    response = err
+  }
+
+  return response
 }
 
 /**
@@ -13,7 +27,10 @@ export async function getAuthHeaders() {
   const now = Date.now()
   const user = store.getters['user/currentUser']
 
-  let headers: any = {
+  let headers: { 
+    'Content-Type': string, 
+    Authorization?: string 
+  } = {
     'Content-Type': 'application/json'
   }
 
@@ -45,6 +62,13 @@ export function objSort(field: any, reverse: number, primer: Function) {
   return function(a: any, b:any) {
     return a = key(a), b = key(b), reverse * (Number(a > b) - Number(b > a)) // keep this Number() in mind in case there are issues with this sorting function
   }
+}
+
+/**
+ * Helper function to show/hide modals and windows
+ */
+export function showWindow(id: number) {
+  store.dispatch('app/setWindowOpen', id)
 }
 
 /**

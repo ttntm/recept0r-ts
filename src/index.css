@@ -147,6 +147,14 @@ hr {
   @apply border-gray-500 my-8;
 }
 
+.menu-item {
+  @apply block font-bold text-lg text-blue-500 rounded-lg px-4 py-2;
+}
+
+.menu-item:hover {
+  @apply bg-gray-500;
+}
+
 /* ---------- BUTTONS ---------- */
 
 .btn {
@@ -301,7 +309,6 @@ hr {
 
 .fade-enter-active, 
 .fade-leave-active { 
-  opacity: 1;
   transition: opacity 0.25s ease-in-out;
 }
 
@@ -312,7 +319,6 @@ hr {
 
 .modal-enter-active, 
 .modal-leave-active { 
-  opacity: 1;
   transform: translateY(0px);
   transition: opacity 0.25s ease-in-out, transform 0.35s ease-in-out; 
 }
