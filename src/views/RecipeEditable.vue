@@ -13,7 +13,6 @@
   import InputToggle from '../components/input/InputToggle.vue'
   import RecipeImage from '../components/recipe/RecipeImage.vue'
   import RecipeIngredients from '../components/recipe/RecipeIngredients.vue'
-  import RecipeTextEditor from '../components/recipe/RecipeTextEditor.vue'
 
   const route = useRoute()
   const router = useRouter()
