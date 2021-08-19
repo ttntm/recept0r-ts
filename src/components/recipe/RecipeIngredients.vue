@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { defineComponent, nextTick, ref } from 'vue'
+  import { nextTick, ref, watch } from 'vue'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
   import ButtonX from '../button/ButtonX.vue'
@@ -36,8 +36,11 @@
 
   const removeItem = (index: number) => {
     let ing = ingredients.value
-    return index > -1 ? ing.splice(index, 1) : ing.splice(ing.length - 1)
+    index > -1 ? ing.splice(index, 1) : ing.splice(ing.length - 1)
+    emit('update:ingredients', ingredients.value)
   }
+
+  watch(() => props.input, currentVal => ingredients.value = currentVal)
 </script>
 
 <template>

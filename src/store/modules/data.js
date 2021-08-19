@@ -39,6 +39,9 @@ export default {
   },
 
   mutations: {
+    ADD_RECIPE(state, value) {
+      state.allRecipes.push(value)
+    },
     SET_ALL_RECIPES(state, value) {
       state.allRecipes = value
     },
@@ -139,10 +142,12 @@ export default {
 
     async create({ dispatch }, recipe) {
       const apiResponse = await apiRequest('POST', recipe)
-      const created = apiResponse.ref['@ref'].id
+      const created = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
       if (created) {
-        // dispatch('readList', mode)
+        // it's always a new recipe, let's add it to the local state
+        // NB: this _doesn't_ consider concurrency at all, due to the (intentionally) small amount of users
+        commit('ADD_RECIPE', apiResponse)
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
         return created
       } else {
@@ -151,10 +156,20 @@ export default {
       }
     },
 
-    // async read({ commit, getters, rootGetters }) {
-      
+    async read({ commit, dispatch }, id) {
+      const apiResponse = await apiRequest('GET', null, id)
+      const current = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
-    // },
+      if (current) {
+        // add the record to `allRecipes` before returning the data to the view
+        // no need to check anything here, as this action will only run if the recipe hasn't been found in `allRecipes` before
+        commit('ADD_RECIPE', apiResponse)
+        return apiResponse
+      } else {
+        dispatch('app/sendToastMessage', { text: `Couldn't get recipe data. Please try again later.`, type: 'error' }, { root: true })
+        return 'error'
+      }
+    },
 
     // async readAll({ commit, getters, rootGetters }) {
       
@@ -166,14 +181,39 @@ export default {
 
     // },
 
-    // async update({ commit, getters, rootGetters }) {
-      
+    async update({ dispatch }, args) {
+      const [id, update] = args
+      const apiResponse = await apiRequest('PUT', update, id)
+      const updated = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
-    // },
+      if (updated) {
+        // we edited a recipe that was already fetched from the DB at some point; either via `allRecipes` or as a single read
+        // we know for sure that it's in `allRecipes` by now, so we should update the local state without further DB reads
+        dispatch('updateLocalRecipe', apiResponse)
+        dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully updated.`, type: 'success' }, { root: true })
+      } else {
+        dispatch('app/sendToastMessage', { text: `Couldn't update the recipe. Please try again later.`, type: 'error' }, { root: true })
+        return 'error'
+      }
+    },
 
     // async delete({ commit, getters, rootGetters }) {
       
 
     // },
+
+    getRecipeById({ getters }, id) {
+      const allRecipes = getters.allRecipes
+      return allRecipes.length > 0 
+        ? allRecipes.filter(item => item.ref['@ref'].id === id) 
+        : []
+    },
+
+    updateLocalRecipe({ commit, getters }, update) {
+      const all = getters.allRecipes
+      const id = update.ref['@ref'].id
+      const updatedArr = all.map(item => item.ref['@ref'].id !== id ? item : update)
+      commit('SET_ALL_RECIPES', updatedArr)
+    }
   }
 }

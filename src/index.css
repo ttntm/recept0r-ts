@@ -151,6 +151,10 @@ hr {
   @apply block font-bold text-lg text-blue-500 rounded-lg px-4 py-2;
 }
 
+.menu-item:focus {
+  @apply outline-none shadow-outline;
+}
+
 .menu-item:hover {
   @apply bg-gray-500;
 }
@@ -243,11 +247,15 @@ hr {
 }
 
 .ql-toolbar.ql-snow {
-  @apply border border-gray-600 rounded-full px-3 mb-4 !important;
+  @apply flex items-center border border-gray-600 rounded-full px-3 mb-4 !important;
 }
 
 .ql-toolbar.ql-snow * {
   @apply rounded !important;
+}
+
+.ql-toolbar.ql-snow .ql-formats {
+  @apply inline-flex items-center mr-4 !important;
 }
 
 .ql-snow.ql-toolbar button.ql-active,
@@ -270,6 +278,16 @@ hr {
 .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
 .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
   @apply text-blue-500 !important;
+}
+
+@media(max-width:767px) {
+  .ql-toolbar.ql-snow .ql-formats {
+    @apply mr-3;
+  }
+
+  .ql-clean {
+    @apply hidden !important;
+  }
 }
 
 .ql-container.ql-snow {

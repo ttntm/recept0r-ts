@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   
   const props = defineProps<{
     current: string,
@@ -14,6 +14,8 @@
   const selected = ref('')
 
   selected.value = props.current
+
+  watch(() => props.current, currentVal => selected.value = currentVal)
 </script>
 
 <template>

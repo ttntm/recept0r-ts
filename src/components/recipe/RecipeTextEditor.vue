@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import { QuillEditor } from '@vueup/vue-quill'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
@@ -11,6 +11,7 @@
     (e: 'update:editor', val: string): void
   }>()
 
+  const editor = ref()
   const editorContent = ref('')
 
   const editorOptions = {
@@ -22,10 +23,14 @@
   }
 
   editorContent.value = props.input
+
+  watch(() => props.input, currentVal => { 
+    editor.value.setHTML(currentVal)
+  })
 </script>
 
 <template>
   <section id="editor">
-    <QuillEditor v-model:content="editorContent"  contentType="html" :options="editorOptions" @update:content="$emit('update:editor', editorContent)" />
+    <QuillEditor ref="editor" v-model:content="editorContent"  contentType="html" :options="editorOptions" @update:content="$emit('update:editor', editorContent)" />
   </section>
 </template>

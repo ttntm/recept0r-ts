@@ -9,13 +9,14 @@ module.exports = (event, context) => {
   const q = faunadb.query
 
   const { body, target } = event
+  const data = JSON.parse(body)  // don't do this inline @ the `q.Update` call!
 
   console.log(`Function 'update' invoked. update id: ${target}`)
 
-  if (!data || !id) {
+  if (!data || !target) {
     return { statusCode: 400, headers: { ...fnHeaders }, body: 'Bad Request' }
   } else {
-    return client.query(q.Update(q.Ref(`collections/recipes/${target}`), JSON.parse(body)))
+    return client.query(q.Update(q.Ref(`collections/recipes/${target}`), { data }))
       .then((response) => {
         console.log("success", response)
         return { statusCode: 200, headers: { ...fnHeaders }, body: JSON.stringify(response) }

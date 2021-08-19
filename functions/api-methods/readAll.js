@@ -10,7 +10,7 @@ module.exports = (event, context) => {
 
   console.log("Function 'readAll' invoked")
 
-  return client.query(q.Paginate(q.Match(q.Index('all_recipes')), { size: 500 }))
+  return client.query(q.Paginate(q.Match(q.Index('all_recipes'), false), { size: 500 }))
     .then((response) => {
       const listRefs = response.data
       console.log(`${listRefs.length} entries found`)

@@ -1,8 +1,10 @@
 import { store } from '../store'
 import { Credentials } from '@/types'
 
-export async function apiRequest(reqMethod: string, payload?: any) {
-  const url = import.meta.env.VITE_APP_API
+export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
+  const url = String(import.meta.env.VITE_APP_API)
+  const path = reqPath ? `${url}/${reqPath}` : url
+  
   const body = payload ? JSON.stringify(payload) : undefined
   const headers = await getAuthHeaders()
   const method = reqMethod
@@ -11,7 +13,7 @@ export async function apiRequest(reqMethod: string, payload?: any) {
   let response
 
   try {
-    const request = url ? await fetch(url.toString(), reqData) : null
+    const request = await fetch(path, reqData)
     response = request ? await request.json() : null
   } catch (err) {
     response = err

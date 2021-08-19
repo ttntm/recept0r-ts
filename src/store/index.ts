@@ -13,9 +13,7 @@ import user from './modules/user.js'
 
 var ls = new SecureLS({ isCompression: false })
 
-export interface State {
-  count: number
-}
+export interface State {}
 
 export const key: InjectionKey<Store<State>> = Symbol()
 
@@ -25,21 +23,21 @@ export const store = createStore<State>({
     data, 
     user
   },
-  // plugins: [
-  //   createMultiTabState({
-  //     key: 'rc-tabs',
-  //     statesPaths: ['explore', 'list', 'tools', 'user.userOptions', 'user.currentUser'], // name/s of the states to be synchronized with dot notation. If the param is not provided, the whole state of your app will be in sync. Defaults to []
-  //   }),
-  //   createPersistedState({
-  //     key: 'rc',
-  //     paths: ['user.GoTrueAuth'],
-  //     storage: {
-  //       getItem: (key) => ls.get(key),
-  //       setItem: (key, value) => ls.set(key, value),
-  //       removeItem: (key) => ls.remove(key),
-  //     },
-  //   }),
-  // ],
+  plugins: [
+    createMultiTabState({
+      key: 'rc-tabs',
+      statesPaths: ['user.currentUser'] // name/s of the states to be synchronized with dot notation. If the param is not provided, the whole state of your app will be in sync. Defaults to []
+    }),
+    createPersistedState({
+      key: 'rc',
+      paths: ['user.GoTrueAuth'],
+      storage: {
+        getItem: (key) => ls.get(key),
+        setItem: (key, value) => ls.set(key, value),
+        removeItem: (key) => ls.remove(key)
+      }
+    })
+  ]
 })
 
 // define your own `useStore` composition function

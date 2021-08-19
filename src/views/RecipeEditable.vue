@@ -3,6 +3,8 @@
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '../store'
   import { Recipe } from '../types'
+  import { QuillEditor } from '@vueup/vue-quill'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
   import { slugify } from '../utils'
 
@@ -20,6 +22,18 @@
   const category = computed(() => store.getters['data/recipeCategory'])
   const diet = computed(() => store.getters['data/recipeDiet'])
   const draftText = computed(() => recipe.draft ? 'Draft mode active' : 'Draft mode disabled')
+  const editor = ref()
+  const editorOptions = {
+    bounds: '#editor',
+    debug: 'error',
+    placeholder: 'Compose an epic...',
+    readOnly: false,
+    theme: 'snow'
+  }
+  const isImgUploaded = computed(() => {
+    const checkImgSrc = RegExp(/^https:\/\//)
+    return checkImgSrc.test(recipe.image)
+  })
   const isSaving = ref(false)
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const me = computed(() => store.getters['user/currentUser'])
@@ -41,27 +55,40 @@
   })
   const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save as Draft' : 'Save & Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
+  
+  const assignKeys = (input: any) => { 
+    Object.keys(input).map(key => updateRecipe(key, input[key]))
+    editor.value.setHTML(recipe.body)
+  }
 
   const cancel = () => router.push({ name: 'Home' })
 
   const deleteRecipe = () => alert('Deleting...')
 
-  const getRecipeData = () => {
+  const getRecipeData = async () => {
     // on component creation: check mode and get recipe data from Vuex or DB if we're in `edit` mode
     if (mode.value && mode.value === 'edit') {
       const currentId = route.params.refId.toString()
-      // const existing = await getRecipeData(currentId)
-      // if (existing.refId === currentId) {
-      //   Object.assign(recipe, existing)
-      //   recipe.draft = false
-      // }
-      recipe.title = currentId
-      recipe.draft = false
+      const existing = await store.dispatch('data/getRecipeById', currentId)      
+
+      if (existing.length > 0) {
+        // console.log('got recipe from store')
+        return assignKeys(existing[0].data)
+      } else {
+        // console.log('getting recipe from DB')
+        const dbRead = await store.dispatch('data/read', currentId)
+        return dbRead !== 'error' ? assignKeys(dbRead.data) : cancel()
+      }
     }
   }
 
   const saveRecipe = async () => {
     const required = ['title', 'description', 'category', 'diet', 'ingredients', 'body']
+
+    if (recipe.image.length > 0 && !isImgUploaded.value) {
+      return alert('An image was selected, but not uploaded yet. Please upload or remove the image before saving.')
+    }
+
     if (!recipe.draft && !validateInput(required)) {
       return alert(`Please make sure that the image was uploaded and fill all of the following fields: ${required.toString().replace(/\W/g,', ')}!`)
     } else {
@@ -84,13 +111,16 @@
           break
   
         case 'edit':
-          publishedId = recipe.ref['@ref'].id
-          store.dispatch('data/update', recipe)
-          if (recipe.draft) {
-            // stay on the page and work with local state
-            isSaving.value = false
+          publishedId = route.params.refId.toString()
+          console.log(recipe)
+          let updated = await store.dispatch('data/update', [publishedId, recipe])
+          if (!recipe.draft && updated !== 'error') {
+            // navigate to the published recipe
+            router.push({ path: `/recipe/${recipe.id}/${publishedId}` })
           } else {
-            router.push({ path: `/edit/${publishedId}` })
+            // stay on the page and work with local state
+            // possibility to try again in case of an error
+            isSaving.value = false
           }
           break
       
@@ -102,7 +132,9 @@
   
   const setRecipeId = () => recipe.id = slugify(recipe.title)
 
-  const updateRecipe = (key: string, value: any) => recipe[key] = value
+  const updateRecipe = (key: string, value: any) => { 
+    recipe[key] = value
+  }
 
   const validateInput = (requiredFields: string[]) => {
     let missing = 0
@@ -119,6 +151,7 @@
   getRecipeData()
 
   watch(loggedIn, () => {
+    // this WILL ignore the RouteLeave guard - we'll accept that for the time being
     if (!loggedIn.value) cancel()
   })
 
@@ -168,7 +201,9 @@
     </div>
     <div class="w-full">
       <h4 class="mb-4">Instructions</h4>
-      <RecipeTextEditor :input="recipe.body" @update:editor="updateRecipe('body', $event)" />
+      <section id="editor">
+        <QuillEditor v-model:content="recipe.body" ref="editor" contentType="html" :options="editorOptions" />
+      </section>
       <div class="flex flex-row justify-center lg:justify-start mt-8">
         <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
         <ButtonDefault @click="cancel">Cancel</ButtonDefault>

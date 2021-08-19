@@ -64,8 +64,10 @@
 
   @media(max-width:767px){
     .user-modal {
+      max-height: calc(90vh - 20px);
       max-width: 90%;
       top: 20px;
+      overflow-y: auto;
     }
   }
 </style>
