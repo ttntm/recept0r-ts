@@ -140,7 +140,7 @@ export default {
       commit('SET_FILTER_DATA', {})
     },
 
-    async create({ dispatch }, recipe) {
+    async create({ commit, dispatch }, recipe) {
       const apiResponse = await apiRequest('POST', recipe)
       const created = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
@@ -189,18 +189,28 @@ export default {
       if (updated) {
         // we edited a recipe that was already fetched from the DB at some point; either via `allRecipes` or as a single read
         // we know for sure that it's in `allRecipes` by now, so we should update the local state without further DB reads
-        dispatch('updateLocalRecipe', apiResponse)
+        dispatch('updateLocalRecipes', ['update', apiResponse])
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully updated.`, type: 'success' }, { root: true })
+        return 'success'
       } else {
         dispatch('app/sendToastMessage', { text: `Couldn't update the recipe. Please try again later.`, type: 'error' }, { root: true })
         return 'error'
       }
     },
 
-    // async delete({ commit, getters, rootGetters }) {
-      
+    async delete({ dispatch }, id) {
+      const apiResponse = await apiRequest('DELETE', null, id)
+      const deleted = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
-    // },
+      if (deleted) {
+        dispatch('updateLocalRecipes', ['remove', apiResponse])
+        dispatch('app/sendToastMessage', { text: `Deleted recipe "${apiResponse.data.title}".`, type: 'success' }, { root: true })
+        return 'success'
+      } else {
+        dispatch('app/sendToastMessage', { text: `Error deleting the recipe. Please try again later.`, type: 'error' }, { root: true })
+        return 'error'
+      }
+    },
 
     getRecipeById({ getters }, id) {
       const allRecipes = getters.allRecipes
@@ -209,10 +219,26 @@ export default {
         : []
     },
 
-    updateLocalRecipe({ commit, getters }, update) {
+    updateLocalRecipes({ commit, getters }, args) {
+      const [mode, record] = args
       const all = getters.allRecipes
-      const id = update.ref['@ref'].id
-      const updatedArr = all.map(item => item.ref['@ref'].id !== id ? item : update)
+      const id = record.ref['@ref'].id
+
+      let updatedArr = []
+
+      switch (mode) {
+        case 'update':
+          updatedArr = all.map(item => item.ref['@ref'].id !== id ? item : record)    
+          break
+        
+        case 'remove':
+          updatedArr = all.filter(item => item.ref['@ref'].id !== id)
+          break
+
+        default:
+          break
+      }
+
       commit('SET_ALL_RECIPES', updatedArr)
     }
   }

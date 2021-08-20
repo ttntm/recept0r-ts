@@ -62,7 +62,7 @@
     z-index: 99;
   }
 
-  @media(max-width:767px){
+  @media(max-width:767px) {
     .user-modal {
       max-height: calc(90vh - 20px);
       max-width: 90%;

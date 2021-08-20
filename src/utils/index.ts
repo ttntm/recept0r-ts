@@ -47,6 +47,18 @@ export async function getAuthHeaders() {
 }
 
 /**
+ * Get recipe data from Vuex or DB
+ * Used for both editable and readonly recipe views
+ */
+export async function getRecipeData(id: string) {
+  const existing = await store.dispatch('data/getRecipeById', id)
+
+  return existing.length > 0
+    ? existing[0]
+    : await store.dispatch('data/read', id)
+}
+
+/**
  * Sorts objects based on a specific key using an optional `primer` function
  */
 export function objSort(field: any, reverse: number, primer: Function) {

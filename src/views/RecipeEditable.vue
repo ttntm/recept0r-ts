@@ -6,7 +6,7 @@
   import { QuillEditor } from '@vueup/vue-quill'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
-  import { slugify } from '../utils'
+  import { getRecipeData, slugify } from '../utils'
 
   import ButtonDefault from '../components/button/ButtonDefault.vue'
   import InputSelect from '../components/input/InputSelect.vue'
@@ -62,22 +62,24 @@
 
   const cancel = () => router.push({ name: 'Home' })
 
-  const deleteRecipe = () => alert('Deleting...')
+  const deleteRecipe = async () => {
+    const confirm = window.confirm(`Deleting "${recipe.title}" - are you sure?`)
+    if (confirm) {
+      noChanges.value = true
+      const currentId = route.params.refId.toString()
+      const deleted = await store.dispatch('data/delete', currentId)
+      return deleted !== 'error' ? cancel() : noChanges.value = false
+    }
+  }
 
-  const getRecipeData = async () => {
+  const getCurrentRecipeData = async () => {
     // on component creation: check mode and get recipe data from Vuex or DB if we're in `edit` mode
     if (mode.value && mode.value === 'edit') {
       const currentId = route.params.refId.toString()
-      const existing = await store.dispatch('data/getRecipeById', currentId)      
-
-      if (existing.length > 0) {
-        // console.log('got recipe from store')
-        return assignKeys(existing[0].data)
-      } else {
-        // console.log('getting recipe from DB')
-        const dbRead = await store.dispatch('data/read', currentId)
-        return dbRead !== 'error' ? assignKeys(dbRead.data) : cancel()
-      }
+      const currentItem = await getRecipeData(currentId)
+      return currentItem !== 'error' && currentItem.data
+        ? assignKeys(currentItem.data)
+        : cancel()
     }
   }
 
@@ -89,7 +91,7 @@
     }
 
     if (!recipe.draft && !validateInput(required)) {
-      return alert(`Please make sure that the image was uploaded and fill all of the following fields: ${required.toString().replace(/\W/g,', ')}!`)
+      return alert(`Please fill all of the following fields: ${required.toString().replace(/\W/g,', ')}!`)
     } else {
       let publishedId = ''
       isSaving.value = true
@@ -111,7 +113,6 @@
   
         case 'edit':
           publishedId = route.params.refId.toString()
-          console.log(recipe)
           let updated = await store.dispatch('data/update', [publishedId, recipe])
           if (!recipe.draft && updated !== 'error') {
             // navigate to the published recipe
@@ -131,9 +132,7 @@
   
   const setRecipeId = () => recipe.id = slugify(recipe.title)
 
-  const updateRecipe = (key: string, value: any) => { 
-    recipe[key] = value
-  }
+  const updateRecipe = (key: string, value: any) => recipe[key] = value
 
   const validateInput = (requiredFields: string[]) => {
     let missing = 0
@@ -147,7 +146,7 @@
     return missing <= 0 ? true : false
   }
 
-  getRecipeData()
+  getCurrentRecipeData()
 
   watch(loggedIn, () => {
     // this WILL ignore the RouteLeave guard - we'll accept that for the time being

@@ -12,7 +12,7 @@ module.exports = (event, context) => {
 
   console.log(`Function 'delete' invoked. delete id: ${target}`)
 
-  if (!list || !id) {
+  if (!target) {
     return { statusCode: 400, body: 'Bad Request' }
   } else {
     return client.query(q.Delete(q.Ref(`collections/recipes/${target}`)))
