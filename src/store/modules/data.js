@@ -76,8 +76,8 @@ export default {
       commit('SET_FILTER_DATA', currentFilterData)
 
       const findIndex = (arr, el) => {
-        if(arr !== undefined) {
-          if(arr.length === 0) {
+        if (arr !== undefined) {
+          if (arr.length === 0) {
             return 0
           } else {
             return arr.indexOf(el)
@@ -171,10 +171,17 @@ export default {
       }
     },
 
-    // async readAll({ commit, getters, rootGetters }) {
-      
+    async readAll({ commit }) {
+      const request = await fetch('/.netlify/functions/read-all', { method: 'GET' })
+      const response = await request.json()
 
-    // },
+      if (response.length > 0) {
+        commit('SET_ALL_RECIPES', response.reverse())
+      } else {
+        dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
+        return 'error'
+      }
+    },
 
     // async readUser({ commit, getters, rootGetters }) {
       

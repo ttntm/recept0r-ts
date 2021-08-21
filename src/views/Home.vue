@@ -1,7 +1,15 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { computed } from 'vue'
+  import { useStore } from '../store'
 
-  const isLoading = ref(true)
+  const store = useStore()
+
+  const allRecipes = computed(() => store.getters['data/allRecipes'])
+  const isLoading = computed(() => allRecipes.value.length > 0)
+
+  const getAllRecipes = () => store.dispatch('data/readAll')
+
+  getAllRecipes()
 </script>
 
 <template>
@@ -10,8 +18,12 @@
     <p class="text-cool-gray-500 mt-12">Loading recipes...</p>
   </div>
   <div v-else class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
-    Search<br>
-    Filters<br>
-    RecipeGrid
+    <ul>
+      <li v-for="recipe in allRecipes" :key="recipe.data.id">
+        <router-link :to="{ path: `/recipe/${recipe.data.id}/${recipe.ref['@ref'].id}` }">
+          {{ recipe.data.title }}
+        </router-link>
+      </li>
+    </ul>
   </div>
 </template>
