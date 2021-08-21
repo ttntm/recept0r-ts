@@ -1,7 +1,7 @@
 const faunadb = require('faunadb')
 const fnHeaders = require('./_shared/headers.js')
 
-module.exports = (event, context) => {
+exports.handler = (event, context) => {
   const client = new faunadb.Client({
     secret: process.env.FAUNA_SECRET,
     domain: 'db.us.fauna.com'
@@ -24,7 +24,8 @@ module.exports = (event, context) => {
       return client.query(getListDataQuery).then((records) => {
         return { statusCode: 200, headers: headers, body: JSON.stringify(records) }
       })
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log('error', error)
       return { statusCode: 400, headers: headers, body: JSON.stringify(error) }
     })

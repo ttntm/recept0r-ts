@@ -10,6 +10,7 @@ export default {
       filterActive: false,
       filterCache: [], //used to store a copy of the current 'allRecipes' state before applying a filter to be restored into 'allRecipes' when clearing filter selection
       filterData: {},
+      lastUpdated: new Date,
       recipeCategory: [
         'Bread',
         'Salad',
@@ -25,7 +26,8 @@ export default {
         'Vegetarian',
         'Vegan',
         'Other'
-      ]
+      ],
+      userRecipes: []
     }
   },
 
@@ -34,13 +36,22 @@ export default {
     filterActive: state => state.filterActive,
     filterCache: state => state.filterCache,
     filterData: state => state.filterData,
+    lastUpdated: state => state.lastUpdated,
     recipeCategory: state => state.recipeCategory,
-    recipeDiet: state => state.recipeDiet
+    recipeDiet: state => state.recipeDiet,
+    userRecipes: state => state.userRecipes
   },
 
   mutations: {
-    ADD_RECIPE(state, value) {
+    ADD_RECIPE_ALL(state, value) {
       state.allRecipes.push(value)
+    },
+    ADD_RECIPE_BOTH(state, value) {
+      state.allRecipes.push(value)
+      state.userRecipes.push(value)
+    },
+    ADD_RECIPE_USER(state, value) {
+      state.userRecipes.push(value)
     },
     SET_ALL_RECIPES(state, value) {
       state.allRecipes = value
@@ -54,6 +65,12 @@ export default {
     SET_FILTER_STATE(state, value) {
       state.filterActive = value
     },
+    SET_LAST_UPDATED(state, value) {
+      state.lastUpdated = value
+    },
+    SET_USER_RECIPES(state, value) {
+      state.userRecipes = value
+    }
   },
 
   actions: {
@@ -145,9 +162,11 @@ export default {
       const created = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
       if (created) {
-        // it's always a new recipe, let's add it to the local state
+        // it's always a new recipe, let's add it to the respective local state
+        // keep in mind that `allRecipes` doesn't include drafts
         // NB: this _doesn't_ consider concurrency at all, due to the (intentionally) small amount of users
-        commit('ADD_RECIPE', apiResponse)
+        const target = apiResponse.data.draft ? 'user' : 'both'
+        commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
         return created
       } else {
@@ -161,9 +180,9 @@ export default {
       const current = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
       if (current) {
-        // add the record to `allRecipes` before returning the data to the view
-        // no need to check anything here, as this action will only run if the recipe hasn't been found in `allRecipes` before
-        commit('ADD_RECIPE', apiResponse)
+        // add the record to the respective local state before returning the data to the view
+        const target = apiResponse.data.draft ? 'user' : 'both'
+        commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
         return apiResponse
       } else {
         dispatch('app/sendToastMessage', { text: `Couldn't get recipe data. Please try again later.`, type: 'error' }, { root: true })
@@ -171,22 +190,30 @@ export default {
       }
     },
 
-    async readAll({ commit }) {
-      const request = await fetch('/.netlify/functions/read-all', { method: 'GET' })
+    async readAll({ commit, dispatch, rootGetters }) {
+      const fn = rootGetters['app/functions']
+      const request = await fetch(fn.readAll, { method: 'GET' })
       const response = await request.json()
 
       if (response.length > 0) {
-        commit('SET_ALL_RECIPES', response.reverse())
+        commit('SET_ALL_RECIPES', response)
+        commit('SET_LAST_UPDATED', new Date)
       } else {
         dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
         return 'error'
       }
     },
 
-    // async readUser({ commit, getters, rootGetters }) {
-      
+    async readUser({ commit, dispatch }, userId) {
+      const apiResponse = await apiRequest('GET', null, `owner/${userId}`)
 
-    // },
+      if (apiResponse.length > 0) {
+        commit('SET_USER_RECIPES', apiResponse)
+      } else {
+        dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
+        return 'error'
+      }
+    },
 
     async update({ dispatch }, args) {
       const [id, update] = args
@@ -221,32 +248,64 @@ export default {
 
     getRecipeById({ getters }, id) {
       const allRecipes = getters.allRecipes
-      return allRecipes.length > 0 
-        ? allRecipes.filter(item => item.ref['@ref'].id === id) 
-        : []
+      const userRecipes = getters.userRecipes
+      
+      const getRecipe = (source, lookup) => source.filter(item => item.ref['@ref'].id === lookup)
+      
+      const inAll = allRecipes.length > 0 ? getRecipe(allRecipes, id) : null
+      const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
+
+      return inAll.length > 0
+        ? inAll
+        : inUser.length > 0
+          ? inUser
+          : []
     },
 
     updateLocalRecipes({ commit, getters }, args) {
-      const [mode, record] = args
-      const all = getters.allRecipes
-      const id = record.ref['@ref'].id
+      const [mode, recipeUpdate] = args
+      const allRecipes = getters.allRecipes
+      const userRecipes = getters.userRecipes
+      const id = recipeUpdate.ref['@ref'].id
+
+      const removeRecord = (input, removalId) => input.filter(item => item.ref['@ref'].id !== removalId)
+
+      const upsertRecord = (input, recordId, recordData) => {
+        let replaced = false
+        let processed = input.map(item => {
+          if (item.ref['@ref'].id !== recordId) {
+            return item
+          } else {
+            replaced = true
+            return recordData
+          }
+        })
+        if (!replaced) processed.push(recordData)
+        return processed
+      }
 
       let updatedArr = []
+      let updatedUsrArr = []
 
       switch (mode) {
         case 'update':
-          updatedArr = all.map(item => item.ref['@ref'].id !== id ? item : record)    
+          // keep in mind that we have to remove drafts from `allRecipes`
+          updatedArr = recipeUpdate.data.draft ? removeRecord(allRecipes, id) : upsertRecord(allRecipes, id, recipeUpdate)
+          updatedUsrArr = upsertRecord(userRecipes, id, recipeUpdate)
           break
         
         case 'remove':
-          updatedArr = all.filter(item => item.ref['@ref'].id !== id)
+          updatedArr = removeRecord(allRecipes, id)
+          updatedUsrArr = removeRecord(userRecipes, id)
           break
 
         default:
           break
       }
 
+      commit('SET_LAST_UPDATED', new Date)
       commit('SET_ALL_RECIPES', updatedArr)
+      commit('SET_USER_RECIPES', updatedUsrArr)
     }
   }
 }

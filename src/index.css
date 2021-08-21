@@ -159,6 +159,20 @@ hr {
   @apply bg-gray-500;
 }
 
+.list-card {
+  @apply flex-no-wrap bg-gray-500 rounded-lg border border-transparent;
+}
+
+.list-card:hover {
+  @apply border-cool-gray-500 shadow;
+}
+
+.img-cover {
+  @apply object-cover;
+  height: 200px;
+  max-height: 200px;
+}
+
 /* ---------- BUTTONS ---------- */
 
 .btn {
@@ -201,14 +215,17 @@ hr {
   @apply bg-red-600 text-white;
 }
 
+.btn-outline,
 .modal-btn {
   @apply block font-bold border border-blue-500 text-blue-500 rounded-lg shadow-sm;
 }
 
+.btn-outline:hover, .btn-outline:focus,
 .modal-btn:hover, .modal-btn:focus {
   @apply bg-cool-gray-500 border-cool-gray-500 shadow-none;
 }
 
+.btn-outline:focus,
 .modal-btn:focus {
   @apply outline-none shadow-outline;
 }

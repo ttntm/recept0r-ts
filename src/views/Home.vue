@@ -1,13 +1,24 @@
 <script setup lang="ts">
   import { computed } from 'vue'
+  import { useRoute } from 'vue-router'
   import { useStore } from '../store'
 
+  const route = useRoute()
   const store = useStore()
 
   const allRecipes = computed(() => store.getters['data/allRecipes'])
-  const isLoading = computed(() => allRecipes.value.length > 0)
+  const isLoading = computed(() => allRecipes.value.length > 0 ? false : true)
+  const lastUpdated = computed(() => store.getters['data/lastUpdated'])
 
-  const getAllRecipes = () => store.dispatch('data/readAll')
+  const getAllRecipes = () => {
+    const now = new Date
+    const diff = Math.round((Number(now) - Number(lastUpdated.value)) / (1000 * 60)) // time difference between now (view init) and last read operation
+    const forceUpdate = route.query.force || null
+    if (allRecipes.value.length === 0 || diff > 60 || forceUpdate) {
+      console.log(`updating all recipes, diff = ${diff} minutes`)
+      store.dispatch('data/readAll')
+    }
+  }
 
   getAllRecipes()
 </script>
@@ -19,8 +30,8 @@
   </div>
   <div v-else class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
     <ul>
-      <li v-for="recipe in allRecipes" :key="recipe.data.id">
-        <router-link :to="{ path: `/recipe/${recipe.data.id}/${recipe.ref['@ref'].id}` }">
+      <li v-for="recipe in allRecipes.slice().reverse()" :key="recipe.data.id">
+        <router-link :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }">
           {{ recipe.data.title }}
         </router-link>
       </li>

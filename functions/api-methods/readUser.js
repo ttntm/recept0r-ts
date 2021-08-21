@@ -25,7 +25,8 @@ module.exports = (event, context) => {
         return client.query(getListDataQuery).then((records) => {
           return { statusCode: 200, headers: { ...fnHeaders }, body: JSON.stringify(records) }
         })
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log('error', error)
         return { statusCode: 400, headers: { ...fnHeaders }, body: JSON.stringify(error) }
       })

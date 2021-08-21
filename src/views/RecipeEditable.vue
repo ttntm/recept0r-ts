@@ -54,11 +54,6 @@
   })
   const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save as Draft' : 'Save & Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
-  
-  const assignKeys = (input: any) => { 
-    Object.keys(input).map(key => updateRecipe(key, input[key]))
-    editor.value.setHTML(recipe.body)
-  }
 
   const cancel = () => router.push({ name: 'Home' })
 
@@ -78,7 +73,7 @@
       const currentId = route.params.refId.toString()
       const currentItem = await getRecipeData(currentId)
       return currentItem !== 'error' && currentItem.data
-        ? assignKeys(currentItem.data)
+        ? updateEditMode(currentItem.data)
         : cancel()
     }
   }
@@ -131,6 +126,14 @@
   }
   
   const setRecipeId = () => recipe.id = slugify(recipe.title)
+
+  const updateEditMode = (input: any) => { 
+    Object.keys(input).map(key => updateRecipe(key, input[key]))
+    editor.value.setHTML(recipe.body)
+    setTimeout(() => {
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    }, 250)
+  }
 
   const updateRecipe = (key: string, value: any) => recipe[key] = value
 
@@ -202,10 +205,10 @@
       <section id="editor">
         <QuillEditor v-model:content="recipe.body" ref="editor" contentType="html" :options="editorOptions" />
       </section>
-      <div class="flex flex-row justify-center lg:justify-start mt-8">
-        <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
-        <ButtonDefault @click="cancel">Cancel</ButtonDefault>
-        <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 ml-4" @click="deleteRecipe">Delete</ButtonDefault>
+      <div class="flex flex-col md:flex-row justify-center lg:justify-start mt-8">
+        <ButtonDefault class="md:mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
+        <ButtonDefault class="my-4 md:my-0" @click="cancel">Cancel</ButtonDefault>
+        <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 md:ml-4" @click="deleteRecipe">Delete</ButtonDefault>
       </div>
     </div>
   </div>

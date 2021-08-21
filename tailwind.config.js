@@ -562,6 +562,7 @@ module.exports = {
     alignSelf: ['responsive'],
     appearance: ['responsive'],
     backgroundColor: ['hover', 'focus'],
+    backgroundOpacity: ['hover'],
     borderColor: ['responsive', 'hover', 'focus'],
     borderOpacity: ['responsive', 'hover', 'focus'],
     borderRadius: ['responsive'],
@@ -637,7 +638,6 @@ module.exports = {
   },
   corePlugins: {
     backgroundAttachment: false,
-    backgroundOpacity: false,
     backgroundPosition: false,
     backgroundRepeat: false,
     backgroundSize: false,

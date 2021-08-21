@@ -17,10 +17,11 @@ module.exports = (event, context) => {
   } else {
     return client.query(q.Delete(q.Ref(`collections/recipes/${target}`)))
       .then((response) => {
-        console.log("success", response)
+        console.log('success', response)
         return { statusCode: 200, headers: { ...fnHeaders },body: JSON.stringify(response) }
-      }).catch((error) => {
-        console.log("error", error)
+      })
+      .catch((error) => {
+        console.log('error', error)
         return { statusCode: 400, headers: { ...fnHeaders }, body: JSON.stringify(error) }
       })
   }

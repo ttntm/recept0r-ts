@@ -28,6 +28,7 @@
         :key="item.name"
         :to="{ name: item.name }"
         class="menu-item mx-4"
+        v-click-blur
       >{{ item.name }}</router-link>
     </div>
     <div class="flex flex-row items-center justify-end" style="width: 160px;">
