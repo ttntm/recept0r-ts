@@ -159,20 +159,6 @@ hr {
   @apply bg-gray-500;
 }
 
-.list-card {
-  @apply flex-no-wrap bg-gray-500 rounded-lg border border-transparent;
-}
-
-.list-card:hover {
-  @apply border-cool-gray-500 shadow;
-}
-
-.img-cover {
-  @apply object-cover;
-  height: 200px;
-  max-height: 200px;
-}
-
 /* ---------- BUTTONS ---------- */
 
 .btn {

@@ -26,7 +26,12 @@ export const store = createStore<State>({
   plugins: [
     createMultiTabState({
       key: 'rc-tabs',
-      statesPaths: ['user.currentUser'] // name/s of the states to be synchronized with dot notation. If the param is not provided, the whole state of your app will be in sync. Defaults to []
+      statesPaths: [ // name/s of the states to be synchronized with dot notation. If the param is not provided, the whole state of your app will be in sync. Defaults to []
+        'data.allRecipes',
+        'data.lastUpdated',
+        'data.userRecipes',
+        'user.currentUser'
+      ]
     }),
     createPersistedState({
       key: 'rc',

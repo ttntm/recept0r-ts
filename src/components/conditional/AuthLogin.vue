@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from 'vue'
+  import { reactive, ref } from 'vue'
   import { useStore } from '../../store'
   import { validateCredentials } from '../../utils'
   import { Credentials } from '../../types'

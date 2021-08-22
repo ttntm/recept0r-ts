@@ -10,7 +10,7 @@ export default {
       filterActive: false,
       filterCache: [], //used to store a copy of the current 'allRecipes' state before applying a filter to be restored into 'allRecipes' when clearing filter selection
       filterData: {},
-      lastUpdated: new Date,
+      lastUpdated: '',
       recipeCategory: [
         'Bread',
         'Salad',
@@ -175,15 +175,17 @@ export default {
       }
     },
 
-    async read({ commit, dispatch }, id) {
-      const apiResponse = await apiRequest('GET', null, id)
-      const current = apiResponse.ref ? apiResponse.ref['@ref'].id : null
+    async read({ commit, dispatch, rootGetters }, id) {
+      const fn = rootGetters['app/functions']
+      const request = await fetch(`${fn.read}/${id}`, { method: 'GET' })
+      const response = await request.json()
+      const current = response.ref ? response.ref['@ref'].id : null
 
       if (current) {
-        // add the record to the respective local state before returning the data to the view
-        const target = apiResponse.data.draft ? 'user' : 'both'
-        commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
-        return apiResponse
+        // -- questionable use case --
+        // add the record to `allRecipes` before returning the data to the view
+        commit(`ADD_RECIPE_ALL`, response)
+        return response
       } else {
         dispatch('app/sendToastMessage', { text: `Couldn't get recipe data. Please try again later.`, type: 'error' }, { root: true })
         return 'error'
@@ -255,9 +257,9 @@ export default {
       const inAll = allRecipes.length > 0 ? getRecipe(allRecipes, id) : null
       const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
 
-      return inAll.length > 0
+      return inAll && inAll.length > 0
         ? inAll
-        : inUser.length > 0
+        : inUser && inUser.length > 0
           ? inUser
           : []
     },

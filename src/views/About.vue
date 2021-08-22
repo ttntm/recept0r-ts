@@ -39,7 +39,7 @@
 			<li>faunadb</li>
       <li>gotrue-js (Netlify identity)</li>
 			<li>tailwindcss</li>
-			<li>tiptap Editor</li>
+			<li>quill Editor</li>
 			<li>vue</li>
 			<li>vue-router</li>
 			<li>vuex</li>

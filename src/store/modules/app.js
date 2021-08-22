@@ -8,6 +8,7 @@ export default {
       cdnryURL: import.meta.env.VITE_APP_CDNRY,
       identityURL: import.meta.env.VITE_APP_IDENTITY,
       functions: {
+        read: import.meta.env.VITE_APP_READ,
         readAll: import.meta.env.VITE_APP_READALL
       },
       toastMessage: null,

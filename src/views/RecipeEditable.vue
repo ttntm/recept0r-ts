@@ -52,7 +52,7 @@
     portions: '4 portions',
     body: '<h1>About this Recipe</h1><p>About text</p><h1>Instructions</h1><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h1>Notes</h1><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
-  const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save as Draft' : 'Save & Publish')
+  const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save Draft' : 'Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
 
   const cancel = () => router.push({ name: 'Home' })
@@ -205,10 +205,10 @@
       <section id="editor">
         <QuillEditor v-model:content="recipe.body" ref="editor" contentType="html" :options="editorOptions" />
       </section>
-      <div class="flex flex-col md:flex-row justify-center lg:justify-start mt-8">
-        <ButtonDefault class="md:mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
-        <ButtonDefault class="my-4 md:my-0" @click="cancel">Cancel</ButtonDefault>
-        <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 md:ml-4" @click="deleteRecipe">Delete</ButtonDefault>
+      <div class="flex flex-row items-center justify-center lg:justify-start mt-8">
+        <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
+        <ButtonDefault class="" @click="cancel">Cancel</ButtonDefault>
+        <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 ml-4" @click="deleteRecipe">Delete</ButtonDefault>
       </div>
     </div>
   </div>

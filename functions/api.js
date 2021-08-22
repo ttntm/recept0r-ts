@@ -20,15 +20,14 @@ exports.handler = async (event, context) => {
 
     switch (event.httpMethod) {
       case 'GET':
-        // need to handle 'by owner' and 'read one' differently here
+        // only used for getting user specific recipes - single read has to be public
         const [tgt, usr] = getMethodPath(event.path)
         if (tgt === 'owner' && usr) {
           event.target = tgt // target = sub-path for method distinction
           event.user = usr // user id for the DB index
           return api.readUser(event, context)
         } else {
-          // target = recipe refId
-          return event.target ? api.read(event, context) : pathError
+          return pathError
         }
 
       case 'POST':

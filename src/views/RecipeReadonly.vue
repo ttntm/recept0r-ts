@@ -1,14 +1,91 @@
-<script lang="ts">
-  import { defineComponent } from 'vue'
+<script setup lang="ts">
+  import { computed, ref } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { useStore } from '../store'
 
-  export default defineComponent({
-    name: 'RecipeReadonly',
-    setup() {
-      
-    },
-  })
+  import { getRecipeData } from '../utils'
+
+  const route = useRoute()
+  const store = useStore()
+
+  const errorMsg = ref('')
+  const loggedIn = computed(() => store.getters['user/loggedIn'])
+  const readSuccess = ref(false)
+  const recipe = ref()
+
+  const getCurrentRecipeData = async () => {
+    const currentId = route.params.refId.toString()
+    const currentItem = await getRecipeData(currentId)
+    if (currentItem !== 'error' && currentItem.data) {
+      recipe.value = Object.assign({}, currentItem)
+      readSuccess.value = true
+    } else {
+      errorMsg.value = `<h3>Oops, something went wrong :(</h3>
+        <p>Error: couldn't load recipe data.<br><br>
+        Please try again later or go back to the home page.</p>`
+    }
+  }
+
+  getCurrentRecipeData()
 </script>
 
 <template>
-  
+  <div v-if="!readSuccess" class="w-full">
+    <div v-if="!errorMsg" class="text-center my-12">
+      <img src="/img/loading.svg" alt="Loading..." class="mx-auto">
+      <p class="text-cool-gray-500 mt-12">Loading recipe data...</p>
+    </div>
+    <div v-else v-html="errorMsg" class="text-center my-12" />
+  </div>
+  <section v-else id="recipe" class="w-full xl:w-4/5 flex flex-row flex-wrap mx-auto">
+    <div class="w-full lg:w-3/5">
+      <img v-if="recipe.data.image" class="w-full rounded-lg shadow-sm mb-4" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
+    </div>
+    <div class="w-full lg:w-2/5 lg:pl-8">
+      <h2 class="mt-4 lg:mt-8 mb-4">{{ recipe.data.title }}</h2>
+      <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
+      <div class="flex flex-row flex-no-wrap border-t border-b border-cool-gray-500 mb-8 py-4">
+        <div class="flex-1 flex flex-row items-center justify-center mr-4">
+          <img src="/img/portions.svg" class="mr-4">
+          <p class="text-blue-500 mb-0">{{ recipe.data.portions }}</p>
+        </div>
+        <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500">
+          <img src="/img/duration.svg" class="mr-4">
+          <p class="text-blue-500 mb-0">{{ recipe.data.duration }}</p>
+        </div>
+      </div>
+      <p class="text-blue-500 font-semibold mb-2">
+        <span class="inline-block text-cool-gray-500" style="width: 6rem">Diet:</span>
+        {{ recipe.data.diet }}
+      </p>
+      <p class="text-blue-500 font-semibold mb-4">
+        <span class="inline-block text-cool-gray-500" style="width: 6rem">Category:</span>
+        {{ recipe.data.category }}
+      </p>
+    </div>
+    <div v-html="recipe.data.body" class="w-full lg:w-3/5 order-2 lg:order-1" />
+    <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
+      <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
+        <h3 class="mb-4">Ingredients</h3>
+        <ul class="mb-0">
+          <li v-for="(item, index) in recipe.data.ingredients" :key="index">
+            {{ item }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="w-full order-3">
+      <hr class="mt-4 mb-8" />
+      <div class="flex flex-row flex-wrap md:flex-no-wrap justify-center md:justify-start">
+        <router-link :to="{ name: 'Home' }" class="btn btn-gray flex flex-row items-center mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline-block pointer-events-none" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z"/>
+            <polyline points="15 6 9 12 15 18" />
+          </svg>
+          <span class="inline-block">All Recipes</span>
+        </router-link>
+        <router-link v-if="loggedIn" :to="{ name: 'Edit Recipe', params: { refId: recipe.ref['@ref'].id } }" class="btn btn-gray">Edit Recipe</router-link>
+      </div>
+    </div>
+  </section>
 </template>
