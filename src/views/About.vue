@@ -8,9 +8,9 @@
 
 <template>
   <div id="about" class="w-full md:w-4/5 mx-auto">
-		<h2>About recept0r</h2>
+		<h2>About This App</h2>
 		<p>
-			If you're into cooking, you may find some inspiration here 😁
+			If you're into cooking, you might find some inspiration here 😁
 		</p>
 		<p>recept0r is a minimal recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like database access and user authentication.</p>
 		<p>At the moment, recept0r is a semi-public personal service. That means, that even though public signup is technically possible, it's currently disabled in favor of an invite only signup process.</p>

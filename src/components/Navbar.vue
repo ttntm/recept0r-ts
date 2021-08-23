@@ -19,8 +19,8 @@
 <template>
   <nav class="container flex flex-row justify-start lg:justify-center items-center pt-4 lg:pt-12 pb-8 px-6 lg:px-4 mx-auto z-10">
     <ButtonMenu @click="showWindow(1)" />
-    <router-link :to="{ name: 'Home' }" class="focus:shadow-none">
-      <img src="/img/logo.svg" class="hover:opacity-75 mb-3" alt="recept0r logo" width="160">
+    <router-link :to="{ name: 'Home' }" class="focus:shadow-none" v-click-blur>
+      <img src="/img/logo.svg" class="hover:opacity-75 mb-3" alt="recept0r logo" width="160" v-click-blur>
     </router-link>
     <div class="hidden lg:flex flex-row justify-center items-center flex-grow">
       <router-link

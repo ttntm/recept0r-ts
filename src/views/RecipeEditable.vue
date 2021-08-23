@@ -36,7 +36,7 @@
   const isSaving = ref(false)
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const me = computed(() => store.getters['user/currentUser'])
-  const mode = computed(() => route.meta.mode)
+  const mode = computed(() => route.meta.mode ? route.meta.mode : '')
   const noChanges = ref(true)
   const recipe: Recipe = reactive({
     id: '',
@@ -50,7 +50,7 @@
     ingredients: [],
     owner: me.value ? me.value.id : '', // empty ID should technically be impossible (can't be seeing this omponent without login), this is just for DEV purposes
     portions: '4 portions',
-    body: '<h1>About this Recipe</h1><p>About text</p><h1>Instructions</h1><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h1>Notes</h1><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
+    body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
   const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save Draft' : 'Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
@@ -198,7 +198,7 @@
     </div>
     <div class="w-full md:w-1/2 md:pl-8 mb-4">
       <h4 class="mb-4">Ingredients</h4>
-      <RecipeIngredients :input="recipe.ingredients" @update:ingredients="updateRecipe('ingredients', $event)" />
+      <RecipeIngredients :input="recipe.ingredients" :mode="mode" @update:ingredients="updateRecipe('ingredients', $event)" />
     </div>
     <div class="w-full">
       <h4 class="mb-4">Instructions</h4>

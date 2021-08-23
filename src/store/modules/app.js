@@ -57,7 +57,7 @@ export default {
 
     /**
      * Toggle open modals and windows
-     * @param {*} id WindowID: 1 = Mobile Nav || 2 = Login/Signup
+     * @param {*} id WindowID: 1 = Mobile Nav || 2 = Login/Signup || 3 = Filter selection
      */
     setWindowOpen({ commit }, id) {
       commit('SET_WINDOW_OPEN', id)

@@ -63,7 +63,7 @@
         {{ recipe.data.category }}
       </p>
     </div>
-    <div v-html="recipe.data.body" class="w-full lg:w-3/5 order-2 lg:order-1" />
+    <div v-html="recipe.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1" />
     <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
       <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
         <h3 class="mb-4">Ingredients</h3>
@@ -89,3 +89,13 @@
     </div>
   </section>
 </template>
+
+<style lang="postcss">
+  .recipe-body a {
+    @apply text-blue-500 font-bold underline;
+  }
+
+  .recipe-body a:hover {
+    @apply no-underline;
+  }
+</style>

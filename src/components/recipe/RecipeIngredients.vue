@@ -5,7 +5,8 @@
   import ButtonX from '../button/ButtonX.vue'
 
   const props = defineProps<{
-    input: string[]
+    input: string[],
+    mode: string
   }>()
 
   const emit = defineEmits<{
@@ -25,10 +26,12 @@
     
     if (index !== undefined && index > -1) {
       ing.splice(index + 1, 0, '')
-      // await next tick to avoid 'x is undefined...' errors
-      await nextTick()
-      // set focus on the spliced item
-      inputEls[index+1].focus()
+      if (props.mode !== 'edit') {
+        // await next tick to avoid 'x is undefined...' errors
+        await nextTick()
+        // set focus on the spliced item
+        inputEls[index+1].focus()
+      }
     } else {
       ing.push('')
     }

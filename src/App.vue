@@ -40,7 +40,7 @@
 <template>
   <div id="app" class="flex h-full flex-col">
     <Navbar :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
-    <transition name="fade">
+    <transition name="menu">
       <NavMobile v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
     </transition>
     <transition name="modal">

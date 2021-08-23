@@ -1,14 +1,14 @@
 <script setup lang="ts">
-    const props = defineProps<{
-      modelValue: boolean | undefined,
-      name: string
-    }>()
+  const props = defineProps<{
+    modelValue: boolean | undefined,
+    name: string
+  }>()
 
-    const emit = defineEmits<{
-      (e: 'update:modelValue', val: boolean): void
-    }>()
+  const emit = defineEmits<{
+    (e: 'update:modelValue', val: boolean): void
+  }>()
 
-    const handleInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).checked)
+  const handleInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).checked)
 </script>
 
 <template>

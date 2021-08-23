@@ -338,6 +338,17 @@ hr {
   opacity: 0;
 }
 
+.menu-enter-active,
+.menu-leave-active {
+  transition: all 0.75s;
+}
+
+.menu-enter-from,
+.menu-leave-to {
+  transform: translateX(-300px);
+  opacity: 0;
+}
+
 .modal-enter-active, 
 .modal-leave-active { 
   transform: translateY(0px);
