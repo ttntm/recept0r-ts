@@ -182,25 +182,6 @@ hr {
   @apply bg-cool-gray-500;
 }
 
-.btn-green {
-  border: 1px solid;
-  @apply border-green-700 text-green-700;
-}
-
-.btn-green:not(:disabled):hover, 
-.btn-green:focus {
-  @apply bg-green-700 text-gray-500;
-}
-
-.btn-red {
-  @apply border border-red-600 text-red-600;
-}
-
-.btn-red:hover, 
-.btn-red:focus {
-  @apply bg-red-600 text-white;
-}
-
 .btn-outline,
 .modal-btn {
   @apply block font-bold border border-blue-500 text-blue-500 rounded-lg shadow-sm;

@@ -5,6 +5,12 @@ export type Credentials = {
   password: string
 }
 
+export type FilterSelection = {
+  [FKey: string]: string[],
+  category: string[],
+  diet: string[]
+}
+
 export type Recipe = {
   [RKey: string]: any
   id: string

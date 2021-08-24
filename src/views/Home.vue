@@ -14,6 +14,7 @@
   const store = useStore()
 
   const allRecipes = computed(() => store.getters['data/allRecipes'])
+  const filterActive = computed(() => store.getters['data/filterActive'])
   const isLoading = computed(() => allRecipes.value.length > 0 ? false : true)
   const searchTerm = ref('')
   const windowOpen = computed(() => store.getters['app/windowOpen'])
@@ -39,12 +40,14 @@
     
     const diff = Math.round((Number(now) - Number(lastUpdated.value)) / (1000 * 60)) // time difference between now (view init) and last read operation
 
-    if (allRecipes.value.length === 0 || !lastUpdated.value || diff > 60 || forceUpdate) {
+    if ((allRecipes.value.length === 0 && !filterActive.value) || !lastUpdated.value || diff > 60 || forceUpdate) {
       store.dispatch('data/readAll')
     }
   }
 
   const onFilterBtnClick = () => windowOpen.value === 0 ? showWindow(3) : showWindow(0)
+
+  const onFilterMsgClick = () => store.dispatch('data/clearFilter')
 
   const setSearchTerm = (val: string) => searchTerm.value = val
 
@@ -52,7 +55,7 @@
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-center my-12">
+  <div v-if="isLoading && !filterActive" class="text-center my-12">
     <img src="/img/loading.svg" alt="Loading..." class="mx-auto">
     <p class="text-cool-gray-500 mt-12">Loading recipes...</p>
   </div>
@@ -63,6 +66,11 @@
     </div>
     <transition name="slide-fade">
       <HomeFilterMenu v-if="windowOpen === 3" />
+    </transition>
+    <transition name="fade">
+      <p v-if="filterActive && windowOpen !== 3" class="text-center mb-10">
+        Showing filtered recipes. <span @click.prevent="onFilterMsgClick" class="text-cool-gray-500 underline hover:no-underline cursor-pointer">Clear Filter</span>
+      </p>
     </transition>
     <transition name="fade">
       <p v-if="searchTerm && displayedRecipes.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>

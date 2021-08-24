@@ -78,38 +78,27 @@ export default {
     * @param args - an array provided by 'RecipeFilter.vue' that provides input for 'mode' in [0] and 'selection' in [1]
     */
     applyFilter({ commit, getters}, args) {
-      const fState = getters.filterActive
+      const allRecipes = getters.allRecipes
       const fData = getters.filterData
-      const recipes = getters.allRecipes
-      const fromCache = getters.filterCache
-
-      let filtered = new Array
-      let mode = args[0].toLowerCase() // strig value
-      let selection = args[1].map(item => item.toLowerCase()) // array based on 'RecipeFilter.vue' component state lowercased just to make sure
-
-      // format the data for filtering
-      let currentFilterData = Object.assign(fData, { [mode]: selection })
-      // commit the filter settings
-      commit('SET_FILTER_DATA', currentFilterData)
-
+      const fState = getters.filterActive
+      const recipeCache = getters.filterCache
+      const [mode, selection] = args
+      
+      let currentFilterData = Object.assign(fData, { [mode]: selection }) // format the data for filtering
+      commit('SET_FILTER_DATA', currentFilterData) // commit the filter settings
+      
       const findIndex = (arr, el) => {
-        if (arr !== undefined) {
-          if (arr.length === 0) {
-            return 0
-          } else {
-            return arr.indexOf(el)
-          }
-        } else { return -1 }
+        if (!arr) return -1
+        return arr.length === 0 ? 0 : arr.indexOf(el)
       }
-
+      
       const doFilter = (input) => {
-        let result = new Array
         let fDataLength = Object.keys(fData).length
 
-        result = input.filter((item) => {
+        return input.filter((item) => {
           // prepare the data
-          let cat = findIndex(fData.category, item.category.toLowerCase())
-          let dt = findIndex(fData.diet, item.diet.toLowerCase())
+          let cat = findIndex(fData.category, item.data.category.toLowerCase())
+          let dt = findIndex(fData.diet, item.data.diet.toLowerCase())
           // handle the possibilities
           switch(fDataLength) {
             case 2:
@@ -130,28 +119,29 @@ export default {
               return false
           }
         })
-        // return the filtered array
-        return result
       }
+
+      let filtered = []
 
       if(!fState) {
         // if there is NO active filter
         commit('SET_FILTER_STATE', true)
+        // create cache
+        commit('SET_FILTER_CACHE', allRecipes.slice())
         // apply to the current state of 'allRecies'
-        filtered = doFilter(recipes)
+        filtered = doFilter(allRecipes)
       } else {
-        // apply to previously filtered selection
-        filtered = doFilter(fromCache)
+        // overwrite previously filtered list based on current filter selection
+        filtered = doFilter(recipeCache)
       }
-
       commit('SET_ALL_RECIPES', filtered)
     },
 
     clearFilter({ commit, getters }) {
       // get state from before applying a filter
-      const fromCache = getters.filterCache
+      const recipeCache = getters.filterCache
       // restore that state
-      commit('SET_ALL_RECIPES', fromCache)
+      commit('SET_ALL_RECIPES', recipeCache)
       // set filter state and clear filter data
       commit('SET_FILTER_STATE', false)
       commit('SET_FILTER_DATA', {})

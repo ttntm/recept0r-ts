@@ -24,9 +24,9 @@ let handleOutsideClick: any = null
 
 app.directive('click-blur', {
   beforeMount(el, binding, vnode) {
-    handleClickBlur = (e: { target: HTMLInputElement }) => {
-      if (clickBlurExclude.indexOf(e.target.nodeName) === -1) {
-        e.target.blur()
+    handleClickBlur = (e: { currentTarget: HTMLElement }) => {
+      if (clickBlurExclude.indexOf(e.currentTarget.nodeName) === -1) {
+        e.currentTarget.blur()
       }
     }
     el.addEventListener('click', handleClickBlur)
