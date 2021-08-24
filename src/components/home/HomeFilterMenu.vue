@@ -46,7 +46,7 @@
   }
 
   const onFilterClose = () => {
-    if (selected.category.length === 0 && selected.diet.length === 0) {
+    if (filterActive.value && selected.category.length === 0 && selected.diet.length === 0) {
       store.dispatch('data/clearFilter')
     }
     return showWindow(0)
