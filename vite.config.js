@@ -26,5 +26,7 @@ export default defineConfig({
       'body-scroll-lock'
     ]
   },
-  plugins: [vue()]
+  plugins: [
+    vue()
+  ]
 })

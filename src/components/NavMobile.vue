@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { computed } from 'vue'
-  import { useStore } from '../store';
   import { RouteRecordNormalized } from 'vue-router'
 
   import { showWindow } from '../utils'

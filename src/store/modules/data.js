@@ -27,7 +27,33 @@ export default {
         'Vegan',
         'Other'
       ],
-      userRecipes: []
+      userRecipes: [],
+      userSortOptions: [
+        {
+          data: 'date',
+          type: 'desc',
+          text: 'Newest',
+          tooltip: 'Sort by date (newest first)'
+        },
+        {
+          data: 'date',
+          type: 'asc',
+          text: 'Oldest',
+          tooltip: 'Sort by date (oldest first)'
+        },
+        {
+          data: 'abc',
+          type: 'asc',
+          text: 'ABC...',
+          tooltip: 'Sort alphabetically'
+        },
+        {
+          data: 'abc',
+          type: 'desc',
+          text: 'ZYX...',
+          tooltip: 'Sort alphabetically (reverse)'
+        }
+      ]
     }
   },
 
@@ -39,7 +65,8 @@ export default {
     lastUpdated: state => state.lastUpdated,
     recipeCategory: state => state.recipeCategory,
     recipeDiet: state => state.recipeDiet,
-    userRecipes: state => state.userRecipes
+    userRecipes: state => state.userRecipes,
+    userSortOptions: state => state.userSortOptions
   },
 
   mutations: {
@@ -74,6 +101,12 @@ export default {
   },
 
   actions: {
+    initializeData({ commit }) {
+      commit('SET_FILTER_CACHE', [])
+      commit('SET_FILTER_DATA', {})
+      commit('SET_FILTER_STATE', false)
+      commit('SET_USER_RECIPES', [])
+    },
     /**
     * @param args - an array provided by 'RecipeFilter.vue' that provides input for 'mode' in [0] and 'selection' in [1]
     */

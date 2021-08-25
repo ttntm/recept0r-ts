@@ -37,6 +37,7 @@ export default {
   actions: {
     initialize({ dispatch }) {
       // global state reset action triggering module actions to keep things separate
+      dispatch('data/initializeData', null, { root: true })
       dispatch('user/initializeUser', null, { root: true })
     },
 

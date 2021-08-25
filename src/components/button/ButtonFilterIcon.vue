@@ -8,7 +8,7 @@
 
 <template>
   <button class="filter-group mb-4 md:mr-4" v-click-blur>
-    <img :src="getFilterImg(current)" :alt="current" class="filter-img" />
+    <img :src="getFilterImg(current)" :alt="current" class="filter-img" width="60" />
     <span class="filter-text">{{ current }}</span>
   </button>
 </template>

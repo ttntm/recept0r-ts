@@ -23,6 +23,14 @@ export async function apiRequest(reqMethod: string, payload?: any, reqPath: stri
 }
 
 /**
+ * Returns the index of an element in the given array
+ */
+export function getArrayIndex (arr: string[], item: string) {
+  const target = [...arr]
+  return target.indexOf(item.toLowerCase())
+}
+
+/**
  * Set authorization headers based on GoTrue's current user session
  */
 export async function getAuthHeaders() {
@@ -61,20 +69,20 @@ export async function getRecipeData(id: string) {
 /**
  * Sorts objects based on a specific key using an optional `primer` function
  */
-export function objSort(field: any, reverse: number, primer: Function) {
+export function objectSort(field: any, reverse: boolean, primer: Function) {
   //generic sorting function for object keys
   const key = primer ?
     function(x: any) {
-      return primer(x[field])
+      return primer(x.data[field])
     } :
     function(x: any) {
-      return x[field]
+      return x.data[field]
     }
   
-  reverse = !reverse ? 1 : -1
+  const reversed = !reverse ? 1 : -1
 
   return function(a: any, b:any) {
-    return a = key(a), b = key(b), reverse * (Number(a > b) - Number(b > a)) // keep this Number() in mind in case there are issues with this sorting function
+    return a = key(a), b = key(b), reversed * (Number(a > b) - Number(b > a)) // keep this Number() in mind in case there are issues with this sorting function
   }
 }
 

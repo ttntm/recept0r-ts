@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { computed, reactive, watch } from 'vue'
+  import { computed, reactive } from 'vue'
   import { useStore } from '../../store'
   import { FilterSelection } from '../../types'
 
-  import { showWindow } from '../../utils'
+  import { getArrayIndex, showWindow } from '../../utils'
 
   import ButtonDefault from '../button/ButtonDefault.vue'
   import ButtonFilterIcon from '../button/ButtonFilterIcon.vue'
@@ -20,12 +20,7 @@
     diet: []
   })
 
-  const findIndex = (arr: string[], item: string) => {
-    const target = [...arr]
-    return target.indexOf(item.toLowerCase())
-  }
-
-  const isActiveFilter = (mode: string, el: string) => findIndex(selected[mode], el) !== -1
+  const isActiveFilter = (mode: string, el: string) => getArrayIndex(selected[mode], el) !== -1
 
   const onClearFilterClick = () => {
     Object.keys(selected).forEach(key => selected[key] = [])
@@ -34,7 +29,7 @@
 
   const onFilterClick = (mode: string, el: string) => {
     const current = selected[mode]
-    let idx = findIndex(selected[mode], el)
+    let idx = getArrayIndex(selected[mode], el)
 
     if (idx === -1) {
       current.push(el.toLowerCase())
