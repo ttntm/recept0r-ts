@@ -22,7 +22,7 @@
   const handleLogout = () => { 
     store.dispatch('user/attemptLogout')
     showWindow(0)
-    if (route.meta.authRequired) router.push({ name: 'Home' })
+    if (route.meta.authRequired) router.push({ name: 'All Recipes' })
   }
 
   const menuItems = computed(() => {

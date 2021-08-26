@@ -5,6 +5,9 @@
 
   import { getRecipeData } from '../utils'
 
+  import duration from '../components/icon/duration.vue'
+  import portions from '../components/icon/portions.vue'
+
   const route = useRoute()
   const store = useStore()
 
@@ -46,11 +49,11 @@
       <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
       <div class="flex flex-row flex-no-wrap border-t border-b border-cool-gray-500 mb-8 py-4">
         <div class="flex-1 flex flex-row items-center justify-center mr-4">
-          <img src="/img/portions.svg" class="mr-4">
+          <portions class="mr-4" />
           <p class="text-blue-500 mb-0">{{ recipe.data.portions }}</p>
         </div>
         <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500">
-          <img src="/img/duration.svg" class="mr-4">
+          <duration class="mr-4" />
           <p class="text-blue-500 mb-0">{{ recipe.data.duration }}</p>
         </div>
       </div>
@@ -77,7 +80,7 @@
     <div class="w-full order-3">
       <hr class="mt-4 mb-8" />
       <div class="flex flex-row flex-wrap md:flex-no-wrap justify-center md:justify-start">
-        <router-link :to="{ name: 'Home' }" class="btn btn-gray flex flex-row items-center mr-4">
+        <router-link :to="{ name: 'All Recipes' }" class="btn btn-gray flex flex-row items-center mr-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="inline-block pointer-events-none" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <polyline points="15 6 9 12 15 18" />

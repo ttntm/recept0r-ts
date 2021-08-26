@@ -92,9 +92,8 @@ export default {
     },
 
     attemptSignup({ dispatch, getters, state }, credentials) {
-      const userOptions = getters['userOptions']
       return new Promise((resolve, reject) => {
-        state.GoTrueAuth.signup(credentials.email, credentials.password)
+        state.GoTrueAuth.signup(credentials.email, credentials.password, { full_name: credentials.name })
           .then(response => {
             dispatch('app/sendToastMessage', { text: `Signup successful, check your emails.`, type: 'success' }, { root: true })
             resolve(response) // Confirmation email sent

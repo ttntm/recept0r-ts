@@ -55,7 +55,7 @@
   const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save Draft' : 'Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
 
-  const cancel = () => router.push({ name: 'Home' })
+  const cancel = () => router.push({ name: 'All Recipes' })
 
   const deleteRecipe = async () => {
     const confirm = window.confirm(`Deleting "${recipe.title}" - are you sure?`)

@@ -15,7 +15,7 @@ declare module 'vue-router' {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
+    name: 'All Recipes',
     component: () => import('./views/Home.vue'),
     meta: {
       menuPosition: 1,
@@ -73,7 +73,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/:pathMatch(.*)',
     name: '404',
-    redirect: { name: 'Home' },
+    redirect: { name: 'All Recipes' },
     meta: {
       menuVisible: false
     }
@@ -98,7 +98,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.authRequired && store.getters['user/loggedIn']) {
     return next()
   } else {
-    router.push({ name: 'Home' })
+    router.push({ name: 'All Recipes' })
   }
 })
 

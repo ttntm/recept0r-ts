@@ -1,14 +1,61 @@
 <script setup lang="ts">
+  import { computed } from 'vue'
+
+  import bread from '../icon/filter/bread.vue'
+  import dessert from '../icon/filter/dessert.vue'
+  import drink from '../icon/filter/drink.vue'
+  import keto from '../icon/filter/keto.vue'
+  import main from '../icon/filter/main.vue'
+  import pastry from '../icon/filter/pastry.vue'
+  import salad from '../icon/filter/salad.vue'
+  import snack from '../icon/filter/snack.vue'
+  import soup from '../icon/filter/soup.vue'
+  import vegan from '../icon/filter/vegan.vue'
+  import vegetarian from '../icon/filter/vegetarian.vue'
+
   const props = defineProps<{
     current: string
   }>()
-  
-  const getFilterImg = (item: string) => `/img/filter/${item.toLowerCase()}.svg`
+
+  /**
+   * This function is required so we can actually get the imported components
+   * Placing the 'string' type prop in the ':is' binding below doesn't work at all
+   * See: https://stackoverflow.com/a/66960318
+  */
+  const getFilterImg = computed(() => {
+    switch (props.current.toLowerCase()) {
+      case 'bread':
+        return bread
+      case 'dessert':
+        return dessert
+      case 'drink':
+        return drink
+      case 'keto':
+        return keto
+      case 'main':
+        return main
+      case 'pastry':
+        return pastry
+      case 'salad':
+        return salad
+      case 'snack':
+        return snack
+      case 'soup':
+        return soup
+      case 'vegan':
+        return vegan
+      case 'vegetarian':
+        return vegetarian
+    
+      default:
+        return keto
+    }
+  })
 </script>
 
 <template>
   <button class="filter-group mb-4 md:mr-4" v-click-blur>
-    <img :src="getFilterImg(current)" :alt="current" class="filter-img" width="60" />
+    <component :is="getFilterImg" class="filter-img" />
     <span class="filter-text">{{ current }}</span>
   </button>
 </template>

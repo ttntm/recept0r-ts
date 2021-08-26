@@ -4,8 +4,12 @@
 
   import ButtonX from '../button/ButtonX.vue'
 
+  import happy from '../icon/happy.vue'
+  import sad from '../icon/sad.vue'
+
   const store = useStore();
   
+  const icon = computed(() => toastMessage.value.type === 'error' ? sad : happy)
   const toastMessage = computed(() => store.getters['app/toastMessage'])
   
   const closeToastMessage = () => store.dispatch('app/sendToastMessage', null)
@@ -17,9 +21,7 @@
       <div class="bg-gray-500 text-blue-500 rounded-lg shadow-md px-8 py-6 pr-12" style="min-width: 240px">
         <ButtonX size="20" class="absolute top-0 right-0 rounded-full p-3" @click.prevent="closeToastMessage" />
         <div class="flex items-center">
-          <img v-if="toastMessage.type === 'error'" src="/img/sad.svg" class="smiley block w-6 h-6 mr-4">
-          <img v-if="toastMessage.type === 'success'" src="/img/happy.svg" class="smiley block w-6 h-6 mr-4">
-          <img v-if="toastMessage.type === 'info'" src="/img/happy.svg" class="smiley block w-6 h-6 mr-4">
+          <component :is="icon" width="24" height="24" class="smiley w-6 h-6 block mr-4" />
           <span class="block font-bold text-sm overflow-hidden" style="text-overflow: ellipsis;">
             {{ toastMessage.text }}
           </span>

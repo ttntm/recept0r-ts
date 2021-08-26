@@ -159,6 +159,10 @@ hr {
   @apply bg-gray-500;
 }
 
+svg {
+  @apply pointer-events-none;
+}
+
 /* ---------- BUTTONS ---------- */
 
 .btn {
