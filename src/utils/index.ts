@@ -125,6 +125,17 @@ export async function uploadImage(url: string, data: FormData) {
 }
 
 /**
+ * Search an array of recipes based on a string value
+ */
+export function useRecipeSearch(data: any[], term: string) {
+  return data.filter((item: any) => {
+    if (item.data.title.toLowerCase().indexOf(term.toLowerCase()) === -1) { //if there was no match for the title...
+      return item.data.description.toLowerCase().indexOf(term.toLowerCase()) !== -1 ? true : false //...evaluate the description
+    } else { return true }
+  })
+}
+
+/**
  * Validates a Credentials object used for signup and login procedures
  */
 export function validateCredentials(input: Credentials) {

@@ -163,6 +163,10 @@ svg {
   @apply pointer-events-none;
 }
 
+.router-link-exact-active {
+  @apply text-cool-gray-600;
+}
+
 /* ---------- BUTTONS ---------- */
 
 .btn {

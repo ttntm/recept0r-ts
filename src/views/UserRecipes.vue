@@ -1,18 +1,37 @@
 <script setup lang="ts">
-  import { computed, ref, watch } from 'vue'
+  import { computed, ref, watch, WritableComputedRef } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '../store'
   
+  import { useRecipeSearch } from '../utils'
+  
+  import SearchBar from '../components/SearchBar.vue'
   import UserRecipeCard from '../components/user/UserRecipeCard.vue'
   import UserRecipeSorting from '../components/user/UserRecipeSorting.vue'
 
   const route = useRoute()
   const store = useStore()
 
+  const displayList: WritableComputedRef<any[]> = computed({
+    // see: https://stackoverflow.com/a/64281689
+    get(): any[] {
+      const list = myRecipesDisplay.value
+      const term = userSearchTerm.value
+      if (term && term.length > 0) {
+        return useRecipeSearch(list, term)
+      } else {
+        return list
+      }
+    },
+    set(newList: any[]): void {
+      myRecipesDisplay.value = newList
+    }
+  })
   const isLoading = ref(true)
   const myRecipes = computed(() => store.getters['data/userRecipes'])
   const myRecipesDisplay = ref([...myRecipes.value.slice().reverse()])
   const user = computed(() => store.getters['user/currentUser'])
+  const userSearchTerm = ref('')
 
   const getMyRecipes = () => {
     const forceUpdate = route.query.force || null
@@ -24,12 +43,14 @@
     setTimeout(() => isLoading.value = false, 1500)
   }
 
-  const updateList = (list: any[]) => myRecipesDisplay.value = list
+  const setSearchTerm = (val: string) => userSearchTerm.value = val
+
+  const updateList = (list: any[]) => displayList.value = list
 
   getMyRecipes()
 
   watch(myRecipes, () => {
-    if (myRecipes.value.length > 0) myRecipesDisplay.value = myRecipes.value.slice().reverse()
+    if (myRecipes.value.length > 0) displayList.value = myRecipes.value.slice().reverse()
   })
 </script>
 
@@ -48,7 +69,13 @@
         class="btn btn-gray"
       >Add Recipe</router-link>
     </div>
+    <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
+      <SearchBar v-model.trim="userSearchTerm" @update:modelValue="setSearchTerm($event)" />
+    </div>
     <UserRecipeSorting v-if="myRecipesDisplay.length > 0" :data="myRecipesDisplay" @update:list="updateList($event)" />
-    <UserRecipeCard v-for="recipe in myRecipesDisplay" :key="recipe.data.id" :recipe="recipe" />
+    <transition name="fade">
+      <p v-if="userSearchTerm && displayList.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
+    </transition>
+    <UserRecipeCard v-for="recipe in displayList" :key="recipe.data.id" :recipe="recipe" />
   </div>
 </template>

@@ -3,12 +3,12 @@
   import { useRoute } from 'vue-router'
   import { useStore } from '../store'
 
-  import { showWindow } from '../utils'
+  import { showWindow, useRecipeSearch } from '../utils'
 
   import ButtonFilter from '../components/button/ButtonFilter.vue'
   import HomeFilterMenu from '../components/home/HomeFilterMenu.vue'
   import HomeRecipeCard from '../components/home/HomeRecipeCard.vue'
-  import HomeSearchBar from '../components/home/HomeSearchBar.vue'
+  import SearchBar from '../components/SearchBar.vue'
 
   const route = useRoute()
   const store = useStore()
@@ -23,11 +23,7 @@
     const reversed: any[] = allRecipes.value.slice().reverse()
     const term = searchTerm.value
     if (term && term.length > 0) {
-      return reversed.filter((item: any) => {
-        if (item.data.title.toLowerCase().indexOf(term.toLowerCase()) === -1) { //if there was no match for the title...
-          return item.data.description.toLowerCase().indexOf(term.toLowerCase()) !== -1 ? true : false //...evaluate the description
-        } else { return true }
-      })
+      return useRecipeSearch(reversed, term)
     } else {
       return reversed
     }
@@ -61,7 +57,7 @@
   </div>
   <section v-else class="">
     <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
-      <HomeSearchBar v-model.trim="searchTerm" @update:modelValue="setSearchTerm($event)" />
+      <SearchBar v-model.trim="searchTerm" @update:modelValue="setSearchTerm($event)" />
       <ButtonFilter :window="windowOpen" @click="onFilterBtnClick" />
     </div>
     <transition name="slide-fade">
