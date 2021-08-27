@@ -1,12 +1,13 @@
 <script setup lang="ts">
-  import { computed, ref } from 'vue'
+  import { computed, ref, onMounted, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '../store'
 
   import { getRecipeData } from '../utils'
 
-  import duration from '../components/icon/duration.vue'
-  import portions from '../components/icon/portions.vue'
+  import Duration from '../components/icon/duration.vue'
+  import Loading from '../components/icon/loading.vue'
+  import Portions from '../components/icon/portions.vue'
 
   const route = useRoute()
   const store = useStore()
@@ -30,12 +31,16 @@
   }
 
   getCurrentRecipeData()
+
+  watch(recipe, () => {
+    if (recipe.value.data.title) document.title = `${recipe.value.data.title} - recept0r`
+  })
 </script>
 
 <template>
   <div v-if="!readSuccess" class="w-full">
     <div v-if="!errorMsg" class="text-center my-12">
-      <img src="/img/loading.svg" alt="Loading..." class="mx-auto">
+      <Loading class="mx-auto" />
       <p class="text-cool-gray-500 mt-12">Loading recipe data...</p>
     </div>
     <div v-else v-html="errorMsg" class="text-center my-12" />
@@ -49,11 +54,11 @@
       <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
       <div class="flex flex-row flex-no-wrap border-t border-b border-cool-gray-500 mb-8 py-4">
         <div class="flex-1 flex flex-row items-center justify-center mr-4">
-          <portions class="mr-4" />
+          <Portions class="mr-4" />
           <p class="text-blue-500 mb-0">{{ recipe.data.portions }}</p>
         </div>
         <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500">
-          <duration class="mr-4" />
+          <Duration class="mr-4" />
           <p class="text-blue-500 mb-0">{{ recipe.data.duration }}</p>
         </div>
       </div>
@@ -66,12 +71,12 @@
         {{ recipe.data.category }}
       </p>
     </div>
-    <div v-html="recipe.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1" />
+    <div v-html="recipe.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-8" />
     <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
       <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
         <h3 class="mb-4">Ingredients</h3>
         <ul class="mb-0">
-          <li v-for="(item, index) in recipe.data.ingredients" :key="index">
+          <li v-for="(item, index) in recipe.data.ingredients" :key="index" class="text-blue-500 font-semibold mb-2">
             {{ item }}
           </li>
         </ul>

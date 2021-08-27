@@ -5,6 +5,8 @@
   
   import { useRecipeSearch } from '../utils'
   
+  import ButtonTop from '../components/button/ButtonTop.vue'
+  import Loading from '../components/icon/loading.vue'
   import SearchBar from '../components/SearchBar.vue'
   import UserRecipeCard from '../components/user/UserRecipeCard.vue'
   import UserRecipeSorting from '../components/user/UserRecipeSorting.vue'
@@ -58,7 +60,7 @@
   <div id="my-recipes" class="w-full lg:w-4/5 flex flex-col mx-auto">
     <h3 class="text-center mb-8">Recipes You Created</h3>
     <div v-if="isLoading && myRecipesDisplay.length === 0" class="text-center">
-      <img src="/img/loading.svg" alt="Loading..." class="mx-auto">
+      <Loading class="mx-auto" />
       <p class="text-cool-gray-500 mt-12">Loading data...</p>
     </div>
     <div v-if="!isLoading && myRecipesDisplay.length === 0" class="text-center">
@@ -76,6 +78,9 @@
     <transition name="fade">
       <p v-if="userSearchTerm && displayList.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>
-    <UserRecipeCard v-for="recipe in displayList" :key="recipe.data.id" :recipe="recipe" />
+    <transition-group name="list" tag="section">
+      <UserRecipeCard v-for="recipe in displayList" :key="recipe.data.id" :recipe="recipe" />
+    </transition-group>
   </div>
+  <ButtonTop />
 </template>

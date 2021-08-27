@@ -327,6 +327,20 @@ svg {
   opacity: 0;
 }
 
+.list-enter-active, 
+.list-leave-active {
+  transition: all .5s;
+}
+
+.list-enter-from, 
+.list-leave-to {
+  opacity: 0;
+}
+
+.list-move {
+  transition: transform .5s;
+}
+
 .menu-enter-active,
 .menu-leave-active {
   transition: all 0.75s;

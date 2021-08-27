@@ -1,5 +1,5 @@
 import { store } from '../store'
-import { Credentials } from '@/types'
+import { Credentials, Headers } from '../types'
 
 export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
   const url = String(import.meta.env.VITE_APP_API)
@@ -25,7 +25,7 @@ export async function apiRequest(reqMethod: string, payload?: any, reqPath: stri
 /**
  * Returns the index of an element in the given array
  */
-export function getArrayIndex (arr: string[], item: string) {
+export function getArrayIndex(arr: string[], item: string) {
   const target = [...arr]
   return target.indexOf(item.toLowerCase())
 }
@@ -37,10 +37,7 @@ export async function getAuthHeaders() {
   const now = Date.now()
   const user = store.getters['user/currentUser']
 
-  let headers: { 
-    'Content-Type': string, 
-    Authorization?: string 
-  } = {
+  let headers: Headers = {
     'Content-Type': 'application/json'
   }
 
@@ -71,13 +68,7 @@ export async function getRecipeData(id: string) {
  */
 export function objectSort(field: any, reverse: boolean, primer: Function) {
   //generic sorting function for object keys
-  const key = primer ?
-    function(x: any) {
-      return primer(x.data[field])
-    } :
-    function(x: any) {
-      return x.data[field]
-    }
+  const key = primer ? (x: any) => primer(x.data[field]) : (x: any) => x.data[field]
   
   const reversed = !reverse ? 1 : -1
 

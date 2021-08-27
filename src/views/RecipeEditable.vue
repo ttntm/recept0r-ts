@@ -180,15 +180,15 @@
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
       <h3 class="">Recipe Title</h3>
-      <input type="text" v-model="recipe.title" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId" v-focus>
+      <input type="text" v-model.trim="recipe.title" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId" v-focus>
       <h4 class="mb-4">Description</h4>
-      <input type="text" v-model="recipe.description" class="form-control mb-4" placeholder="A fancy description...">
+      <input type="text" v-model.trim="recipe.description" class="form-control mb-4" placeholder="A fancy description...">
     </div>
     <div class="w-full md:w-1/2">
       <h4 class="mb-4">Metadata</h4>
       <InputToggle v-model="recipe.draft" name="draft" @update:modelValue="updateRecipe('draft', $event)">{{ draftText }}</InputToggle>
-      <input type="text" v-model="recipe.portions" class="form-control text-sm mb-4" placeholder="Portions; how many people does this recipe serve?">
-      <input type="text" v-model="recipe.duration" class="form-control text-sm mb-4" placeholder="Duration; how long does it take to cook this?">
+      <input type="text" v-model.trim="recipe.portions" class="form-control text-sm mb-4" placeholder="Portions; how many people does this recipe serve?">
+      <input type="text" v-model.trim="recipe.duration" class="form-control text-sm mb-4" placeholder="Duration; how long does it take to cook this?">
       <InputSelect :current="recipe.diet" :data="diet" name="diet" class="relative mb-4" @update:select="updateRecipe('diet', $event)">
         Please select a diet
       </InputSelect>
@@ -207,7 +207,7 @@
       </section>
       <div class="flex flex-row items-center justify-center lg:justify-start mt-8">
         <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
-        <ButtonDefault class="" @click="cancel">Cancel</ButtonDefault>
+        <ButtonDefault @click="cancel">Cancel</ButtonDefault>
         <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 ml-4" @click="deleteRecipe">Delete</ButtonDefault>
       </div>
     </div>

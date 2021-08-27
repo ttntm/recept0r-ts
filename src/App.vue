@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { computed, onMounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from './store'
 
@@ -8,7 +8,7 @@
   import Auth from './components/conditional/Auth.vue'
   import Footer from './components/Footer.vue'
   import Navbar from './components/Navbar.vue'
-  import NavMobile from './components/NavMobile.vue'
+  import MobileMenu from './components/MobileMenu.vue'
   import ToastMessage from './components/conditional/ToastMessage.vue'
 
   const route = useRoute()
@@ -35,13 +35,21 @@
       }
     })
   })
+
+  onMounted(() => {
+    const app = document.getElementById('app')
+    if (app) {
+      app.style.opacity = '1'
+      app.style.transition = 'opacity 1.5s ease'
+    }
+  })
 </script>
 
 <template>
   <div id="app" class="flex h-full flex-col">
     <Navbar :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
     <transition name="menu">
-      <NavMobile v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
+      <MobileMenu v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
     </transition>
     <transition name="modal">
       <Auth v-if="windowOpen === 2" :loggedIn="loggedIn" />

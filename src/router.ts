@@ -102,4 +102,8 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to, from, failure) => {
+  document.title = to.name ? `${to.name?.toString()} - recept0r.com` : 'recept0r'
+})
+
 export default router

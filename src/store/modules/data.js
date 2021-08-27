@@ -66,6 +66,7 @@ export default {
     recipeCategory: state => state.recipeCategory,
     recipeDiet: state => state.recipeDiet,
     userRecipes: state => state.userRecipes,
+    userRecipesLength: state => state.userRecipes.length,
     userSortOptions: state => state.userSortOptions
   },
 
@@ -180,7 +181,7 @@ export default {
       commit('SET_FILTER_DATA', {})
     },
 
-    async create({ commit, dispatch }, recipe) {
+    async create({ commit, dispatch, getters }, recipe) {
       const apiResponse = await apiRequest('POST', recipe)
       const created = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
@@ -188,8 +189,15 @@ export default {
         // it's always a new recipe, let's add it to the respective local state
         // keep in mind that `allRecipes` doesn't include drafts
         // NB: this _doesn't_ consider concurrency at all, due to the (intentionally) small amount of users
-        const target = apiResponse.data.draft ? 'user' : 'both'
-        commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
+        const target = () => {
+          if (getters.userRecipesLength <= 0 && !apiResponse.data.draft) return 'all'
+          if (getters.userRecipesLength > 0) {
+            return apiResponse.data.draft ? 'user' : 'both'
+          } else {
+            return undefined
+          }
+        }
+        if (target()) commit(`ADD_RECIPE_${target().toUpperCase()}`, apiResponse)
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
         return created
       } else {

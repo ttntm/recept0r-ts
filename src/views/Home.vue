@@ -6,8 +6,10 @@
   import { showWindow, useRecipeSearch } from '../utils'
 
   import ButtonFilter from '../components/button/ButtonFilter.vue'
+  import ButtonTop from '../components/button/ButtonTop.vue'
   import HomeFilterMenu from '../components/home/HomeFilterMenu.vue'
   import HomeRecipeCard from '../components/home/HomeRecipeCard.vue'
+  import Loading from '../components/icon/loading.vue'
   import SearchBar from '../components/SearchBar.vue'
 
   const route = useRoute()
@@ -31,7 +33,9 @@
 
   const getAllRecipes = () => {
     const forceUpdate = route.query.force || null
-    const lastUpdated = computed(() => store.getters['data/lastUpdated'])
+    // computed() makes the date that vuex generated a string
+    // we have to convert it back into a date object for math to work on it
+    const lastUpdated = computed(() => new Date(store.getters['data/lastUpdated']))
     const now = new Date
     
     const diff = Math.round((Number(now) - Number(lastUpdated.value)) / (1000 * 60)) // time difference between now (view init) and last read operation
@@ -52,7 +56,7 @@
 
 <template>
   <div v-if="isLoading && !filterActive" class="text-center my-12">
-    <img src="/img/loading.svg" alt="Loading..." class="mx-auto">
+    <Loading class="mx-auto" />
     <p class="text-cool-gray-500 mt-12">Loading recipes...</p>
   </div>
   <section v-else class="">
@@ -75,23 +79,10 @@
       <HomeRecipeCard v-for="recipe in displayedRecipes" :recipe="recipe" :key="recipe.data.id" />
     </transition-group>
   </section>
+  <ButtonTop />
 </template>
 
 <style lang="postcss" scoped>
-  .list-enter-active, 
-  .list-leave-active {
-    transition: all .5s;
-  }
-
-  .list-enter-from, 
-  .list-leave-to {
-    opacity: 0;
-  }
-
-  .list-move {
-    transition: transform .5s;
-  }
-
   .slide-fade-enter-active,
   .slide-fade-leave-active {
     transition: all 0.5s;

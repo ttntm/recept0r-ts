@@ -18,7 +18,7 @@
       <circle cx="10" cy="10" r="7" />
       <line x1="21" y1="21" x2="15" y2="15" />
     </svg>
-    <input :value="modelValue" type="text" class="w-full search-input" id="search-input" placeholder="Search term" @input="handleInput">
+    <input :value="modelValue" type="text" class="w-full search-input" id="search-input" placeholder="What do you want to eat?" @input="handleInput">
     <div class="input-group-append">
       <button
         v-if="modelValue"

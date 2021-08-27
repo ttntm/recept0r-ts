@@ -5,9 +5,14 @@ export type Credentials = {
   password: string
 }
 
+export type Headers = {
+  Authorization?: string
+  'Content-Type': string
+}
+
 export type FilterSelection = {
-  [FKey: string]: string[],
-  category: string[],
+  [FKey: string]: string[]
+  category: string[]
   diet: string[]
 }
 
@@ -25,4 +30,11 @@ export type Recipe = {
   owner: string
   portions: string
   body: string
+}
+
+/**
+ * See: https://www.cloudhadoop.com/typescript-add-property-window/
+ */
+export interface smoothScrollWindow extends Window {
+  smoothScroll: Function
 }
