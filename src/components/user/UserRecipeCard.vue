@@ -42,5 +42,6 @@
     @apply object-cover;
     height: 200px;
     max-height: 200px;
+    min-width: 333px;
   }
 </style>

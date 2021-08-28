@@ -66,7 +66,7 @@
       <ButtonX class="rounded-full p-2" @click="onFilterClose" />
     </div>
     <div class="w-full -mt-8">
-      <h5 class="text-cool-gray-500 text-center">Filter Selection</h5>
+      <h2 class="text-base text-cool-gray-500 text-center">Filter Selection</h2>
     </div>
     <div class="w-full mb-4">
       <h5>Category</h5>

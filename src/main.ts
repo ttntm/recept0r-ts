@@ -29,8 +29,8 @@ app.directive('click-blur', {
         e.currentTarget.blur()
       }
     }
-    el.addEventListener('click', handleClickBlur)
-    el.addEventListener('touchend', handleClickBlur)
+    el.addEventListener('click', handleClickBlur, false)
+    el.addEventListener('touchend', handleClickBlur, false)
   },
   beforeUnmount(el) {
     el.removeEventListener('click', handleClickBlur)
@@ -40,14 +40,13 @@ app.directive('click-blur', {
 
 app.directive('click-outside', {
   beforeMount(el, binding, vnode) {
-    handleOutsideClick = (e: Event & { target: HTMLInputElement }) => {
-      e.stopPropagation()
+    handleOutsideClick = (e: Event & { target: HTMLElement }) => {
       if (!el.contains(e.target) && !e.target.classList.contains('click-outside-ignore')) {
         binding.value()
       }
     }
-    document.addEventListener('click', handleOutsideClick)
-    document.addEventListener('touchstart', handleOutsideClick)
+    document.addEventListener('click', handleOutsideClick, false)
+    document.addEventListener('touchstart', handleOutsideClick, false)
   },
   beforeUnmount() {
     document.removeEventListener('click', handleOutsideClick)

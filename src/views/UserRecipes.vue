@@ -67,13 +67,10 @@
     <div v-if="!isLoading && myRecipesDisplay.length === 0" class="text-center">
       <p class="">It seems like you haven't created any recipes yet...</p>
       <p class="mb-12">How about giving it a try?</p>
-      <router-link
-        :to="{ name: 'Add Recipe' }"
-        class="btn btn-gray"
-      >Add Recipe</router-link>
+      <router-link :to="{ name: 'Add Recipe' }" class="btn btn-gray">Add Recipe</router-link>
     </div>
     <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
-      <SearchBar v-model.trim="userSearchTerm" @update:modelValue="setSearchTerm($event)" />
+      <SearchBar v-if="displayList.length > 0" v-model.trim="userSearchTerm" @update:modelValue="setSearchTerm($event)" />
     </div>
     <UserRecipeSorting v-if="myRecipesDisplay.length > 0" :data="myRecipesDisplay" @update:list="updateList($event)" />
     <transition name="fade">

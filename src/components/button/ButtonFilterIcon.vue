@@ -85,7 +85,6 @@
 
   .filter-group:hover .filter-img,
   .filter-group:hover .filter-text,
-  .filter-group:focus .filter-img,
   .filter-group:focus .filter-text {
     @apply opacity-100;
   }

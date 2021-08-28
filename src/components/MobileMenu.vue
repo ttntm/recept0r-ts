@@ -18,9 +18,9 @@
 
 <template>
   <div class="w-full min-h-screen absolute top-0 bg-white flex flex-col justify-start items-start px-6 py-4 z-10" v-scroll-lock>
-    <div class="w-full flex items-center justify-between">
-      <ButtonMenu class="rounded-full opacity-75 hover:opacity-100 p-2 mt-2 mx-2" mode="close" label="Close menu" @click="showWindow(0)" />
-      <ButtonX class="rounded-full p-2 mt-2 mx-2" @click="showWindow(0)" />
+    <div class="w-full flex items-center justify-between mt-2">
+      <ButtonMenu class="rounded-full opacity-75 hover:opacity-100 p-2 mx-2" mode="close" label="Close menu" @click="showWindow(0)" />
+      <ButtonX class="rounded-full p-2 mx-2" @click="showWindow(0)" />
     </div>
     <nav class="w-full flex flex-col justify-center">
       <router-link
