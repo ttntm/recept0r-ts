@@ -1,5 +1,5 @@
 import { store } from '../store'
-import { Credentials, Headers } from '../types'
+import type { Credentials, Headers } from '../types'
 
 export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
   const url = String(import.meta.env.VITE_APP_API)

@@ -30,11 +30,11 @@ app.directive('click-blur', {
       }
     }
     el.addEventListener('click', handleClickBlur)
-    el.addEventListener('touchstart', handleClickBlur)
+    el.addEventListener('touchend', handleClickBlur)
   },
   beforeUnmount(el) {
     el.removeEventListener('click', handleClickBlur)
-    el.removeEventListener('touchstart', handleClickBlur)
+    el.removeEventListener('touchend', handleClickBlur)
   }
 })
 

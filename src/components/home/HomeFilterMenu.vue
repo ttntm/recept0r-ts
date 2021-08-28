@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, reactive } from 'vue'
   import { useStore } from '../../store'
-  import { FilterSelection } from '../../types'
+  import type { FilterSelection } from '../../types'
 
   import { getArrayIndex, showWindow } from '../../utils'
 

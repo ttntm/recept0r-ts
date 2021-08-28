@@ -1,7 +1,8 @@
 <script setup lang="ts">
-  import { computed, ref, watch, WritableComputedRef } from 'vue'
+  import { computed, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '../store'
+  import type { WritableComputedRef } from 'vue'
   
   import { useRecipeSearch } from '../utils'
   

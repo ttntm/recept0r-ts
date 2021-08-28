@@ -1,9 +1,5 @@
 <script setup lang="ts">
   import { onUnmounted, ref } from 'vue'
-  import { smoothScrollWindow } from '../../types'
-
-  // See: https://www.cloudhadoop.com/typescript-add-property-window/
-  declare const window: smoothScrollWindow
 
   // based on: https://github.com/caiofsouza/vue-backtotop/blob/master/src/BackToTop.vue
   const visible = ref(false)

@@ -2,9 +2,9 @@
   import { computed, reactive, ref, watch } from 'vue'
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '../store'
-  import { Recipe } from '../types'
   import { QuillEditor } from '@vueup/vue-quill'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
+  import type { Recipe } from '../types'
 
   import { getRecipeData, slugify } from '../utils'
 

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { RouteRecordNormalized } from 'vue-router'
+  import type { RouteRecordNormalized } from 'vue-router'
 
   import { showWindow } from '../utils'
 
-  import ButtonX from './button/ButtonX.vue';
+  import ButtonMenu from './button/ButtonMenu.vue'
+  import ButtonX from './button/ButtonX.vue'
 
   const props = defineProps<{
     loggedIn: boolean,
@@ -17,7 +18,8 @@
 
 <template>
   <div class="w-full min-h-screen absolute top-0 bg-white flex flex-col justify-start items-start px-6 py-4 z-10" v-scroll-lock>
-    <div class="w-full flex items-center justify-end">
+    <div class="w-full flex items-center justify-between">
+      <ButtonMenu class="rounded-full opacity-75 hover:opacity-100 p-2 mt-2 mx-2" mode="close" label="Close menu" @click="showWindow(0)" />
       <ButtonX class="rounded-full p-2 mt-2 mx-2" @click="showWindow(0)" />
     </div>
     <nav class="w-full flex flex-col justify-center">

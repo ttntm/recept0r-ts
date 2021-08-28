@@ -33,8 +33,11 @@ export type Recipe = {
 }
 
 /**
+ * We need to tell TS about custom properties/methods on the Window object
  * See: https://www.cloudhadoop.com/typescript-add-property-window/
  */
-export interface smoothScrollWindow extends Window {
-  smoothScroll: Function
+declare global {
+  interface Window {
+    smoothScroll: Function
+  }
 }
