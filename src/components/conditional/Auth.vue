@@ -48,7 +48,7 @@
         </h3>
       </div>
       <AuthLogin v-if="mode === 'login'" />
-      <div v-if="mode === 'signup'">
+      <div v-if="mode === 'signup'" class="text-center">
         <p>Thanks for your interest in recept0r.</p>
         <p>Public registrations are suspended until further notice. This is currently an invite only service.</p>
       </div>
