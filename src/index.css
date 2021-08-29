@@ -379,6 +379,10 @@ svg {
     transition: all 0.35s ease;
   }
 
+  .logo:hover {
+    @apply opacity-75;
+  }
+
   .btn-gray:hover {
     @apply bg-cool-gray-500;
   }
