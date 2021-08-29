@@ -20,7 +20,7 @@
   <nav class="container flex flex-row justify-start lg:justify-center items-center pt-4 lg:pt-12 pb-8 px-6 lg:px-4 mx-auto">
     <ButtonMenu class="mr-8" @click="showWindow(1)" />
     <router-link :to="{ name: 'All Recipes' }" class="focus:shadow-none" v-click-blur>
-      <img src="/img/logo.svg" class="logo pointer-events-none mb-3" alt="recept0r logo" width="160">
+      <img src="/img/logo.svg" class="logo mb-3" alt="recept0r logo" width="160">
     </router-link>
     <div class="hidden lg:flex flex-row justify-center items-center flex-grow">
       <router-link

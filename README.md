@@ -1,29 +1,26 @@
-# About recept0r
+## About
 
-If you're into cooking, you may find some inspiration here 😁
+This is the 2021 version of [recept0r](https://github.com/ttntm/recept0r/), a minimal open source recipes app.
 
-recept0r is a minimal recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like database access and user authentication.
+Re-written from scratch using Vue 3 with TypeScript.
 
-At the moment, recept0r is a semi-public personal service. That means, that even though public signup is technically possible, it's currently disabled in favor of an invite only signup process.
+A little background info in an article I wrote: [How I Built a Serverless Recipes App with FaunaDB and Vue.js](https://ttntm.me/blog/serverless-recipes-app-faunadb-vuejs/) (a little outdated in terms of the code samples, but the app's architecture is still the same)
 
-## Credits
+## Deploymet
 
-**Design**: Sahar Heumesser | [website](https://sahar.design)
+If you'd like to fork this repository and deploy your own recipes app:
 
-**Code**: ttntm | [website](https://ttntm.me)
+1. Sign up @ Cloudinary, Fauna & Netlify
+2. Create a new db + necessary indexes in Fauna
+    - Refer to everything in `./functions` to see what's required or get in touch
+3. Configure necessary environment variables
+    - `FAUNA_SECRET`: your Fauna secret
+    - `VITE_APP_API`: something like `/.netlify/functions/api`
+    - `VITE_APP_CDNRY`: something like `https://api.cloudinary.com/v1_1/USERNAME/image/upload`
+    - `VITE_APP_CDNRY_UPRESET`: a short ID generated in Cloudinary
+    - `VITE_APP_IDENTITY`: an absolute URL to your site's identity endpoint like `https://your.domain/.netlify/identity`
+    - `VITE_APP_READ`: path to the public "read" function `/.netlify/functions/read`
+    - `VITE_APP_READALL`: path to the public "readAll" function `/.netlify/functions/read-all`
+4. Build and deploy your instance
 
-## Tech Stack
-
-recept0r is built based on these tools:
-
-- faunadb
-- gotrue-js (Netlify identity)
-- tailwindcss
-- tiptap Editor
-- vue
-- vue-router
-- vuex
-
-The exact specifications can be found in `package.json` at [GitHub](https://github.com/ttntm/recept0r/blob/master/package.json)
-
-Large parts of the user signup and authentication process are based on this project: [vue-netlify-fauna-starter-kit](https://github.com/chiubaca/vue-netlify-fauna-starter-kit)
+Regarding Netlify: any serverless "back end" code (functions) can probably run elsewhere without bigger changes, but re-wiring the whole user management (Netlify Identity) might end up being a major change.
