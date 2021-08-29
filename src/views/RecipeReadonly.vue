@@ -52,12 +52,12 @@
     <div class="w-full lg:w-2/5 lg:pl-8">
       <h2 class="mt-4 lg:mt-8 mb-4">{{ recipe.data.title }}</h2>
       <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
-      <div class="flex flex-row flex-no-wrap border-t border-b border-cool-gray-500 mb-8 py-4">
-        <div class="flex-1 flex flex-row items-center justify-center mr-4">
+      <div class="flex flex-row flex-no-wrap leading-none border-t border-b border-cool-gray-500 mb-8 py-4">
+        <div class="flex-1 flex flex-row items-center justify-center px-4">
           <Portions class="mr-4" />
           <p class="text-blue-500 mb-0">{{ recipe.data.portions }}</p>
         </div>
-        <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500">
+        <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500 px-4">
           <Duration class="mr-4" />
           <p class="text-blue-500 mb-0">{{ recipe.data.duration }}</p>
         </div>
