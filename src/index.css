@@ -47,10 +47,6 @@
   }
 }
 
-*:hover {
-  transition: all 0.35s ease;
-}
-
 *:focus {
   @apply outline-none shadow-outline;
 }
@@ -185,7 +181,6 @@ svg {
   @apply bg-gray-500 text-blue-500;
 }
 
-.btn-gray:hover, 
 .btn-gray:focus {
   @apply bg-cool-gray-500;
 }
@@ -195,8 +190,8 @@ svg {
   @apply block font-bold border border-blue-500 text-blue-500 rounded-lg shadow-sm;
 }
 
-.btn-outline:hover, .btn-outline:focus,
-.modal-btn:hover, .modal-btn:focus {
+.btn-outline:focus,
+.modal-btn:focus {
   @apply bg-cool-gray-500 border-cool-gray-500 shadow-none;
 }
 
@@ -373,6 +368,25 @@ svg {
 .toast-fade-leave-to {
   transform: translateX(400px);
   opacity: 0;
+}
+
+/* ---------- HOVER STYLES ---------- */
+/* Styles that shouldn't trigger on touch devices where :hover doesn't work properly = doesn't unset itself */
+/* See: https://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices */
+
+@media (hover: hover) and (pointer: fine) {
+  *:hover {
+    transition: all 0.35s ease;
+  }
+
+  .btn-gray:hover {
+    @apply bg-cool-gray-500;
+  }
+
+  .btn-outline:hover,
+  .modal-btn:hover {
+    @apply bg-cool-gray-500 border-cool-gray-500 shadow-none;
+  }
 }
 
 @tailwind utilities;

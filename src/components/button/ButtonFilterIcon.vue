@@ -71,6 +71,7 @@
 
   .filter-img,
   .filter-text {
+    @apply pointer-events-none;
     transition: opacity .35s ease-in-out;
   }
 
@@ -80,12 +81,18 @@
   }
 
   .filter-text {
-    @apply block text-xs font-bold text-center text-blue-500 opacity-50 pointer-events-none;
+    @apply block text-xs font-bold text-center text-blue-500 opacity-50;
   }
 
-  .filter-group:hover .filter-img,
-  .filter-group:hover .filter-text,
+  .filter-group:focus .filter-img,
   .filter-group:focus .filter-text {
     @apply opacity-100;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .filter-group:hover .filter-img,
+    .filter-group:hover .filter-text {
+      @apply opacity-100;
+    }
   }
 </style>

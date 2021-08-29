@@ -33,9 +33,11 @@
   .list-card {
     @apply flex-no-wrap bg-gray-500 rounded-lg border border-transparent;
   }
-
-  .list-card:hover {
-    @apply border-cool-gray-500 shadow;
+  
+  @media (hover: hover) and (pointer: fine) {
+    .list-card:hover {
+      @apply border-cool-gray-500 shadow;
+    }
   }
 
   .img-cover {

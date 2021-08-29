@@ -25,15 +25,17 @@
     @apply bg-gray-500 shadow-sm;
   }
 
-  .recipe-card:hover {
-    box-shadow: 0 0.45rem 0.9rem rgba(0,0,0,.1);
-    transition: box-shadow .35s ease-in-out;
-  }
-
   .recipe-card-img {
     @apply w-full rounded-tl-lg rounded-tr-lg object-cover;
     height: 300px;
     max-height: 300px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .recipe-card:hover {
+      box-shadow: 0 0.45rem 0.9rem rgba(0,0,0,.1);
+      transition: box-shadow .35s ease-in-out;
+    }
   }
 
   @media screen and (min-width:1024px) {
