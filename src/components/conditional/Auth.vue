@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, watch } from 'vue'
-  import { useStore } from '../../store'
+  import { showWindow } from '../../utils'
 
   import AuthLogin from './AuthLogin.vue'
   import ButtonX from '../button/ButtonX.vue'
@@ -9,10 +9,9 @@
     loggedIn: boolean
   }>()
 
-  const store = useStore()
   const mode = ref('login')
 
-  const closeAuth = () => store.dispatch('app/setWindowOpen', 0)
+  const closeAuth = () => showWindow(0)
 
   watch(() => props.loggedIn, (currentVal) => {
     if (currentVal) closeAuth()

@@ -3,11 +3,14 @@
   import { useRoute } from 'vue-router'
   import { useStore } from '../store'
 
-  import { getRecipeData } from '../utils'
+  import { getRecipeData, showWindow } from '../utils'
 
+  import ButtonShare from '../components/button/ButtonShare.vue'
+  import ButtonTop from '../components/button/ButtonTop.vue'
   import Duration from '../components/icon/duration.vue'
   import Loading from '../components/icon/loading.vue'
   import Portions from '../components/icon/portions.vue'
+  import RecipeShare from '../components/recipe/RecipeShare.vue'
 
   const route = useRoute()
   const store = useStore()
@@ -16,6 +19,7 @@
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const readSuccess = ref(false)
   const recipe = ref()
+  const windowOpen = computed(() => store.getters['app/windowOpen'])
 
   const getCurrentRecipeData = async () => {
     const currentId = route.params.refId.toString()
@@ -50,7 +54,13 @@
       <img v-if="recipe.data.image" class="w-full rounded-lg shadow-sm mb-4" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
     </div>
     <div class="w-full lg:w-2/5 lg:pl-8">
-      <h2 class="mt-4 lg:mt-8 mb-4">{{ recipe.data.title }}</h2>
+      <div class="flex justify-end">
+        <transition name="share">
+          <RecipeShare v-if="windowOpen === 4" />
+        </transition>
+        <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
+      </div>
+      <h2 class="mt-4 mb-4">{{ recipe.data.title }}</h2>
       <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
       <div class="flex flex-row flex-no-wrap leading-none border-t border-b border-cool-gray-500 mb-8 py-4">
         <div class="flex-1 flex flex-row items-center justify-center px-4">
@@ -96,6 +106,7 @@
       </div>
     </div>
   </section>
+  <ButtonTop />
 </template>
 
 <style lang="postcss">
@@ -105,5 +116,16 @@
 
   .recipe-body a:hover {
     @apply no-underline;
+  }
+
+  .share-enter-active,
+  .share-leave-active {
+    transition: all 0.5s;
+  }
+
+  .share-enter-from,
+  .share-leave-to {
+    transform: translateX(-150px);
+    opacity: 0;
   }
 </style>
