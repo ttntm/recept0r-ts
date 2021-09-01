@@ -18,6 +18,7 @@
   const allRecipes = computed(() => store.getters['data/allRecipes'])
   const filterActive = computed(() => store.getters['data/filterActive'])
   const isLoading = computed(() => allRecipes.value.length > 0 ? false : true)
+  const lastUpdated = computed(() => store.getters['data/lastUpdated'])
   const searchTerm = ref('')
   const windowOpen = computed(() => store.getters['app/windowOpen'])
 
@@ -34,13 +35,14 @@
   const getAllRecipes = () => {
     const forceUpdate = route.query.force || null
     // computed() makes the date that vuex generated a string
-    // we have to convert it back into a date object for math to work on it
-    const lastUpdated = computed(() => new Date(store.getters['data/lastUpdated']))
+    // we have to convert it back into a date object for math to work on it,
+    // but only if it's not an empty string!
+    const lastUpdate = lastUpdated.value ? new Date(lastUpdated.value) : null
     const now = new Date
     
     const diff = Math.round((Number(now) - Number(lastUpdated.value)) / (1000 * 60)) // time difference between now (view init) and last read operation
 
-    if ((allRecipes.value.length === 0 && !filterActive.value) || !lastUpdated.value || diff > 60 || forceUpdate) {
+    if ((allRecipes.value.length === 0 && !filterActive.value) || !lastUpdate || diff > 60 || forceUpdate) {
       store.dispatch('data/readAll')
     }
   }

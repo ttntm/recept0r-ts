@@ -67,7 +67,6 @@ export async function getRecipeData(id: string) {
  * Sorts objects based on a specific key using an optional `primer` function
  */
 export function objectSort(field: any, reverse: boolean, primer: Function) {
-  //generic sorting function for object keys
   const key = primer ? (x: any) => primer(x.data[field]) : (x: any) => x.data[field]
   
   const reversed = !reverse ? 1 : -1
@@ -109,7 +108,7 @@ export async function uploadImage(url: string, data: FormData) {
 
     const res = await req.json()
 
-    return res ? { message: 'Image successfully uploaded.', data: res.secure_url } : error
+    return res? { message: 'Image successfully uploaded.', data: res.secure_url } : error
   } catch (err) {
     return error
   }
@@ -122,7 +121,9 @@ export function useRecipeSearch(data: any[], term: string) {
   return data.filter((item: any) => {
     if (item.data.title.toLowerCase().indexOf(term.toLowerCase()) === -1) { //if there was no match for the title...
       return item.data.description.toLowerCase().indexOf(term.toLowerCase()) !== -1 ? true : false //...evaluate the description
-    } else { return true }
+    } else { 
+      return true 
+    }
   })
 }
 
@@ -135,11 +136,7 @@ export function validateCredentials(input: Credentials) {
 
   if (emptyKeys.length > 0) return false
 
-  if (input.password && input.email && validateEmail(input.email)) {
-    return true
-  } else {
-    return false
-  }
+  return Boolean(input.password && input.email && validateEmail(input.email))
 }
 
 /**
