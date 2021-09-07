@@ -14,15 +14,15 @@ function detectTokens() {
   const recoveryToken = detectRecoveryToken()
 
   if (emailToken) {
-    console.log("Detected email confirmation token", emailToken)
+    console.log('Detected email confirmation token', emailToken)
     confirmEmailToken(emailToken)
     return
   } else if (inviteToken) {
-    console.log("found invite token", inviteToken)
+    console.log('found invite token', inviteToken)
     confirmInviteToken(inviteToken)
     return
   } else if (recoveryToken) {
-    console.log("found recovery token", recoveryToken)
+    console.log('found recovery token', recoveryToken)
     confirmRecoveryToken(recoveryToken)
     return
   }
@@ -35,12 +35,12 @@ function detectEmailConfirmationToken() {
   try {
     // split the hash where it detects `confirmation_token=`. The string which proceeds is the part which we want.
     const token = decodeURIComponent(document.location.hash).split(
-      "confirmation_token="
+      'confirmation_token='
     )[1]
     return token
   } catch (error) {
     console.error(
-      "Something went wrong when trying to extract email confirmation token",
+      'Something went wrong when trying to extract email confirmation token',
       error
     )
     return null
@@ -51,12 +51,12 @@ function detectInviteToken() {
   try {
     // split the hash where it detects `invite_token=`. The string which proceeds is the part which we want.
     const token = decodeURIComponent(document.location.hash).split(
-      "invite_token="
+      'invite_token='
     )[1]
     return token
   } catch (error) {
     console.error(
-      "Something went wrong when trying to extract invite token.",
+      'Something went wrong when trying to extract invite token.',
       error
     )
     return null
@@ -67,12 +67,12 @@ function detectRecoveryToken() {
   try {
     // split the hash where it detects `confirmation_token=`. The string which proceeds is the part which we want.
     const token = decodeURIComponent(document.location.hash).split(
-      "recovery_token="
+      'recovery_token='
     )[1]
     return token
   } catch (error) {
     console.error(
-      "Something went wrong when trying to extract recovery token.",
+      'Something went wrong when trying to extract recovery token.',
       error
     )
     return null
@@ -84,7 +84,7 @@ function detectRecoveryToken() {
  */
 function confirmEmailToken(token) {
   store
-    .dispatch("user/attemptConfirmation", token)
+    .dispatch('user/attemptConfirmation', token)
     .then(resp => {
       store.dispatch('app/sendToastMessage', { text: `${resp.email} has been confirmed, please login`, type: 'success' })
     })
@@ -101,10 +101,10 @@ function confirmInviteToken(token) {
 
 function confirmRecoveryToken(recoveryToken) {
   store
-    .dispatch("user/attemptPasswordRecovery", recoveryToken)
+    .dispatch('user/attemptPasswordRecovery', recoveryToken)
     .then(() => {
       router.push({ name: 'profile' })
-      alert("Account has been recovered. Update your password now.")
+      alert('Account has been recovered. Update your password now.')
     })
     .catch(() => {
       alert(`Can't recover password`)

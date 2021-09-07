@@ -57,7 +57,7 @@ export async function getAuthHeaders() {
  */
 export async function getRecipeData(id: string) {
   const existing = await store.dispatch('data/getRecipeById', id)
-
+  console.log(existing)
   return existing.length > 0
     ? existing[0]
     : await store.dispatch('data/read', id)

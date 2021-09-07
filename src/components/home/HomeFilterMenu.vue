@@ -11,6 +11,7 @@
 
   const store = useStore()
 
+  const confirmBtnTxt = computed(() => filterActive.value ? 'Apply' : 'Close')
   const filterActive = computed(() => store.getters['data/filterActive'])
   const filterActiveSelection = computed(() => store.getters['data/filterData'])
   const recipeCategory = computed(() => store.getters['data/recipeCategory'])
@@ -23,8 +24,10 @@
   const isActiveFilter = (mode: string, el: string) => getArrayIndex(selected[mode], el) !== -1
 
   const onClearFilterClick = () => {
-    Object.keys(selected).forEach(key => selected[key] = [])
-    return store.dispatch('data/clearFilter')
+    if (filterActive.value) {
+      Object.keys(selected).forEach(key => selected[key] = [])
+      return store.dispatch('data/clearFilter')
+    }
   }
 
   const onFilterClick = (mode: string, el: string) => {
@@ -93,8 +96,8 @@
       </div>
     </div>
     <div class="w-full flex flex-row justify-center lg:justify-end">
-      <ButtonDefault class="btn-outline px-8" @click="onClearFilterClick()">Clear Filter</ButtonDefault>
-      <ButtonDefault class="btn-outline px-8 ml-4" @click="onFilterClose">Close</ButtonDefault>
+      <ButtonDefault class="btn-outline px-8" :disabled="!filterActive" @click="onClearFilterClick()">Clear</ButtonDefault>
+      <ButtonDefault class="btn-outline px-8 ml-4" @click="onFilterClose">{{ confirmBtnTxt }}</ButtonDefault>
     </div>
   </div>
 </template>

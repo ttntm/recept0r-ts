@@ -282,17 +282,19 @@ export default {
     getRecipeById({ getters }, id) {
       const allRecipes = getters.allRecipes
       const userRecipes = getters.userRecipes
+      const result = []
       
-      const getRecipe = (source, lookup) => source.filter(item => item.ref['@ref'].id === lookup)
+      const getRecipe = (source, lookup) => source.find(item => item.ref['@ref'].id === lookup)
       
-      const inAll = allRecipes.length > 0 ? getRecipe(allRecipes, id) : null
-      const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
-
-      return inAll && inAll.length > 0
-        ? inAll
-        : inUser && inUser.length > 0
-          ? inUser
-          : []
+      if (allRecipes.length > 0) {
+        const inAll = getRecipe(allRecipes, id)
+        if (inAll) result.push(inAll)
+      } else {
+        const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
+        if (inUser) result.push(inUser)
+      }
+      
+      return result
     },
 
     updateLocalRecipes({ commit, getters }, args) {

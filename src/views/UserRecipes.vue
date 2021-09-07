@@ -43,7 +43,7 @@
       store.dispatch('data/readUser', user.value.id)
     }
 
-    setTimeout(() => isLoading.value = false, 1500)
+    setTimeout(() => isLoading.value = false, 2000)
   }
 
   const setSearchTerm = (val: string) => userSearchTerm.value = val

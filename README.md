@@ -6,7 +6,7 @@ Re-written from scratch using Vue 3 with TypeScript.
 
 A little background info in an article I wrote: [How I Built a Serverless Recipes App with FaunaDB and Vue.js](https://ttntm.me/blog/serverless-recipes-app-faunadb-vuejs/) (a little outdated in terms of the code samples, but the app's architecture is still the same)
 
-## Deploymet
+## Deployment
 
 If you'd like to fork this repository and deploy your own recipes app:
 
@@ -23,4 +23,12 @@ If you'd like to fork this repository and deploy your own recipes app:
     - `VITE_APP_READALL`: path to the public "readAll" function `/.netlify/functions/read-all`
 4. Build and deploy your instance
 
-Regarding Netlify: any serverless "back end" code (functions) can probably run elsewhere without bigger changes, but re-wiring the whole user management (Netlify Identity) might end up being a major change.
+### User Accounts
+
+**Public=anonymous user signup is disabled by default.**
+
+If you want to enable that, you've got to import and use the `AuthSignup` component in `./src/components/conditional/Auth.vue`.
+
+NB: invite processing and pwd reset are not working atm - the needed routes/views are missing.
+
+Regarding Netlify: any serverless "back end" code (functions) can probably run elsewhere without bigger changes, but re-building the whole user management (Netlify Identity) might end up being a major change.

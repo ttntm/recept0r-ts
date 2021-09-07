@@ -18,28 +18,29 @@
   
   // the Vue 3 way of handling refs based on v-for -- see:
   // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
-  const inputs: {[el: string]: any} = ref([])
+  const inputs: { [el: string]: any } = ref([])
 
   const addItem = async (index?: number) => {
+    let currentEl = null
     let ing = ingredients.value
     let inputEls = inputs.value
     
     if (index !== undefined && index > -1) {
       ing.splice(index + 1, 0, '')
-      if (props.mode !== 'edit') {
-        // await next tick to avoid 'x is undefined...' errors
-        await nextTick()
-        // set focus on the spliced item
-        inputEls[index+1].focus()
-      }
+      await nextTick() // await next tick to avoid 'x is undefined...' errors
+      currentEl = inputEls[index+1]
     } else {
       ing.push('')
+      await nextTick() // await next tick to avoid 'x is undefined...' errors
+      currentEl = inputEls[inputEls.length-1]
     }
+    // set focus on the added element
+    if (currentEl) currentEl.focus()
   }
 
-  const removeItem = (index: number) => {
-    let ing = ingredients.value
-    index > -1 ? ing.splice(index, 1) : ing.splice(ing.length - 1)
+  const removeItem = (index: number) => {    
+    ingredients.value.splice(index, 1)
+    inputs.value.splice(index, 1)
     emit('update:ingredients', ingredients.value)
   }
 
@@ -58,7 +59,6 @@
             class="inline-block form-control text-sm"
             @input="$emit('update:ingredients', ingredients)"
             @keydown.enter="addItem(index)"
-            v-focus
           >
           <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="removeItem(index)" />
         </span>
