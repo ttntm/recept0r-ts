@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { computed, reactive } from 'vue'
-  import { useStore } from '../../store'
+  import { useStore } from '@/store'
 
-  import { uploadImage } from '../../utils'
+  import { uploadImage } from '@/utils'
 
-  import ButtonDefault from '../button/ButtonDefault.vue'
+  import ButtonDefault from '@/components/button/ButtonDefault.vue'
 
   const props = defineProps<{
     currentImage: string,

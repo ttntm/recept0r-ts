@@ -1,18 +1,18 @@
 <script setup lang="ts">
-  import { computed, reactive, ref, watch } from 'vue'
+  import { computed, onMounted, reactive, ref, watch } from 'vue'
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
-  import { useStore } from '../store'
+  import { useStore } from '@/store'
   import { QuillEditor } from '@vueup/vue-quill'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
-  import type { Recipe } from '../types'
+  import type { Recipe } from '@/types'
 
-  import { getRecipeData, slugify } from '../utils'
+  import { getRecipeData, isImgUploaded, slugify } from '@/utils'
 
-  import ButtonDefault from '../components/button/ButtonDefault.vue'
-  import InputSelect from '../components/input/InputSelect.vue'
-  import InputToggle from '../components/input/InputToggle.vue'
-  import RecipeImage from '../components/recipe/RecipeImage.vue'
-  import RecipeIngredients from '../components/recipe/RecipeIngredients.vue'
+  import ButtonDefault from '@/components/button/ButtonDefault.vue'
+  import InputSelect from '@/components/input/InputSelect.vue'
+  import InputToggle from '@/components/input/InputToggle.vue'
+  import RecipeImage from '@/components/recipe/RecipeImage.vue'
+  import RecipeIngredients from '@/components/recipe/RecipeIngredients.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -29,10 +29,6 @@
     readOnly: false,
     theme: 'snow'
   }
-  const isImgUploaded = computed(() => {
-    const checkImgSrc = RegExp(/^https:\/\//)
-    return checkImgSrc.test(recipe.image)
-  })
   const isSaving = ref(false)
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const me = computed(() => store.getters['user/currentUser'])
@@ -48,12 +44,13 @@
     duration: '30 min / 1 h',
     image: '',
     ingredients: [],
-    owner: me.value ? me.value.id : '', // empty ID should technically be impossible (can't be seeing this omponent without login), this is just for DEV purposes
+    owner: me.value ? me.value.id : '',
     portions: '4 portions',
     body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
   const saveBtnText = computed(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save Draft' : 'Publish')
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
+  const title = ref()
 
   const cancel = () => router.push({ name: 'All Recipes' })
 
@@ -81,7 +78,7 @@
   const saveRecipe = async () => {
     const required = ['title', 'description', 'category', 'diet', 'ingredients', 'body']
 
-    if (recipe.image.length > 0 && !isImgUploaded.value) {
+    if (recipe.image.length > 0 && !isImgUploaded(recipe.image)) {
       return alert('An image was selected, but not uploaded yet. Please upload or remove the image before saving.')
     }
 
@@ -130,9 +127,6 @@
   const updateEditMode = (input: any) => { 
     Object.keys(input).map(key => updateRecipe(key, input[key]))
     editor.value.setHTML(recipe.body)
-    setTimeout(() => {
-      if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
-    }, 250)
   }
 
   const updateRecipe = (key: string, value: any) => recipe[key] = value
@@ -152,7 +146,7 @@
   getCurrentRecipeData()
 
   watch(loggedIn, () => {
-    // this WILL ignore the RouteLeave guard - we'll accept that for the time being
+    // this WILL ignore the 'onBeforeRouteLeave' guard - we'll accept that for the time being...
     if (!loggedIn.value) cancel()
   })
 
@@ -162,6 +156,8 @@
   watch(recipe, (current, old) => {
     if (current) noChanges.value = false
   })
+
+  onMounted(() => mode.value && mode.value !== 'edit' ? title.value.focus() : false)
 
   onBeforeRouteLeave((to, from) => {
     if (loggedIn.value && !noChanges.value && !isSaving.value) {
@@ -174,13 +170,13 @@
 <template>
   <div id="create-recipe" class="w-full md:w-4/5 flex flex-row flex-wrap mx-auto">
     <div class="w-full md:w-1/2">
-      <h3>Image</h3>
+      <h4>Image</h4>
       <img v-if="recipe.image" class="rounded-lg mt-4 mb-4" :src="recipe.image" :alt="recipe.title">
       <RecipeImage :currentImage="recipe.image" :recipe="recipe.id" @update:image="updateRecipe('image', $event)" class="mb-4" />
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
-      <h3 class="">Recipe Title</h3>
-      <input type="text" v-model.trim="recipe.title" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId" v-focus>
+      <h4 class="">Recipe Title</h4>
+      <input type="text" v-model.trim="recipe.title" ref="title" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId">
       <h4 class="mb-4">Description</h4>
       <input type="text" v-model.trim="recipe.description" class="form-control mb-4" placeholder="A fancy description...">
     </div>

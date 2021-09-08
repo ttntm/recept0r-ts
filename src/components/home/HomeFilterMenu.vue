@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { computed, reactive } from 'vue'
-  import { useStore } from '../../store'
-  import type { FilterSelection } from '../../types'
+  import { useStore } from '@/store'
+  import type { FilterSelection } from '@/types'
 
-  import { getArrayIndex, showWindow } from '../../utils'
+  import { getArrayIndex, showWindow } from '@/utils'
 
-  import ButtonDefault from '../button/ButtonDefault.vue'
-  import ButtonFilterIcon from '../button/ButtonFilterIcon.vue'
-  import ButtonX from '../button/ButtonX.vue'
+  import ButtonDefault from '@/components/button/ButtonDefault.vue'
+  import ButtonFilterIcon from '@/components/button/ButtonFilterIcon.vue'
+  import ButtonX from '@/components/button/ButtonX.vue'
 
   const store = useStore()
 

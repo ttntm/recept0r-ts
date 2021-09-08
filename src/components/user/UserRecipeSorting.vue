@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import { useStore } from '../../store'
+  import { useStore } from '@/store'
 
-  import { getArrayIndex, objectSort } from '../../utils'
+  import { getArrayIndex, objectSort } from '@/utils'
 
-  import ButtonSort from '../button/ButtonSort.vue'
+  import ButtonSort from '@/components/button/ButtonSort.vue'
 
   const emit = defineEmits<{
     (e: 'update:list', val: any[]): void

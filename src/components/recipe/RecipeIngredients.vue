@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { nextTick, ref, watch } from 'vue'
 
-  import ButtonDefault from '../button/ButtonDefault.vue'
-  import ButtonX from '../button/ButtonX.vue'
+  import ButtonDefault from '@/components/button/ButtonDefault.vue'
+  import ButtonX from '@/components/button/ButtonX.vue'
 
   const props = defineProps<{
     input: string[],

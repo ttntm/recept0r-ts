@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { ref, watch } from 'vue'
-  import { showWindow } from '../../utils'
+  import { showWindow } from '@/utils'
 
   import AuthLogin from './AuthLogin.vue'
-  import ButtonX from '../button/ButtonX.vue'
+  import ButtonX from '@/components/button/ButtonX.vue'
 
   const props = defineProps<{
     loggedIn: boolean

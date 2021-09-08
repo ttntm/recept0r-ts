@@ -1,5 +1,5 @@
-import { store } from '../store'
-import type { Credentials, Headers } from '../types'
+import { store } from '@/store'
+import type { Credentials, Headers } from '@/types'
 
 export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
   const url = String(import.meta.env.VITE_APP_API)
@@ -61,6 +61,14 @@ export async function getRecipeData(id: string) {
   return existing.length > 0
     ? existing[0]
     : await store.dispatch('data/read', id)
+}
+
+/**
+ * Checks a path for starting with 'https' and returns 'true' if that's the case
+ */
+export function isImgUploaded(path: string) {
+  const checkImgSrc = RegExp(/^https:\/\//)
+  return checkImgSrc.test(path)
 }
 
 /**

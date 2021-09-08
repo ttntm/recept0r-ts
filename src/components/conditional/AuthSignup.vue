@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
-  import { useStore } from '../../store'
-  import { validateCredentials } from '../../utils'
-  import type { Credentials } from '../../types'
+  import { useStore } from '@/store'
+  import { validateCredentials } from '@/utils'
+  import type { Credentials } from '@/types'
 
-  import ButtonDefault from '../button/ButtonDefault.vue'
+  import ButtonDefault from '@/components/button/ButtonDefault.vue'
 
   const store = useStore()
 

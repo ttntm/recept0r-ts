@@ -1,16 +1,16 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useRoute } from 'vue-router'
-  import { useStore } from '../store'
+  import { useStore } from '@/store'
 
-  import { showWindow, useRecipeSearch } from '../utils'
+  import { showWindow, useRecipeSearch } from '@/utils'
 
-  import ButtonFilter from '../components/button/ButtonFilter.vue'
-  import ButtonTop from '../components/button/ButtonTop.vue'
-  import HomeFilterMenu from '../components/home/HomeFilterMenu.vue'
-  import HomeRecipeCard from '../components/home/HomeRecipeCard.vue'
-  import Loading from '../components/icon/loading.vue'
-  import SearchBar from '../components/SearchBar.vue'
+  import ButtonFilter from '@/components/button/ButtonFilter.vue'
+  import ButtonTop from '@/components/button/ButtonTop.vue'
+  import HomeFilterMenu from '@/components/home/HomeFilterMenu.vue'
+  import HomeRecipeCard from '@/components/home/HomeRecipeCard.vue'
+  import Loading from '@/components/icon/loading.vue'
+  import SearchBar from '@/components/SearchBar.vue'
 
   const route = useRoute()
   const store = useStore()

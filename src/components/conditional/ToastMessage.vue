@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { computed } from 'vue'
-  import { useStore } from '../../store'
+  import { useStore } from '@/store'
 
-  import ButtonX from '../button/ButtonX.vue'
+  import ButtonX from '@/components/button/ButtonX.vue'
 
-  import happy from '../icon/happy.vue'
-  import sad from '../icon/sad.vue'
+  import happy from '@/components/icon/happy.vue'
+  import sad from '@/components/icon/sad.vue'
 
   const store = useStore();
   

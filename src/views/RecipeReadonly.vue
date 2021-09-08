@@ -1,16 +1,16 @@
 <script setup lang="ts">
   import { computed, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
-  import { useStore } from '../store'
+  import { useStore } from '@/store'
 
-  import { getRecipeData, showWindow } from '../utils'
+  import { getRecipeData, showWindow } from '@/utils'
 
-  import ButtonShare from '../components/button/ButtonShare.vue'
-  import ButtonTop from '../components/button/ButtonTop.vue'
-  import Duration from '../components/icon/duration.vue'
-  import Loading from '../components/icon/loading.vue'
-  import Portions from '../components/icon/portions.vue'
-  import RecipeShare from '../components/recipe/RecipeShare.vue'
+  import ButtonShare from '@/components/button/ButtonShare.vue'
+  import ButtonTop from '@/components/button/ButtonTop.vue'
+  import Duration from '@/components/icon/duration.vue'
+  import Loading from '@/components/icon/loading.vue'
+  import Portions from '@/components/icon/portions.vue'
+  import RecipeShare from '@/components/recipe/RecipeShare.vue'
 
   const route = useRoute()
   const store = useStore()

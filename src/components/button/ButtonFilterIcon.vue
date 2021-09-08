@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import { computed } from 'vue'
 
-  import bread from '../icon/filter/bread.vue'
-  import dessert from '../icon/filter/dessert.vue'
-  import drink from '../icon/filter/drink.vue'
-  import keto from '../icon/filter/keto.vue'
-  import main from '../icon/filter/main.vue'
-  import pastry from '../icon/filter/pastry.vue'
-  import salad from '../icon/filter/salad.vue'
-  import snack from '../icon/filter/snack.vue'
-  import soup from '../icon/filter/soup.vue'
-  import vegan from '../icon/filter/vegan.vue'
-  import vegetarian from '../icon/filter/vegetarian.vue'
+  import bread from '@/components/icon/filter/bread.vue'
+  import dessert from '@/components/icon/filter/dessert.vue'
+  import drink from '@/components/icon/filter/drink.vue'
+  import keto from '@/components/icon/filter/keto.vue'
+  import main from '@/components/icon/filter/main.vue'
+  import pastry from '@/components/icon/filter/pastry.vue'
+  import salad from '@/components/icon/filter/salad.vue'
+  import snack from '@/components/icon/filter/snack.vue'
+  import soup from '@/components/icon/filter/soup.vue'
+  import vegan from '@/components/icon/filter/vegan.vue'
+  import vegetarian from '@/components/icon/filter/vegetarian.vue'
 
   const props = defineProps<{
     current: string

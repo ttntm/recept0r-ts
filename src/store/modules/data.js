@@ -1,4 +1,4 @@
-import { apiRequest } from '../../utils'
+import { apiRequest } from '@/utils'
 
 export default {
   strict: false,
@@ -288,10 +288,12 @@ export default {
       
       if (allRecipes.length > 0) {
         const inAll = getRecipe(allRecipes, id)
-        if (inAll) result.push(inAll)
-      } else {
-        const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
-        if (inUser) result.push(inUser)
+        if (inAll) { 
+          result.push(inAll)
+        } else {
+          const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
+          if (inUser) result.push(inUser)
+        }
       }
       
       return result
@@ -302,6 +304,8 @@ export default {
       const allRecipes = getters.allRecipes
       const userRecipes = getters.userRecipes
       const id = recipeUpdate.ref['@ref'].id
+
+      const mustUpdateUR = () => userRecipes.length > 0
 
       const removeRecord = (input, removalId) => input.filter(item => item.ref['@ref'].id !== removalId)
 
@@ -326,12 +330,12 @@ export default {
         case 'update':
           // keep in mind that we have to remove drafts from `allRecipes`
           updatedArr = recipeUpdate.data.draft ? removeRecord(allRecipes, id) : upsertRecord(allRecipes, id, recipeUpdate)
-          updatedUsrArr = upsertRecord(userRecipes, id, recipeUpdate)
+          updatedUsrArr = mustUpdateUR() ? upsertRecord(userRecipes, id, recipeUpdate) : updatedUsrArr
           break
         
         case 'remove':
           updatedArr = removeRecord(allRecipes, id)
-          updatedUsrArr = removeRecord(userRecipes, id)
+          updatedUsrArr = mustUpdateUR() ? removeRecord(userRecipes, id) : updatedUsrArr
           break
 
         default:

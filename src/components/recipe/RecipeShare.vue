@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
-  import { showWindow } from '../../utils'
+  import { showWindow } from '@/utils'
 
-  import ButtonX from '../button/ButtonX.vue'
+  import ButtonX from '@/components/button/ButtonX.vue'
 
   const route = useRoute()
 

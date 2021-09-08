@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { RouteRecordNormalized } from 'vue-router'
 
-  import { showWindow } from '../utils'
+  import { showWindow } from '@/utils'
 
   import ButtonMenu from './button/ButtonMenu.vue'
   import ButtonX from './button/ButtonX.vue'

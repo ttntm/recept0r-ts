@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { Recipe } from '../../types'
+  import type { Recipe } from '@/types'
 
   const props = defineProps<{
     recipe: Recipe
@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <div :class="{ 'bg-gray-600 bg-opacity-25' : recipe.data.draft }" class="list-card flex flex-col md:flex-row mb-8" style="min-height: 200px;">
+  <div :class="{ 'list-card--draft' : recipe.data.draft }" class="list-card flex flex-col md:flex-row mb-8" style="min-height: 200px;">
     <div class="w-full sm:w-1/3 rounded-t-lg md:rounded-t-none md:rounded-l-lg">
       <router-link v-if="recipe.data.image" :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }" class="img-link focus:shadow-none" title="View recipe">
         <img :src="recipe.data.image" crossorigin="anonymous" :alt="recipe.data.title" :class="{ 'opacity-75' : recipe.data.draft }" class="w-full rounded-t-lg md:rounded-t-none md:rounded-l-lg img-cover" height="200" loading="lazy">
@@ -38,6 +38,10 @@
     .list-card:hover {
       @apply border-cool-gray-500 shadow;
     }
+  }
+
+  .list-card--draft {
+    @apply bg-gray-600 bg-opacity-25;
   }
 
   .img-cover {

@@ -1,16 +1,16 @@
 <script setup lang="ts">
   import { computed, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
-  import { useStore } from '../store'
+  import { useStore } from '@/store'
   import type { WritableComputedRef } from 'vue'
   
-  import { useRecipeSearch } from '../utils'
+  import { useRecipeSearch } from '@/utils'
   
-  import ButtonTop from '../components/button/ButtonTop.vue'
-  import Loading from '../components/icon/loading.vue'
-  import SearchBar from '../components/SearchBar.vue'
-  import UserRecipeCard from '../components/user/UserRecipeCard.vue'
-  import UserRecipeSorting from '../components/user/UserRecipeSorting.vue'
+  import ButtonTop from '@/components/button/ButtonTop.vue'
+  import Loading from '@/components/icon/loading.vue'
+  import SearchBar from '@/components/SearchBar.vue'
+  import UserRecipeCard from '@/components/user/UserRecipeCard.vue'
+  import UserRecipeSorting from '@/components/user/UserRecipeSorting.vue'
 
   const route = useRoute()
   const store = useStore()
