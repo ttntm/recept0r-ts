@@ -9,6 +9,8 @@
   import { getRecipeData, isImgUploaded, slugify } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
+  import ButtonDelete from '@/components/button/ButtonDelete.vue'
+  import ButtonDuplicate from '@/components/button/ButtonDuplicate.vue'
   import InputSelect from '@/components/input/InputSelect.vue'
   import InputToggle from '@/components/input/InputToggle.vue'
   import RecipeImage from '@/components/recipe/RecipeImage.vue'
@@ -29,6 +31,7 @@
     readOnly: false,
     theme: 'snow'
   }
+  const isDeleted = ref(false)
   const isSaving = ref(false)
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const me = computed(() => store.getters['user/currentUser'])
@@ -52,22 +55,18 @@
   const saveDisabled = computed(() => noChanges.value || isSaving.value ? true : false)
   const title = ref()
 
-  const cancel = () => router.push({ name: 'All Recipes' })
-
-  const deleteRecipe = async () => {
-    const confirm = window.confirm(`Deleting "${recipe.title}" - are you sure?`)
-    if (confirm) {
-      noChanges.value = true
-      const currentId = route.params.refId.toString()
-      const deleted = await store.dispatch('data/delete', currentId)
-      return deleted !== 'error' ? cancel() : noChanges.value = false
-    }
+  const cancel = (goHome: boolean = true) => {
+    return goHome
+      ? router.push({ name: 'All Recipes' })
+      : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
   }
+
+  const getCurrentRefId = () => route.params.refId.toString()
 
   const getCurrentRecipeData = async () => {
     // on component creation: check mode and get recipe data from Vuex or DB if we're in `edit` mode
     if (mode.value && mode.value === 'edit') {
-      const currentId = route.params.refId.toString()
+      const currentId = getCurrentRefId()
       const currentItem = await getRecipeData(currentId)
       return currentItem !== 'error' && currentItem.data
         ? updateEditMode(currentItem.data)
@@ -155,13 +154,16 @@
   // which is reason enough to trigger the navigation guard/cancel confirmation
   watch(recipe, (current, old) => {
     if (current) noChanges.value = false
+    if (current.title) document.title = `Editing: ${current.title} - recept0r`
   })
 
   onMounted(() => mode.value && mode.value !== 'edit' ? title.value.focus() : false)
 
   onBeforeRouteLeave((to, from) => {
     if (loggedIn.value && !noChanges.value && !isSaving.value) {
-      const answer = window.confirm('Do you really want to leave? There might be unsaved changes!')
+      const answer = isDeleted.value
+        ? true
+        : window.confirm('Do you really want to leave? There might be unsaved changes!')
       if (!answer) return false
     }
   })
@@ -201,10 +203,15 @@
       <section id="editor">
         <QuillEditor v-model:content="recipe.body" ref="editor" contentType="html" :options="editorOptions" />
       </section>
-      <div class="flex flex-row items-center justify-center lg:justify-start mt-8">
-        <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
-        <ButtonDefault @click="cancel">Cancel</ButtonDefault>
-        <ButtonDefault v-if="mode === 'edit'" class="opacity-75 hover:opacity-100 ml-4" @click="deleteRecipe">Delete</ButtonDefault>
+      <div class="flex flex-col md:flex-row items-center justify-between mt-8">
+        <div class="flex">
+          <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="saveRecipe">{{ saveBtnText }}</ButtonDefault>
+          <ButtonDefault @click="cancel(false)">Cancel</ButtonDefault>
+        </div>
+        <div v-if="mode === 'edit'" class="flex mt-4 md:mt-0">
+          <ButtonDelete :id="getCurrentRefId()" :title="recipe.title" @event:delete="() => isDeleted = true" class="mr-4" />
+          <ButtonDuplicate :recipe="recipe" />
+        </div>
       </div>
     </div>
   </div>

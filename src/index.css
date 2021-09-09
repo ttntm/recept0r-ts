@@ -187,7 +187,7 @@ svg {
 
 .btn-outline,
 .modal-btn {
-  @apply block font-bold border border-blue-500 text-blue-500 rounded-lg shadow-sm;
+  @apply block font-bold border border-blue-500 text-blue-500 bg-transparent rounded-lg shadow-sm;
 }
 
 .btn-outline:focus,

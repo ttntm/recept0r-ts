@@ -72,14 +72,14 @@ export default {
 
   mutations: {
     ADD_RECIPE_ALL(state, value) {
-      state.allRecipes.push(value)
+      state.allRecipes = [...state.allRecipes, value]
     },
     ADD_RECIPE_BOTH(state, value) {
-      state.allRecipes.push(value)
-      state.userRecipes.push(value)
+      state.allRecipes = [...state.allRecipes, value]
+      state.userRecipes = [...state.userRecipes, value]
     },
     ADD_RECIPE_USER(state, value) {
-      state.userRecipes.push(value)
+      state.userRecipes = [...state.userRecipes, value]
     },
     SET_ALL_RECIPES(state, value) {
       state.allRecipes = value
@@ -197,7 +197,11 @@ export default {
             return undefined
           }
         }
-        if (target()) commit(`ADD_RECIPE_${target().toUpperCase()}`, apiResponse)
+
+        if (target()) {
+          commit(`ADD_RECIPE_${target().toUpperCase()}`, apiResponse)
+        }
+        
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
         return created
       } else {
@@ -330,11 +334,14 @@ export default {
         case 'update':
           // keep in mind that we have to remove drafts from `allRecipes`
           updatedArr = recipeUpdate.data.draft ? removeRecord(allRecipes, id) : upsertRecord(allRecipes, id, recipeUpdate)
+          // update user recipes whenever we have any
           updatedUsrArr = mustUpdateUR() ? upsertRecord(userRecipes, id, recipeUpdate) : updatedUsrArr
           break
         
         case 'remove':
-          updatedArr = removeRecord(allRecipes, id)
+          // deleting a draft: not necessary in 'allRecipes' - drafts aren't in there
+          updatedArr = recipeUpdate.data.draft ? updatedArr : removeRecord(allRecipes, id)
+          // update user recipes whenever we have any
           updatedUsrArr = mustUpdateUR() ? removeRecord(userRecipes, id) : updatedUsrArr
           break
 
@@ -343,8 +350,16 @@ export default {
       }
 
       commit('SET_LAST_UPDATED', new Date)
-      commit('SET_ALL_RECIPES', updatedArr)
-      commit('SET_USER_RECIPES', updatedUsrArr)
+      
+      if (allRecipes.length > 0 && updatedArr.length > 0) {
+        // update 'allRecipes' if the update isn't 0 length (see case: 'remove')
+        commit('SET_ALL_RECIPES', updatedArr)
+      }
+
+      if (mustUpdateUR()) {
+        // update user recipes whenever we have any
+        commit('SET_USER_RECIPES', updatedUsrArr)
+      }
     }
   }
 }

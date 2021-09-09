@@ -43,7 +43,7 @@
       store.dispatch('data/readUser', user.value.id)
     }
 
-    setTimeout(() => isLoading.value = false, 2000)
+    setTimeout(() => isLoading.value = false, 5000)
   }
 
   const setSearchTerm = (val: string) => userSearchTerm.value = val
@@ -52,8 +52,10 @@
 
   getMyRecipes()
 
-  watch(myRecipes, () => {
-    if (myRecipes.value.length > 0) displayList.value = myRecipes.value.slice().reverse()
+  watch(myRecipes, (current, old) => {
+    if (current.length > 0) {
+      displayList.value = myRecipes.value.slice().reverse()
+    }
   })
 </script>
 

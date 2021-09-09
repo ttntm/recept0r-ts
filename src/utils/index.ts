@@ -1,6 +1,9 @@
 import { store } from '@/store'
-import type { Credentials, Headers } from '@/types'
+import type { Credentials, Headers, Recipe } from '@/types'
 
+/**
+ * Shared logic to handle API requests to the app's serverless back end functions
+ */
 export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
   const url = String(import.meta.env.VITE_APP_API)
   const path = reqPath ? `${url}/${reqPath}` : url
@@ -57,7 +60,6 @@ export async function getAuthHeaders() {
  */
 export async function getRecipeData(id: string) {
   const existing = await store.dispatch('data/getRecipeById', id)
-  console.log(existing)
   return existing.length > 0
     ? existing[0]
     : await store.dispatch('data/read', id)
