@@ -15,6 +15,7 @@
   const router = useRouter()
   const store = useStore()
 
+  const debugInfo = computed(() => store.getters['app/debugInfo'])
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const routeFull = computed(() => route.fullPath)
   const windowOpen = computed(() => store.getters['app/windowOpen'])
@@ -58,6 +59,6 @@
       <router-view :key="routeFull" />
     </div>
     <ToastMessage />
-    <Footer />
+    <Footer :debug="debugInfo" :loggedIn="loggedIn" />
   </div>
 </template>

@@ -6,6 +6,7 @@ export default {
     return {
       cdnryUpreset: import.meta.env.VITE_APP_CDNRY_UPRESET,
       cdnryURL: import.meta.env.VITE_APP_CDNRY,
+      debugInfo: null,
       identityURL: import.meta.env.VITE_APP_IDENTITY,
       functions: {
         read: import.meta.env.VITE_APP_READ,
@@ -19,6 +20,7 @@ export default {
   getters: {
     cdnryUpreset: state => state.cdnryUpreset,
     cdnryURL: state => state.cdnryURL,
+    debugInfo: state => state.debugInfo,
     functions: state => state.functions,
     identityURL: state => state.identityURL,
     toastMessage: state => state.toastMessage,
@@ -26,6 +28,9 @@ export default {
   },
 
   mutations: {
+    SET_DEBUG_INFO(state, value){
+      state.debugInfo = value
+    },
     SET_TOAST_MESSAGE(state, value) {
       state.toastMessage = value
     },
@@ -54,6 +59,14 @@ export default {
       timer = setTimeout(() => {
         commit('SET_TOAST_MESSAGE', null)
       }, 5000)
+    },
+
+    /**
+     * Set debug info based on how the 'Home' view handled the initial 'getAllRecipes()' function
+     * @param {object} data 
+     */
+    setDebugInfo({ commit }, data) {
+      commit('SET_DEBUG_INFO', data)
     },
 
     /**

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, ref } from 'vue'
+  import { computed, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
 
@@ -16,7 +16,6 @@
   const store = useStore()
 
   const allRecipes = computed(() => store.getters['data/allRecipes'])
-  const debug = computed(() => `<!-- Last update: ${lastUpdate()} || Update needed: ${updateNeeded()} || Force: ${Boolean(forceUpdate)} -->`)
   const filterActive = computed(() => store.getters['data/filterActive'])
   const forceUpdate = route.query.force || null
   const isLoading = computed(() => allRecipes.value.length > 0 ? false : true)
@@ -34,7 +33,7 @@
     }
   })  
 
-  const getAllRecipes = () => {
+  const getAllRecipes = () => {    
     if ((allRecipes.value.length === 0 && !filterActive.value) || forceUpdate || !lastUpdate() || updateNeeded()) {
       store.dispatch('data/readAll')
     }
@@ -58,6 +57,10 @@
   }
 
   getAllRecipes()
+
+  watch(lastUpdated, () => {
+    store.dispatch('app/setDebugInfo', { lastUpdate: lastUpdate(), updateNeeded: updateNeeded(), forceUpdate: Boolean(forceUpdate) })
+  })
 </script>
 
 <template>
@@ -85,7 +88,6 @@
       <HomeRecipeCard v-for="recipe in displayedRecipes" :recipe="recipe" :key="recipe.data.id" />
     </transition-group>
   </section>
-  <div id="info" v-html="debug" class="h-0 hidden" />
   <ButtonTop />
 </template>
 
