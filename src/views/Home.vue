@@ -16,7 +16,9 @@
   const store = useStore()
 
   const allRecipes = computed(() => store.getters['data/allRecipes'])
+  const debug = computed(() => `<!-- Last update: ${lastUpdate()} || Update needed: ${updateNeeded()} || Force: ${Boolean(forceUpdate)} -->`)
   const filterActive = computed(() => store.getters['data/filterActive'])
+  const forceUpdate = route.query.force || null
   const isLoading = computed(() => allRecipes.value.length > 0 ? false : true)
   const lastUpdated = computed(() => store.getters['data/lastUpdated'])
   const searchTerm = ref('')
@@ -30,28 +32,30 @@
     } else {
       return reversed
     }
-  })
+  })  
 
   const getAllRecipes = () => {
-    const forceUpdate = route.query.force || null
-    // computed() makes the date that vuex generated a string
-    // we have to convert it back into a date object for math to work on it,
-    // but only if it's not an empty string!
-    const lastUpdate = lastUpdated.value ? new Date(lastUpdated.value) : null
-    const now = new Date
-    
-    const diff = Math.round((Number(now) - Number(lastUpdated.value)) / (1000 * 60)) // time difference between now (view init) and last read operation
-
-    if ((allRecipes.value.length === 0 && !filterActive.value) || !lastUpdate || diff > 60 || forceUpdate) {
+    if ((allRecipes.value.length === 0 && !filterActive.value) || forceUpdate || !lastUpdate() || updateNeeded()) {
       store.dispatch('data/readAll')
     }
   }
+
+  // computed() makes the date that vuex generated a string
+  // we have to convert it back into a date object for math to work on it,
+  // but only if it's not an empty string!
+  const lastUpdate = () => lastUpdated.value ? new Date(lastUpdated.value) : null
 
   const onFilterBtnClick = () => windowOpen.value === 0 ? showWindow(3) : showWindow(0)
 
   const onFilterMsgClick = () => store.dispatch('data/clearFilter')
 
   const setSearchTerm = (val: string) => searchTerm.value = val
+
+  const updateNeeded = () => {
+    const now: Date = new Date
+    const diff: number = Math.round((Number(now) - Number(lastUpdate())) / (1000 * 60)) // time difference between now (view init) and last read operation
+    return diff > 60
+  }
 
   getAllRecipes()
 </script>
@@ -81,6 +85,7 @@
       <HomeRecipeCard v-for="recipe in displayedRecipes" :recipe="recipe" :key="recipe.data.id" />
     </transition-group>
   </section>
+  <div id="info" v-html="debug" class="h-0 hidden" />
   <ButtonTop />
 </template>
 
