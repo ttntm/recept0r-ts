@@ -5,8 +5,8 @@
       If you're into cooking, you might find some inspiration here 😁
     </p>
     <p>recept0r is a minimal <a href="https://github.com/ttntm/recept0r-ts/" target="_blank" rel="noopener">open source</a> recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like database access and user authentication.</p>
-    <p>It's designed to scale well while keeping operational costs at a bare minimum; bot Fauna and Netlify offer generous free tiers that are enough to host and operate the application you see here for zero runtime cost.</p>
-    <p>At the moment, recept0r is a semi-public personal/family service. That means, that even though public signup would technically be possible, it's currently disabled.</p>
+    <p>It's designed to scale well while keeping operational costs at a bare minimum; both Fauna and Netlify offer generous free tiers that are enough to host and operate the application you see here for zero runtime cost.</p>
+    <p>At the moment, recept0r is a semi-public personal/family service. That means that even though public signup is in the code, it's currently disabled.</p>
     <h3 class="mb-0">Credits</h3>
     <div class="flex flex-col sm:flex-row">
       <div class="flex flex-row items-center justify-start my-4 sm:mr-12">
