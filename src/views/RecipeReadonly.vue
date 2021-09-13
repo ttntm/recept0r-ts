@@ -50,18 +50,22 @@
     <div v-else v-html="errorMsg" class="text-center my-12" />
   </div>
   <section v-else id="recipe" class="w-full xl:w-4/5 flex flex-row flex-wrap mx-auto">
-    <div class="w-full lg:w-3/5">
-      <img v-if="recipe.data.image" class="w-full rounded-lg shadow-sm mb-4" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
+    <div class="w-full lg:w-3/5 mb-6 lg:mb-4">
+      <img v-if="recipe.data.image" class="w-full rounded-lg shadow-sm" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
     </div>
     <div class="w-full lg:w-2/5 lg:pl-8">
-      <div class="flex justify-end">
-        <transition name="share">
-          <RecipeShare v-if="windowOpen === 4" />
-        </transition>
-        <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
+      <div class="flex flex-row lg:flex-col justify-between items-start">
+        <div class="flex flex-row lg:self-end justify-end order-2 lg:order-1">
+          <transition name="share">
+            <RecipeShare v-if="windowOpen === 4" />
+          </transition>
+          <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
+        </div>
+        <div class="order-1 lg:order-2">
+          <h2 class="mb-4 lg:my-4">{{ recipe.data.title }}</h2>
+          <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
+        </div>
       </div>
-      <h2 class="mt-4 mb-4">{{ recipe.data.title }}</h2>
-      <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
       <div class="flex flex-row flex-no-wrap leading-none border-t border-b border-cool-gray-500 mb-8 py-4">
         <div class="flex-1 flex flex-row items-center justify-center px-4">
           <Portions class="mr-4" />
