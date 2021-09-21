@@ -1,6 +1,6 @@
 <template>
   <section id="about" class="w-full md:w-2/3 lg:w-3/5 mx-auto">
-    <h2>About This App</h2>
+    <h1 class="h2">About This App</h1>
     <p>
       If you're into cooking, you might find some inspiration here 😁
     </p>
@@ -28,7 +28,7 @@
         </p>
       </div>
     </div>
-    <h3>More Information</h3>
+    <h2 class="h3">More Information</h2>
     <p>This is FOSS, feel free to fork the project and deploy your own instance!</p>
     <p>Re-written from scratch in summer 2021, a year after it's initial release; using Vite and Vue 3 with TypeScript now.</p>
   </section>

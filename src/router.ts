@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { store } from './store'
+import { store } from '@/store'
 
-import { showWindow } from './utils'
+import { showWindow } from '@/utils'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -16,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'All Recipes',
-    component: () => import('./views/Home.vue'),
+    component: () => import('@/views/Home.vue'),
     meta: {
       menuPosition: 1,
       menuVisible: true
@@ -25,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create',
     name: 'Add Recipe',
-    component: () => import('./views/RecipeEditable.vue'),
+    component: () => import('@/views/RecipeEditable.vue'),
     meta: {
       authRequired: true,
       menuPosition: 2,
@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/my-recipes',
     name: 'My Recipes',
-    component: () => import('./views/UserRecipes.vue'),
+    component: () => import('@/views/UserRecipes.vue'),
     meta: {
       authRequired: true,
       menuPosition: 3,
@@ -46,16 +46,25 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'About',
-    component: () => import('./views/About.vue'),
+    component: () => import('@/views/About.vue'),
     meta: {
       menuPosition: 4,
       menuVisible: true
     }
   },
   {
+    path: '/me',
+    name: 'Profile',
+    component: () => import('@/views/Profile.vue'),
+    meta: {
+      authRequired: true,
+      menuVisible: false
+    }
+  },
+  {
     path: '/recipe/:id/:refId',
     name: 'Recipe',
-    component: () => import('./views/RecipeReadonly.vue'),
+    component: () => import('@/views/RecipeReadonly.vue'),
     meta: {
       menuVisible: false
     }
@@ -63,11 +72,22 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/edit/:refId',
     name: 'Edit Recipe',
-    component: () => import('./views/RecipeEditable.vue'),
+    component: () => import('@/views/RecipeEditable.vue'),
     meta: {
       authRequired: true,
       menuVisible: false,
       mode: 'edit'
+    }
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: () => import('@/views/Signup.vue'),
+    meta: {
+      menuVisible: false
+    },
+    beforeEnter: (to, from, next) => {
+      return store.getters['user/loggedIn'] ? router.push({ name: 'All Recipes' }) : next()
     }
   },
   {

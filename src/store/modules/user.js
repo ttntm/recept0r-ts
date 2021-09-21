@@ -155,6 +155,21 @@ export default {
           dispatch('app/sendToastMessage', { text: `Error sending recovery email, please try again later.`, type: 'error' }, { root: true })
           reject(error)
         })
+    },
+
+    updateUserAccount({ dispatch, state }, userData) {
+      return new Promise((resolve, reject) => {
+        const user = state.GoTrueAuth.currentUser()
+        user.update(userData)
+          .then(response => {
+            dispatch('app/sendToastMessage', { text: `Profile successfully updated.`, type: 'success' }, { root: true })
+            resolve(response)
+          })
+          .catch(error => {
+            dispatch('app/sendToastMessage', { text: `Error updating the user profile, please try again later.`, type: 'error' }, { root: true })
+            reject(error)
+          })
+      })
     }
   }
 }

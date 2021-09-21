@@ -75,7 +75,7 @@ h1 {
   }
 }
 
-h2 {
+h2, .h2 {
   font-size: calc(1.325rem + 0.9vw);
 }
 
@@ -85,15 +85,15 @@ h2 {
   }
 }
 
-h3 {
+h3, .h3 {
   font-size: calc(1.3rem + 0.6vw);
 }
 
 @media (min-width: 1200px) {
-  h3 {
+  h3, .h3 {
     @apply text-2xl;
   }
-  h4 {
+  h4, .h4 {
     @apply text-xl;
   }
 }

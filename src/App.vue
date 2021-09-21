@@ -1,15 +1,13 @@
 <script setup lang="ts">
-  import { computed, onMounted } from 'vue'
+  import { computed, onMounted, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
-  import { useStore } from './store'
+  import { useStore } from '@/store'
 
-  import { showWindow } from './utils'
-
-  import Auth from './components/conditional/Auth.vue'
-  import Footer from './components/Footer.vue'
-  import Navbar from './components/Navbar.vue'
-  import MobileMenu from './components/MobileMenu.vue'
-  import ToastMessage from './components/conditional/ToastMessage.vue'
+  import Auth from '@/components/conditional/Auth.vue'
+  import Footer from '@/components/Footer.vue'
+  import Navbar from '@/components/Navbar.vue'
+  import MobileMenu from '@/components/MobileMenu.vue'
+  import ToastMessage from '@/components/conditional/ToastMessage.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -19,12 +17,6 @@
   const loggedIn = computed(() => store.getters['user/loggedIn'])
   const routeFull = computed(() => route.fullPath)
   const windowOpen = computed(() => store.getters['app/windowOpen'])
-
-  const handleLogout = () => { 
-    store.dispatch('user/attemptLogout')
-    showWindow(0)
-    if (route.meta.authRequired) router.push({ name: 'All Recipes' })
-  }
 
   const menuItems = computed(() => {
     const routes = router.getRoutes()
@@ -44,13 +36,17 @@
       app.style.transition = 'opacity 1.5s ease'
     }
   })
+
+  watch(loggedIn, () => {
+    if (!loggedIn.value && route.meta.authRequired) router.push({ name: 'All Recipes' })
+  })
 </script>
 
 <template>
   <div id="app" class="flex h-full flex-col">
-    <Navbar :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
+    <Navbar :loggedIn="loggedIn" :menuItems="menuItems" />
     <transition name="menu">
-      <MobileMenu v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" @action:logout="handleLogout"/>
+      <MobileMenu v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" />
     </transition>
     <transition name="modal">
       <Auth v-if="windowOpen === 2" :loggedIn="loggedIn" />

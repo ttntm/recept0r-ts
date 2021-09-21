@@ -2,7 +2,7 @@
   import { ref, watch } from 'vue'
   import { showWindow } from '@/utils'
 
-  import AuthLogin from './AuthLogin.vue'
+  import AuthLogin from '@/components/conditional/AuthLogin.vue'
   import ButtonX from '@/components/button/ButtonX.vue'
 
   const props = defineProps<{
