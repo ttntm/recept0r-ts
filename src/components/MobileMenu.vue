@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import type { RouteRecordNormalized } from 'vue-router'
 
-  import { showWindow } from '@/utils'
+  import { showWindow, useLogout } from '@/utils'
 
-  import ButtonMenu from './button/ButtonMenu.vue'
-  import ButtonX from './button/ButtonX.vue'
+  import ButtonMenu from '@/components/button/ButtonMenu.vue'
+  import ButtonX from '@/components/button/ButtonX.vue'
 
   const props = defineProps<{
     loggedIn: boolean,
@@ -29,8 +29,9 @@
         :to="{ name: item.name }"
         class="menu-item mx-auto my-8"
       >{{ item.name }}</router-link>
+      <router-link :to="{ name: 'Profile'}" class="menu-item mx-auto my-8">Profile</router-link>
       <button v-if="!loggedIn" class="menu-item mx-auto my-8 click-outside-ignore" @click="showWindow(2)">Login</button>
-      <button v-else class="menu-item mx-auto my-8" @click="$emit('action:logout')">Logout</button>
+      <button v-else class="menu-item mx-auto my-8" @click="useLogout">Logout</button>
     </nav>
   </div>
 </template>

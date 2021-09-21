@@ -15,9 +15,7 @@
   const token = route.query.t
 
   const handleSignup = () => {    
-    if (!validate()) {
-      return alert(msg.value)
-    }
+    if (!validate()) return alert(msg.value)
 
     btnText.value = `Processing...`
     

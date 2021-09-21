@@ -1,19 +1,23 @@
 <script setup lang="ts">
+  import { computed } from 'vue'
   import type { RouteRecordNormalized } from 'vue-router'
+  import { useStore } from '@/store'
 
   import { showWindow } from '@/utils'
 
-  import ButtonDefault from './button/ButtonDefault.vue'
-  import ButtonMenu from './button/ButtonMenu.vue'
+  import ButtonDefault from '@/components/button/ButtonDefault.vue'
+  import ButtonMenu from '@/components/button/ButtonMenu.vue'
+  import ButtonUser from '@/components/button/ButtonUser.vue'
+  import UserMenu from '@/components/conditional/UserMenu.vue'
 
   const props = defineProps<{
     loggedIn: boolean,
     menuItems: RouteRecordNormalized[]
   }>()
 
-  const emit = defineEmits<{
-    (e: 'action:logout'): void
-  }>()
+  const store = useStore()
+
+  const windowOpen = computed(() => store.getters['app/windowOpen'])
 </script>
 
 <template>
@@ -33,7 +37,10 @@
     </div>
     <div class="flex flex-row items-center justify-end" style="width: 160px;">
       <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showWindow(2)">Login</ButtonDefault>
-      <ButtonDefault v-else class="hidden lg:block" @click="$emit('action:logout')">Logout</ButtonDefault>
+      <ButtonUser v-else :window="windowOpen" class="hidden lg:block click-outside-ignore" @click="showWindow(5)" />
+      <transition name="modal">
+        <UserMenu v-if="windowOpen === 5" />
+      </transition>
     </div>
   </nav>
 </template>

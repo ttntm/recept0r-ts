@@ -71,7 +71,7 @@ export default {
 
     /**
      * Toggle open modals and windows
-     * @param {*} id WindowID: 1 = Mobile Nav || 2 = Login/Signup || 3 = Filter selection || 4 = recipe share menu
+     * @param {*} id WindowID: 1 = Mobile Nav || 2 = Login/Signup || 3 = Filter selection || 4 = recipe share menu || 5 = user button menu
      */
     setWindowOpen({ commit }, id) {
       commit('SET_WINDOW_OPEN', id)

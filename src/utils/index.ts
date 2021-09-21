@@ -125,6 +125,14 @@ export async function uploadImage(url: string, data: FormData) {
 }
 
 /**
+ * Reusable 'logout' handler
+ */
+export function useLogout() {
+  store.dispatch('user/attemptLogout')
+  showWindow(0)
+}
+
+/**
  * Search an array of recipes based on a string value
  */
 export function useRecipeSearch(data: any[], term: string) {

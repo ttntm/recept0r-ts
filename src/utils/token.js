@@ -39,10 +39,7 @@ function detectEmailConfirmationToken() {
     )[1]
     return token
   } catch (error) {
-    console.error(
-      'Something went wrong when trying to extract email confirmation token',
-      error
-    )
+    console.error('Something went wrong when trying to extract email confirmation token', error)
     return null
   }
 }
@@ -55,10 +52,7 @@ function detectInviteToken() {
     )[1]
     return token
   } catch (error) {
-    console.error(
-      'Something went wrong when trying to extract invite token.',
-      error
-    )
+    console.error('Something went wrong when trying to extract invite token.', error)
     return null
   }
 }
@@ -71,10 +65,7 @@ function detectRecoveryToken() {
     )[1]
     return token
   } catch (error) {
-    console.error(
-      'Something went wrong when trying to extract recovery token.',
-      error
-    )
+    console.error('Something went wrong when trying to extract recovery token.', error)
     return null
   }
 }
@@ -83,8 +74,7 @@ function detectRecoveryToken() {
  * @param {string} token - authentication token used to confirm a user who has created an account via email signup.
  */
 function confirmEmailToken(token) {
-  store
-    .dispatch('user/attemptConfirmation', token)
+  store.dispatch('user/attemptConfirmation', token)
     .then(resp => {
       store.dispatch('app/sendToastMessage', { text: `${resp.email} has been confirmed, please login`, type: 'success' })
     })
@@ -100,8 +90,7 @@ function confirmInviteToken(token) {
 }
 
 function confirmRecoveryToken(recoveryToken) {
-  store
-    .dispatch('user/attemptPasswordRecovery', recoveryToken)
+  store.dispatch('user/attemptPasswordRecovery', recoveryToken)
     .then(() => {
       router.push({ name: 'Profile' })
       alert('Account has been recovered. Update your password now.')
