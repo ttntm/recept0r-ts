@@ -103,7 +103,7 @@ function confirmRecoveryToken(recoveryToken) {
   store
     .dispatch('user/attemptPasswordRecovery', recoveryToken)
     .then(() => {
-      router.push({ name: 'profile' })
+      router.push({ name: 'Profile' })
       alert('Account has been recovered. Update your password now.')
     })
     .catch(() => {
