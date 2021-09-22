@@ -20,13 +20,17 @@
   </svg>`
   const validationMsg = ref('')
   
-  const clearMsg = () => validationMsg.value = ''
+  const clearMsg = () => {
+    if (btnText.value !== 'Login') btnText.value = 'Login'
+    if (validationMsg.value) validationMsg.value = ''
+  }
 
   const handleLogin = () => {
     if (validateCredentials(credentials)) {
       btnText.value = 'Logging in...'
       validationMsg.value = spinner
       store.dispatch('user/attemptLogin', credentials)
+      setTimeout(() => clearMsg(), 2500)
     } else {
       validationMsg.value = 'Please enter valid information.'
     }
@@ -43,7 +47,7 @@
       <label for="password">Password</label>
       <input class="auth-form-control" id="password" type="password" v-model="credentials.password" placeholder="******" @input="clearMsg" />
     </div>
-    <ButtonDefault class="modal-btn mx-auto" type="submit">{{ btnText }}</ButtonDefault>
+    <ButtonDefault class="modal-btn mx-auto" type="submit" :disabled="btnText !== 'Login'">{{ btnText }}</ButtonDefault>
   </form>
   <transition name="fade">
     <p v-if="validationMsg !== ''" v-html="validationMsg" class="error font-bold text-center mt-8 mb-2" />

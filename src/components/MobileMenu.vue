@@ -29,7 +29,7 @@
         :to="{ name: item.name }"
         class="menu-item mx-auto my-8"
       >{{ item.name }}</router-link>
-      <router-link :to="{ name: 'Profile'}" class="menu-item mx-auto my-8">Profile</router-link>
+      <router-link v-if="loggedIn" :to="{ name: 'Profile'}" class="menu-item mx-auto my-8">Profile</router-link>
       <button v-if="!loggedIn" class="menu-item mx-auto my-8 click-outside-ignore" @click="showWindow(2)">Login</button>
       <button v-else class="menu-item mx-auto my-8" @click="useLogout">Logout</button>
     </nav>
