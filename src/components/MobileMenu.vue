@@ -22,7 +22,7 @@
       <ButtonMenu class="rounded-full opacity-75 hover:opacity-100 p-2 mx-2" mode="close" label="Close menu" @click="showWindow(0)" />
       <ButtonX class="rounded-full p-2 mx-2" @click="showWindow(0)" />
     </div>
-    <nav class="w-full flex flex-col justify-center overflow-y-auto">
+    <nav class="w-full flex flex-col overflow-y-auto">
       <router-link
         v-for="item in menuItems"
         :key="item.name"
