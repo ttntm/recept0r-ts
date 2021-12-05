@@ -32,6 +32,15 @@ export type Recipe = {
   body: string
 }
 
+export type RecipeDB = {
+  ref: {
+    '@ref': {
+      id: string
+    }
+  }
+  data: Recipe
+}
+
 /**
  * We need to tell TS about custom properties/methods on the Window object
  * See: https://www.cloudhadoop.com/typescript-add-property-window/

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, ref, watch } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
 
   import { getRecipeData, showWindow } from '@/utils'
@@ -13,6 +13,7 @@
   import RecipeShare from '@/components/recipe/RecipeShare.vue'
 
   const route = useRoute()
+  const router = useRouter()
   const store = useStore()
 
   const errorMsg = ref('')
@@ -26,7 +27,7 @@
     const currentItem = await getRecipeData(currentId)
     if (currentItem !== 'error' && currentItem.data) {
       recipe.value = Object.assign({}, currentItem)
-      readSuccess.value = true
+      currentItem.data.draft ? router.push({ name: 'All Recipes' }) : readSuccess.value = true
     } else {
       errorMsg.value = `<h3>Oops, something went wrong :(</h3>
         <p>Error: couldn't load recipe data.<br><br>

@@ -40,8 +40,7 @@
   }
 
   // computed() makes the date that vuex generated a string
-  // we have to convert it back into a date object for math to work on it,
-  // but only if it's not an empty string!
+  // we have to convert it back into a date object for math to work on it
   const lastUpdate = () => lastUpdated.value ? new Date(lastUpdated.value) : null
 
   const onFilterBtnClick = () => windowOpen.value === 0 ? showWindow(3) : showWindow(0)

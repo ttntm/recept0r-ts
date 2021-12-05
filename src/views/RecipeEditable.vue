@@ -56,9 +56,13 @@
   const title = ref()
 
   const cancel = (goHome: boolean = true) => {
-    return goHome || mode.value === 'create'
-      ? router.push({ name: 'All Recipes' })
-      : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
+    if (goHome || mode.value === 'create') { 
+      router.push({ name: 'All Recipes' })
+    } else {
+      return recipe.draft
+        ? router.push({ name: 'My Recipes' })
+        : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
+    }
   }
 
   const getCurrentRefId = () => route.params.refId.toString()
