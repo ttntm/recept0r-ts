@@ -78,6 +78,15 @@
     }
   }
 
+  const onEditClose = (e: BeforeUnloadEvent) => {
+    if (!noChanges.value && !isSaving.value) {
+      e.preventDefault() // FF
+      e.returnValue = '' // Chrome
+    } else {
+      delete e['returnValue']
+    }
+  }
+
   const saveRecipe = async () => {
     const required = ['title', 'description', 'category', 'diet', 'ingredients', 'body']
 
@@ -161,7 +170,10 @@
     if (current.title) document.title = `Editing: ${current.title} - recept0r`
   })
 
-  onMounted(() => mode.value && mode.value !== 'edit' ? title.value.focus() : false)
+  onMounted(() => {
+    if (mode.value && mode.value !== 'edit') title.value.focus()
+    window.addEventListener('beforeunload', onEditClose)
+  })
 
   onBeforeRouteLeave((to, from) => {
     if (loggedIn.value && !noChanges.value && !isSaving.value) {
