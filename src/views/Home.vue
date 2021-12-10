@@ -2,6 +2,7 @@
   import { computed, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
+  import type { RecipeDB } from '@/types'
 
   import { showWindow, useRecipeSearch } from '@/utils'
 
@@ -15,15 +16,15 @@
   const route = useRoute()
   const store = useStore()
 
-  const allRecipes = computed(() => store.getters['data/allRecipes'])
-  const filterActive = computed(() => store.getters['data/filterActive'])
+  const allRecipes = computed<RecipeDB[]>(() => store.getters['data/allRecipes'])
+  const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
   const forceUpdate = route.query.force || null
-  const isLoading = computed(() => allRecipes.value.length > 0 ? false : true)
-  const lastUpdated = computed(() => store.getters['data/lastUpdated'])
+  const isLoading = computed<boolean>(() => allRecipes.value.length > 0 ? false : true)
+  const lastUpdated = computed<string>(() => store.getters['data/lastUpdated'])
   const searchTerm = ref('')
-  const windowOpen = computed(() => store.getters['app/windowOpen'])
+  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
-  const displayedRecipes = computed(() => {
+  const displayedRecipes = computed<RecipeDB[]>(() => {
     const reversed: any[] = allRecipes.value.slice().reverse()
     const term = searchTerm.value
     if (term && term.length > 0) {
@@ -43,16 +44,24 @@
   // we have to convert it back into a date object for math to work on it
   const lastUpdate = () => lastUpdated.value ? new Date(lastUpdated.value) : null
 
-  const onFilterBtnClick = () => windowOpen.value === 0 ? showWindow(3) : showWindow(0)
-
-  const onFilterMsgClick = () => store.dispatch('data/clearFilter')
-
-  const setSearchTerm = (val: string) => searchTerm.value = val
-
   const updateNeeded = () => {
     const now: Date = new Date
     const diff: number = Math.round((Number(now) - Number(lastUpdate())) / (1000 * 60)) // time difference between now (view init) and last read operation
     return diff > 60
+  }
+
+  const events = {
+    onFilterBtnClick() {
+      windowOpen.value === 0 ? showWindow(3) : showWindow(0)
+    },
+
+    onFilterMsgClick() {
+      store.dispatch('data/clearFilter')
+    },
+
+    onSetSearchTerm(val: string) {
+      searchTerm.value = val
+    }
   }
 
   getAllRecipes()
@@ -69,15 +78,15 @@
   </div>
   <section v-else class="">
     <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
-      <SearchBar v-model.trim="searchTerm" @update:modelValue="setSearchTerm($event)" />
-      <ButtonFilter :window="windowOpen" @click="onFilterBtnClick" />
+      <SearchBar v-model.trim="searchTerm" @update:modelValue="events.onSetSearchTerm($event)" />
+      <ButtonFilter :window="windowOpen" @click="events.onFilterBtnClick" />
     </div>
     <transition name="slide-fade">
       <HomeFilterMenu v-if="windowOpen === 3" />
     </transition>
     <transition name="fade">
       <p v-if="filterActive && windowOpen !== 3" class="text-center mb-10">
-        Showing filtered recipes. <span @click.prevent="onFilterMsgClick" class="text-cool-gray-500 underline hover:no-underline cursor-pointer">Clear Filter</span>
+        Showing filtered recipes. <span @click.prevent="events.onFilterMsgClick" class="text-cool-gray-500 underline hover:no-underline cursor-pointer">Clear Filter</span>
       </p>
     </transition>
     <transition name="fade">

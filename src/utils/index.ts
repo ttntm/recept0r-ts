@@ -1,5 +1,5 @@
 import { store } from '@/store'
-import type { Credentials, Headers, Recipe } from '@/types'
+import type { Credentials, Headers, RecipeDB } from '@/types'
 
 /**
  * Shared logic to handle API requests to the app's serverless back end functions
@@ -135,7 +135,7 @@ export function useLogout() {
 /**
  * Search an array of recipes based on a string value
  */
-export function useRecipeSearch(data: any[], term: string) {
+export function useRecipeSearch(data: RecipeDB[], term: string) {
   return data.filter((item: any) => {
     if (item.data.title.toLowerCase().indexOf(term.toLowerCase()) === -1) { //if there was no match for the title...
       return item.data.description.toLowerCase().indexOf(term.toLowerCase()) !== -1 ? true : false //...evaluate the description

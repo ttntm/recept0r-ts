@@ -2,6 +2,7 @@
   import { computed, ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
+  import type { RecipeDB } from '@/types'
 
   import { getRecipeData, showWindow } from '@/utils'
 
@@ -17,10 +18,10 @@
   const store = useStore()
 
   const errorMsg = ref('')
-  const loggedIn = computed(() => store.getters['user/loggedIn'])
+  const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const readSuccess = ref(false)
-  const recipe = ref()
-  const windowOpen = computed(() => store.getters['app/windowOpen'])
+  const recipe = ref<RecipeDB>()
+  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
   const getCurrentRecipeData = async () => {
     const currentId = route.params.refId.toString()
@@ -38,7 +39,7 @@
   getCurrentRecipeData()
 
   watch(recipe, () => {
-    if (recipe.value.data.title) document.title = `${recipe.value.data.title} - recept0r`
+    if (recipe.value?.data.title) document.title = `${recipe.value.data.title} - recept0r`
   })
 </script>
 
@@ -52,7 +53,7 @@
   </div>
   <section v-else id="recipe" class="w-full xl:w-4/5 flex flex-row flex-wrap mx-auto">
     <div class="w-full lg:w-3/5 mb-6 lg:mb-4">
-      <img v-if="recipe.data.image" class="w-full rounded-lg shadow-sm" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
+      <img v-if="recipe?.data.image" class="w-full rounded-lg shadow-sm" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
     </div>
     <div class="w-full lg:w-2/5 lg:pl-8">
       <div class="flex flex-row lg:flex-col justify-between items-start">
@@ -63,35 +64,35 @@
           <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
         </div>
         <div class="order-1 lg:order-2">
-          <h2 class="mb-4 lg:my-4">{{ recipe.data.title }}</h2>
-          <p class="text-blue-500 mb-8">{{ recipe.data.description }}</p>
+          <h2 class="mb-4 lg:my-4">{{ recipe?.data.title }}</h2>
+          <p class="text-blue-500 mb-8">{{ recipe?.data.description }}</p>
         </div>
       </div>
       <div class="flex flex-row flex-no-wrap leading-none border-t border-b border-cool-gray-500 mb-8 py-4">
         <div class="flex-1 flex flex-row items-center justify-center px-4">
           <Portions class="mr-4" />
-          <p class="text-blue-500 mb-0">{{ recipe.data.portions }}</p>
+          <p class="text-blue-500 mb-0">{{ recipe?.data.portions }}</p>
         </div>
         <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500 px-4">
           <Duration class="mr-4" />
-          <p class="text-blue-500 mb-0">{{ recipe.data.duration }}</p>
+          <p class="text-blue-500 mb-0">{{ recipe?.data.duration }}</p>
         </div>
       </div>
       <p class="text-blue-500 font-semibold mb-2">
         <span class="inline-block text-cool-gray-500" style="width: 6rem">Diet:</span>
-        {{ recipe.data.diet }}
+        {{ recipe?.data.diet }}
       </p>
       <p class="text-blue-500 font-semibold mb-4">
         <span class="inline-block text-cool-gray-500" style="width: 6rem">Category:</span>
-        {{ recipe.data.category }}
+        {{ recipe?.data.category }}
       </p>
     </div>
-    <div v-html="recipe.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-8" />
+    <div v-html="recipe?.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-8" />
     <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
       <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
         <h3 class="mb-4">Ingredients</h3>
         <ul class="mb-0">
-          <li v-for="(item, index) in recipe.data.ingredients" :key="index" class="text-blue-500 font-semibold mb-2">
+          <li v-for="(item, index) in recipe?.data.ingredients" :key="index" class="text-blue-500 font-semibold mb-2">
             {{ item }}
           </li>
         </ul>
@@ -107,7 +108,7 @@
           </svg>
           <span class="inline-block">All Recipes</span>
         </router-link>
-        <router-link v-if="loggedIn" :to="{ name: 'Edit Recipe', params: { refId: recipe.ref['@ref'].id } }" class="btn btn-gray">Edit Recipe</router-link>
+        <router-link v-if="loggedIn" :to="{ name: 'Edit Recipe', params: { refId: recipe?.ref['@ref'].id } }" class="btn btn-gray">Edit Recipe</router-link>
       </div>
     </div>
   </section>

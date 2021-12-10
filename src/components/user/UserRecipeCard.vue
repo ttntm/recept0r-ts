@@ -8,7 +8,7 @@
     recipe: RecipeDB
   }>()
 
-  const target = props.recipe.data.draft ? 'Edit Recipe' : 'Recipe'
+  const target: string = props.recipe.data.draft ? 'Edit Recipe' : 'Recipe'
 </script>
 
 <template>

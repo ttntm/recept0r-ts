@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useStore } from '@/store'
+  import type { RecipeDB, SortOption } from '@/types'
 
   import { getArrayIndex, objectSort } from '@/utils'
 
@@ -12,17 +13,17 @@
 
   const store = useStore()
 
-  const cachedList = computed(() => store.getters['data/userRecipes'])
-  const sortButtons = computed(() => store.getters['data/userSortOptions'])
+  const cachedList = computed<RecipeDB[]>(() => store.getters['data/userRecipes'])
+  const sortButtons = computed<SortOption[]>(() => store.getters['data/userSortOptions'])
 
-  const currentSortState = ref(['date', 'desc'])
+  const currentSortState = ref<string[]>(['date', 'desc'])
 
   const isActiveBtn = (data: string, type: string) => {
     const selected = currentSortState.value
     return getArrayIndex(selected, data) !== -1 && getArrayIndex(selected, type) !== -1
   }
 
-  const sortMyRecipes = (data: string, type: string) => {
+  const onSortButtonClick = (data: string, type: string) => {
     const input = [...cachedList.value.slice()]
     
     currentSortState.value = [data, type]
@@ -64,7 +65,7 @@
       :key="index" 
       :tip="item.tooltip" 
       class="mx-2 mb-4 md:m-0" 
-      @click="sortMyRecipes(item.data, item.type)"
+      @click="onSortButtonClick(item.data, item.type)"
     >
       {{ item.text }}
     </ButtonSort>

@@ -1,10 +1,8 @@
 <script setup lang="ts">
+  import type { DebugInfo } from '@/types'
+
   const props = defineProps<{
-    debug: {
-      lastUpdate: Date | null, 
-      updateNeeded: boolean, 
-      forceUpdate: boolean
-    } | null
+    debug: DebugInfo | null
     loggedIn: boolean
   }>()
   

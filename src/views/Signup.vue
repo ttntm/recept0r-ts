@@ -14,25 +14,6 @@
   const pwd = ref('')
   const token = route.query.t
 
-  const handleSignup = () => {    
-    if (!validate()) return alert(msg.value)
-
-    btnText.value = `Processing...`
-    
-    store.dispatch('user/processInvite', { token: token, pwd: pwd.value })
-      .then(() => {
-        store.dispatch('app/sendToastMessage', { text: 'Account created, redirecting...', type: 'success' })
-        setTimeout(() => {
-          router.push({ name: 'All Recipes' })
-        }, 2000)
-      })
-      .catch(error => {
-        store.dispatch('app/sendToastMessage', { text: 'Error processing the invite, please try again later.', type: 'error' })
-        btnText.value = 'Create Account'
-        pwd.value = ''
-      })
-  }
-
   const validate = () => {
     msg.value = ''
     
@@ -48,11 +29,32 @@
 
     return true
   }
+
+  const events = {
+    onSignup() {    
+      if (!validate()) return alert(msg.value)
+
+      btnText.value = `Processing...`
+      
+      store.dispatch('user/processInvite', { token: token, pwd: pwd.value })
+        .then(() => {
+          store.dispatch('app/sendToastMessage', { text: 'Account created, redirecting...', type: 'success' })
+          setTimeout(() => {
+            router.push({ name: 'All Recipes' })
+          }, 2000)
+        })
+        .catch(error => {
+          store.dispatch('app/sendToastMessage', { text: 'Error processing the invite, please try again later.', type: 'error' })
+          btnText.value = 'Create Account'
+          pwd.value = ''
+        })
+    }
+  }
 </script>
 
 <template>
   <section id="signup" class="w-full md:w-2/3 lg:w-1/2 mx-auto">
-    <form id="signup-form" class="signup-form" @submit.prevent="handleSignup">
+    <form id="signup-form" class="signup-form" @submit.prevent="events.onSignup">
       <h1 class="h3">Confirm Signup</h1>
       <p class="text-sm">
         We're almost done processing your invite - please choose a password for your account.

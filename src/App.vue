@@ -2,6 +2,7 @@
   import { computed, onMounted, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
+  import type { DebugInfo } from '@/types'
 
   import Auth from '@/components/conditional/Auth.vue'
   import Footer from '@/components/Footer.vue'
@@ -13,10 +14,10 @@
   const router = useRouter()
   const store = useStore()
 
-  const debugInfo = computed(() => store.getters['app/debugInfo'])
-  const loggedIn = computed(() => store.getters['user/loggedIn'])
-  const routeFull = computed(() => route.fullPath)
-  const windowOpen = computed(() => store.getters['app/windowOpen'])
+  const debugInfo = computed<DebugInfo>(() => store.getters['app/debugInfo'])
+  const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
+  const routeFull = computed<string>(() => route.fullPath)
+  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
   const menuItems = computed(() => {
     const routes = router.getRoutes()

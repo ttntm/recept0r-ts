@@ -7,7 +7,7 @@
     (e: 'update:modelValue', val: string): void
   }>()
 
-  const handleInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).value)
+  const onInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).value)
 </script>
 
 <template>
@@ -18,7 +18,7 @@
       <circle cx="10" cy="10" r="7" />
       <line x1="21" y1="21" x2="15" y2="15" />
     </svg>
-    <input :value="modelValue" type="text" class="w-full search-input" id="search-input" placeholder="What do you want to eat?" @input="handleInput">
+    <input :value="modelValue" type="text" class="w-full search-input" id="search-input" placeholder="What do you want to eat?" @input="onInput">
     <div class="input-group-append">
       <button
         v-if="modelValue"

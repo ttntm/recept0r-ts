@@ -11,44 +11,17 @@
 
   const store = useStore()
 
-  const confirmBtnTxt = computed(() => filterActive.value ? 'Apply' : 'Close')
-  const filterActive = computed(() => store.getters['data/filterActive'])
-  const filterActiveSelection = computed(() => store.getters['data/filterData'])
-  const recipeCategory = computed(() => store.getters['data/recipeCategory'])
-  const recipeDiet = computed(() => store.getters['data/recipeDiet'])
+  const confirmBtnTxt = computed<string>(() => filterActive.value ? 'Apply' : 'Close')
+  const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
+  const filterActiveSelection = computed<FilterSelection>(() => store.getters['data/filterData'])
+  const recipeCategory = computed<string[]>(() => store.getters['data/recipeCategory'])
+  const recipeDiet = computed<string[]>(() => store.getters['data/recipeDiet'])
   const selected: FilterSelection = reactive({
     category: [],
     diet: []
   })
 
   const isActiveFilter = (mode: string, el: string) => getArrayIndex(selected[mode], el) !== -1
-
-  const onClearFilterClick = () => {
-    if (filterActive.value) {
-      Object.keys(selected).forEach(key => selected[key] = [])
-      return store.dispatch('data/clearFilter')
-    }
-  }
-
-  const onFilterClick = (mode: string, el: string) => {
-    const current = selected[mode]
-    let idx = getArrayIndex(selected[mode], el)
-
-    if (idx === -1) {
-      current.push(el.toLowerCase())
-    } else {
-      current.splice(idx, 1)
-    }
-
-    return store.dispatch('data/applyFilter', [mode, selected[mode]])
-  }
-
-  const onFilterClose = () => {
-    if (filterActive.value && selected.category.length === 0 && selected.diet.length === 0) {
-      store.dispatch('data/clearFilter')
-    }
-    return showWindow(0)
-  }
 
   const updateFilterState = () => {
     if (filterActive.value) {
@@ -60,13 +33,42 @@
     }
   }
 
+  const events = {
+    onClearFilterClick() {
+      if (filterActive.value) {
+        Object.keys(selected).forEach(key => selected[key] = [])
+        return store.dispatch('data/clearFilter')
+      }
+    },
+
+    onFilterClick(mode: string, el: string) {
+      const current = selected[mode]
+      let idx = getArrayIndex(selected[mode], el)
+
+      if (idx === -1) {
+        current.push(el.toLowerCase())
+      } else {
+        current.splice(idx, 1)
+      }
+
+      return store.dispatch('data/applyFilter', [mode, selected[mode]])
+    },
+
+    onFilterClose() {
+      if (filterActive.value && selected.category.length === 0 && selected.diet.length === 0) {
+        store.dispatch('data/clearFilter')
+      }
+      return showWindow(0)
+    }
+  }
+
   updateFilterState()
 </script>
 
 <template>
   <div id="recipe-filter" class="flex flex-col relative w-full lg:w-3/4 xl:w-2/3 bg-gray-500 rounded-lg shadow-sm py-8 px-12 mb-12 mx-auto">
     <div class="flex items-center justify-end -mt-4 -mr-6">
-      <ButtonX class="rounded-full p-2" @click="onFilterClose" />
+      <ButtonX class="rounded-full p-2" @click="events.onFilterClose" />
     </div>
     <div class="w-full -mt-8">
       <h2 class="text-base text-cool-gray-500 text-center">Filter Selection</h2>
@@ -79,7 +81,7 @@
           :class="{ 'activeFilter': isActiveFilter('category', cat) }"
           :current="cat"
           :key="index"
-          @click="onFilterClick('category', cat)"
+          @click="events.onFilterClick('category', cat)"
         />
       </div>
     </div>
@@ -91,13 +93,13 @@
           :class="{ 'activeFilter': isActiveFilter('diet', diet) }"
           :current="diet"
           :key="index"
-          @click="onFilterClick('diet', diet)"
+          @click="events.onFilterClick('diet', diet)"
         />
       </div>
     </div>
     <div class="w-full flex flex-row justify-center lg:justify-end">
-      <ButtonDefault class="btn-outline px-8" :disabled="!filterActive" @click="onClearFilterClick()">Clear</ButtonDefault>
-      <ButtonDefault class="btn-outline px-8 ml-4" @click="onFilterClose">{{ confirmBtnTxt }}</ButtonDefault>
+      <ButtonDefault class="btn-outline px-8" :disabled="!filterActive" @click="events.onClearFilterClick()">Clear</ButtonDefault>
+      <ButtonDefault class="btn-outline px-8 ml-4" @click="events.onFilterClose">{{ confirmBtnTxt }}</ButtonDefault>
     </div>
   </div>
 </template>

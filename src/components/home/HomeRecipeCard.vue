@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type { Recipe } from '@/types'
+  import type { RecipeDB } from '@/types'
 
   const props = defineProps<{
-    recipe: Recipe
+    recipe: RecipeDB
   }>()
 </script>
 

@@ -3,6 +3,7 @@
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
   import type { WritableComputedRef } from 'vue'
+  import type { RecipeDB, User } from '@/types'
   
   import { useRecipeSearch } from '@/utils'
   
@@ -15,10 +16,10 @@
   const route = useRoute()
   const store = useStore()
 
-  const displayList: WritableComputedRef<any[]> = computed({
+  const displayList: WritableComputedRef<RecipeDB[]> = computed({
     // see: https://stackoverflow.com/a/64281689
-    get(): any[] {
-      const list = myRecipesDisplay.value
+    get(): RecipeDB[] {
+      const list: RecipeDB[] = myRecipesDisplay.value
       const term = userSearchTerm.value
       if (term && term.length > 0) {
         return useRecipeSearch(list, term)
@@ -31,9 +32,9 @@
     }
   })
   const isLoading = ref(true)
-  const myRecipes = computed(() => store.getters['data/userRecipes'])
-  const myRecipesDisplay = ref([...myRecipes.value.slice().reverse()])
-  const user = computed(() => store.getters['user/currentUser'])
+  const myRecipes = computed<RecipeDB[]>(() => store.getters['data/userRecipes'])
+  const myRecipesDisplay = ref<RecipeDB[]>([...myRecipes.value.slice().reverse()])
+  const user = computed<User>(() => store.getters['user/currentUser'])
   const userSearchTerm = ref('')
 
   const getMyRecipes = () => {
@@ -46,9 +47,15 @@
     setTimeout(() => isLoading.value = false, 5000)
   }
 
-  const setSearchTerm = (val: string) => userSearchTerm.value = val
+  const events = {
+    onSetSearchTerm(val: string) {
+      userSearchTerm.value = val
+    },
 
-  const updateList = (list: any[]) => displayList.value = list
+    onUpdateList(list: RecipeDB[]) {
+      displayList.value = list
+    }
+  }
 
   getMyRecipes()
 
@@ -72,9 +79,9 @@
       <router-link :to="{ name: 'Add Recipe' }" class="btn btn-gray">Add Recipe</router-link>
     </div>
     <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
-      <SearchBar v-if="displayList.length > 0 || userSearchTerm" v-model.trim="userSearchTerm" @update:modelValue="setSearchTerm($event)" />
+      <SearchBar v-if="displayList.length > 0 || userSearchTerm" v-model.trim="userSearchTerm" @update:modelValue="events.onSetSearchTerm($event)" />
     </div>
-    <UserRecipeSorting v-if="myRecipesDisplay.length > 0" :data="myRecipesDisplay" @update:list="updateList($event)" />
+    <UserRecipeSorting v-if="myRecipesDisplay.length > 0" :data="myRecipesDisplay" @update:list="events.onUpdateList($event)" />
     <transition name="fade">
       <p v-if="userSearchTerm && displayList.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>

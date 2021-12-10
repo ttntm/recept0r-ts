@@ -17,7 +17,7 @@
 
   const store = useStore()
 
-  const windowOpen = computed(() => store.getters['app/windowOpen'])
+  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 </script>
 
 <template>

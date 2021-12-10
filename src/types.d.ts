@@ -1,8 +1,16 @@
+import type { UserData } from 'gotrue-js'
+
 export type Credentials = {
   [CKey: string]: string
   name?: string
   email: string
   password: string
+}
+
+export type DebugInfo = {
+  lastUpdate: Date | null
+  updateNeeded: boolean
+  forceUpdate: boolean
 }
 
 export type Headers = {
@@ -40,6 +48,15 @@ export type RecipeDB = {
   }
   data: Recipe
 }
+
+export type SortOption = {
+  data: string
+  type: string
+  text: string
+  tooltip: string
+}
+
+export type User = UserData
 
 /**
  * We need to tell TS about custom properties/methods on the Window object
