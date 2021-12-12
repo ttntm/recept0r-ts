@@ -8,7 +8,7 @@
     (e: 'update:modelValue', val: boolean): void
   }>()
 
-  const handleInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).checked)
+  const onInput = (evt: Event) => emit('update:modelValue', (evt.target as HTMLInputElement).checked)
 </script>
 
 <template>
@@ -27,7 +27,7 @@
         :name="name" 
         :checked="modelValue" 
         class="appearance-none w-full h-full outline-none cursor-pointer rounded-full" 
-        @click="handleInput"
+        @click="onInput"
       />
     </div>
     <span :class="{ 'text-blue-500 font-bold' : modelValue, 'text-cool-gray-500' : !modelValue }" class="block transition-all duration-200 ml-4">

@@ -1,32 +1,30 @@
 <script setup lang="ts">
-  import { onUnmounted, ref } from 'vue'
+  import { onMounted, onUnmounted, ref } from 'vue'
 
   // based on: https://github.com/caiofsouza/vue-backtotop/blob/master/src/BackToTop.vue
   const visible = ref(false)
-  const visibleOffset = '1024'
-  
-  const backToTop = () => {
-    window.smoothScroll()
-  }
+  const visibleOffset: number = 1024
 
-  const catchScroll = () => {
-    const pastTopOffset = window.pageYOffset > parseInt(visibleOffset)
-    visible.value = pastTopOffset
+  const events = {
+    onBackToTop() {
+      window.smoothScroll()
+    },
+    onScroll() {
+      visible.value = window.pageYOffset > visibleOffset
+    }
   }
   
   window.smoothScroll = () => {
-    let currentScroll = document.documentElement.scrollTop || document.body.scrollTop
+    let currentScroll: number = document.documentElement.scrollTop || document.body.scrollTop
     if (currentScroll > 0) {
       window.requestAnimationFrame(window.smoothScroll as FrameRequestCallback)
       window.scrollTo(0, Math.floor(currentScroll - (currentScroll / 5)))
     }
   }
   
-  window.addEventListener('scroll', catchScroll)
+  onMounted(() => window.addEventListener('scroll', events.onScroll))
   
-  onUnmounted(() => {
-    window.removeEventListener('scroll', catchScroll)
-  })
+  onUnmounted(() => window.removeEventListener('scroll', events.onScroll))
 </script>
 
 <template>
@@ -36,7 +34,7 @@
       v-click-blur
       class="back-to-top mx-2 my-4 lg:m-6"
       title="Back to Top"
-      @click="backToTop()"
+      @click="events.onBackToTop"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none icon icon-tabler icon-tabler-chevron-up" width="25" height="25" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -59,6 +57,10 @@
 
   .back-to-top {
     @apply fixed z-10 bottom-0 right-0 rounded-full bg-cool-gray-500 text-blue-500 shadow-lg p-2;
+  }
+
+  .back-to-top:focus {
+    @apply border-none outline-none shadow-none;
   }
 
   .back-to-top:hover {

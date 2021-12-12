@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+  import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
   import { QuillEditor } from '@vueup/vue-quill'
@@ -177,7 +177,7 @@
     window.addEventListener('beforeunload', events.onEditClose)
   })
 
-  onBeforeUnmount(() => window.removeEventListener('beforeunload', events.onEditClose))
+  onUnmounted(() => window.removeEventListener('beforeunload', events.onEditClose))
 
   onBeforeRouteLeave((to, from) => {
     if (loggedIn.value && !noChanges.value && !isSaving.value) {

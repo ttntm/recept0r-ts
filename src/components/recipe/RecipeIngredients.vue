@@ -18,30 +18,32 @@
   
   // the Vue 3 way of handling refs based on v-for -- see:
   // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
-  const inputs: { [el: string]: any } = ref([])
+  const inputs = ref<{ [el: string]: any }[]>([])
 
-  const addItem = async (index?: number) => {
-    let currentEl = null
-    let ing = ingredients.value
-    let inputEls = inputs.value
-    
-    if (index !== undefined && index > -1) {
-      ing.splice(index + 1, 0, '')
-      await nextTick() // await next tick to avoid 'x is undefined...' errors
-      currentEl = inputEls[index+1]
-    } else {
-      ing.push('')
-      await nextTick() // await next tick to avoid 'x is undefined...' errors
-      currentEl = inputEls[inputEls.length-1]
+  const events = {
+    async onAddItem(index?: number) {
+      let currentEl = null
+      let ing = ingredients.value
+      let inputEls = inputs.value
+      
+      if (index !== undefined && index > -1) {
+        ing.splice(index + 1, 0, '')
+        await nextTick() // await next tick to avoid 'x is undefined...' errors
+        currentEl = inputEls[index+1]
+      } else {
+        ing.push('')
+        await nextTick() // await next tick to avoid 'x is undefined...' errors
+        currentEl = inputEls[inputEls.length-1]
+      }
+      
+      if (currentEl) currentEl.focus()
+    },
+
+    onRemoveItem(index: number) {    
+      ingredients.value.splice(index, 1)
+      inputs.value.splice(index, 1)
+      emit('update:ingredients', ingredients.value)
     }
-    // set focus on the added element
-    if (currentEl) currentEl.focus()
-  }
-
-  const removeItem = (index: number) => {    
-    ingredients.value.splice(index, 1)
-    inputs.value.splice(index, 1)
-    emit('update:ingredients', ingredients.value)
   }
 
   watch(() => props.input, currentVal => ingredients.value = currentVal)
@@ -58,12 +60,12 @@
             :ref="el => { if (el) inputs[index] = el }"
             class="inline-block form-control text-sm"
             @input="$emit('update:ingredients', ingredients)"
-            @keydown.enter="addItem(index)"
+            @keydown.enter="events.onAddItem(index)"
           >
-          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="removeItem(index)" />
+          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="events.onRemoveItem(index)" />
         </span>
       </li>
     </ul>
-    <ButtonDefault class="block text-sm mx-auto" @click="addItem()">Add Ingredient</ButtonDefault>
+    <ButtonDefault class="block text-sm mx-auto" @click="events.onAddItem()">Add Ingredient</ButtonDefault>
   </div>
 </template>

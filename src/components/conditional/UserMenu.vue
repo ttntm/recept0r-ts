@@ -3,13 +3,13 @@
 
   import ButtonX from '@/components/button/ButtonX.vue'
 
-  const closeUserMenu = () => showWindow(0)
+  const onCloseMenu = () => showWindow(0)
 </script>
 
 <template>
-  <div class="user-button-modal" v-click-outside="closeUserMenu" v-esc="closeUserMenu">
+  <div class="user-button-modal" v-click-outside="onCloseMenu" v-esc="onCloseMenu">
     <div class="flex items-center justify-end leading-none">
-      <ButtonX size="20" class="rounded-full p-1 mt-2 mx-2" @click="closeUserMenu" />
+      <ButtonX size="20" class="rounded-full p-1 mt-2 mx-2" @click="onCloseMenu" />
     </div>
     <div class="text-center mb-4">
       <router-link :to="{ name: 'Profile'}" class="menu-item text-sm rounded-none mb-2 mx-auto">Profile</router-link>

@@ -9,7 +9,7 @@
   const store = useStore()
 
   const btnText = ref('Login')
-  const credentials: Credentials = reactive({
+  const credentials = reactive<Credentials>({
     email: '',
     password: ''
   })
@@ -19,33 +19,36 @@
     </circle>
   </svg>`
   const validationMsg = ref('')
-  
-  const clearMsg = () => {
-    if (btnText.value !== 'Login') btnText.value = 'Login'
-    if (validationMsg.value) validationMsg.value = ''
-  }
 
-  const handleLogin = () => {
-    if (validateCredentials(credentials)) {
+  const events = {
+    onInput() {
+      if (btnText.value !== 'Login') btnText.value = 'Login'
+      if (validationMsg.value) validationMsg.value = ''
+    },
+
+    onSubmitLogin() {
+      if (!validateCredentials(credentials)) {
+        validationMsg.value = 'Please enter valid information.'
+        return
+      }
+
       btnText.value = 'Logging in...'
       validationMsg.value = spinner
       store.dispatch('user/attemptLogin', credentials)
-      setTimeout(() => clearMsg(), 2500)
-    } else {
-      validationMsg.value = 'Please enter valid information.'
+      setTimeout(() => events.onInput(), 2500)
     }
   }
 </script>
 
 <template>
-  <form class="" @submit.prevent="handleLogin">
+  <form class="" @submit.prevent="events.onSubmitLogin">
     <div class="form-group">
       <label for="email">Email</label>
-      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="hey@email.com" autocomplete="off" @input="clearMsg" v-focus />
+      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="hey@email.com" autocomplete="off" @input="events.onInput" v-focus />
     </div>
     <div class="form-group">
       <label for="password">Password</label>
-      <input class="auth-form-control" id="password" type="password" v-model="credentials.password" placeholder="******" @input="clearMsg" />
+      <input class="auth-form-control" id="password" type="password" v-model="credentials.password" placeholder="******" @input="events.onInput" />
     </div>
     <ButtonDefault class="modal-btn mx-auto" type="submit" :disabled="btnText !== 'Login'">{{ btnText }}</ButtonDefault>
   </form>

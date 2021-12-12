@@ -1,5 +1,5 @@
 import { store } from '@/store'
-import type { Credentials, Headers, RecipeDB } from '@/types'
+import type { Credentials, Headers, RecipeDB, User } from '@/types'
 
 /**
  * Shared logic to handle API requests to the app's serverless back end functions
@@ -29,7 +29,7 @@ export async function apiRequest(reqMethod: string, payload?: any, reqPath: stri
  * Returns the index of an element in the given array
  */
 export function getArrayIndex(arr: string[], item: string) {
-  const target = [...arr]
+  const target: string[] = [...arr]
   return target.indexOf(item.toLowerCase())
 }
 
@@ -38,7 +38,7 @@ export function getArrayIndex(arr: string[], item: string) {
  */
 export async function getAuthHeaders() {
   const now = Date.now()
-  const user = store.getters['user/currentUser']
+  const user: User = store.getters['user/currentUser']
 
   let headers: Headers = {
     'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ export async function getAuthHeaders() {
  * Used for both editable and readonly recipe views
  */
 export async function getRecipeData(id: string) {
-  const existing = await store.dispatch('data/getRecipeById', id)
+  const existing: RecipeDB[] = await store.dispatch('data/getRecipeById', id)
   return existing.length > 0
     ? existing[0]
     : await store.dispatch('data/read', id)
@@ -150,7 +150,7 @@ export function useRecipeSearch(data: RecipeDB[], term: string) {
  */
 export function validateCredentials(input: Credentials) {
   // check for empty keys on our credentials object -- otherwise an empty user name might not get caught
-  let emptyKeys = Object.keys(input).filter((key: string) => input[key].length < 1)
+  let emptyKeys: string[] = Object.keys(input).filter((key: string) => input[key].length < 1)
 
   if (emptyKeys.length > 0) return false
 

@@ -24,7 +24,7 @@
     loading: false
   })
 
-  const deleteRecipe = async () => {
+  const onDeleteRecipe = async () => {
     const confirmDelete = window.confirm(`Deleting the recipe "${props.title}" - are you sure?`)
     if (confirmDelete) {
       btnState.disabled = true
@@ -36,8 +36,7 @@
         // avoid hitting 'onBeforeRouteLeave' in the parent
         emit('event:delete', true)
         // redirect home if currently viewing the deleted recipe's dedicated view/edit route
-        let redirect = route.params.refId?.toString()?.length > 0 || ''
-        if (redirect) router.push({ name: 'All Recipes', replace: true })
+        if (route.params.refId?.toString()?.length > 0) router.push({ name: 'All Recipes', replace: true })
       } else {
         btnState.disabled = false
         btnState.loading = false
@@ -47,7 +46,7 @@
 </script>
 
 <template>
-  <ButtonDefault class="opacity-75 hover:opacity-100" title="Delete recipe" @click="deleteRecipe">
+  <ButtonDefault class="opacity-75 hover:opacity-100" title="Delete recipe" @click="onDeleteRecipe">
     <Loading v-if="btnState.loading" size="24" />
     <svg v-else xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash pointer-events-none" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

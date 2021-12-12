@@ -12,9 +12,11 @@
       <img class="recipe-card-img" :src="recipe.data.image" crossorigin="anonymous" :alt="recipe.data.title">
     </router-link>
     <div class="p-8">
-      <router-link :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }" tabindex="-1">
-        <h3 class="font-bold text-2xl tracking-wide text-blue-500 hover:text-blue-600">{{ recipe.data.title }}</h3>
-      </router-link>
+      <h3 class="font-bold text-2xl tracking-wide text-blue-500 hover:text-blue-600">
+        <router-link :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }" tabindex="-1">
+          {{ recipe.data.title }}
+        </router-link>
+      </h3>
       <p class="text-blue-600 mt-4">{{ recipe.data.description }}</p>
     </div>
   </div>
@@ -43,6 +45,10 @@
       transform: scale(1.015);
       transition: transform .25s ease;
     }
+  }
+
+  .img-link {
+    @apply block;
   }
 
   .img-link:focus > img {

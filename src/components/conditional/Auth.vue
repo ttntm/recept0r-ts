@@ -17,7 +17,7 @@
     if (currentVal) closeAuth()
   })
 
-  const toggleMode = (newMode: string) => mode.value = newMode
+  const onToggleMode = (newMode: string) => mode.value = newMode
 </script>
 
 <template>
@@ -30,7 +30,7 @@
         <h3 class="">
           <button class="text-cool-gray-500 font-bold text-lg pb-1 border-b border-transparent focus:outline-none shadow-none"
             :class="{ 'border-blue-500 text-blue-500': mode === 'signup' }"
-            @click="toggleMode('signup')"
+            @click="onToggleMode('signup')"
             v-click-blur
           >
             Sign Up
@@ -39,7 +39,7 @@
         <h3 class="">
           <button class="text-cool-gray-500 font-bold text-lg pb-1 border-b border-transparent focus:outline-none shadow-none"
             :class="{ 'border-blue-500 text-blue-500': mode === 'login' }"
-            @click="toggleMode('login')"
+            @click="onToggleMode('login')"
             v-click-blur
           >
             Login

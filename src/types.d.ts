@@ -56,6 +56,11 @@ export type SortOption = {
   tooltip: string
 }
 
+export type ToastMessage = {
+  text: string,
+  type: 'error' | 'success' |'info'
+}
+
 export type User = UserData
 
 /**

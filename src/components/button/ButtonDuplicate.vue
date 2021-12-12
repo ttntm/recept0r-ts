@@ -17,7 +17,7 @@
 
   const store = useStore()
 
-  const duplicate = async () => {
+  const onDuplicate = async () => {
     const confirmDuplicate = window.confirm(`This will duplicate the recipe "${props.recipe.title}" - are you sure?`)
     if (confirmDuplicate) {
       btnState.disabled = true
@@ -41,7 +41,7 @@
 </script>
 
 <template>
-  <ButtonDefault class="opacity-75 hover:opacity-100" title="Duplicate recipe" :disabled="btnState.disabled" @click="duplicate">
+  <ButtonDefault class="opacity-75 hover:opacity-100" title="Duplicate recipe" :disabled="btnState.disabled" @click="onDuplicate">
     <Loading v-if="btnState.loading" size="24" />
     <svg v-else xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy pointer-events-none" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

@@ -6,11 +6,11 @@
 
   const route = useRoute()
 
-  const url = route.fullPath
+  const url: string = route.fullPath
 
-  const eml = `mailto:?subject=Check%20out%20this%20recipe&body=https://recept0r.com${url}`
-  const fb = `https://facebook.com/sharer/sharer.php?u=https://recept0r.com${url}`
-  const tw = `https://twitter.com/intent/tweet/?text=Check%20out%20this%20recipe&url=https://recept0r.com${url}`
+  const eml: string = `mailto:?subject=Check%20out%20this%20recipe&body=https://recept0r.com${url}`
+  const fb: string = `https://facebook.com/sharer/sharer.php?u=https://recept0r.com${url}`
+  const tw: string = `https://twitter.com/intent/tweet/?text=Check%20out%20this%20recipe&url=https://recept0r.com${url}`
 
   const closeShare = () => showWindow(0)
 </script>

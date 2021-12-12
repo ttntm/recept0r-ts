@@ -8,37 +8,41 @@
 
   const store = useStore()
 
-  const credentials: Credentials = reactive({
+  const credentials = reactive<Credentials>({
     name: '',
     email: '',
     password: ''
   })
   const validationMsg = ref('')
 
-  const clearMsg = () => validationMsg.value = ''
+  const events = {
+    onInput() {
+      validationMsg.value = ''
+    },
 
-  const handleSignup = () => {
-    if (validateCredentials(credentials)) {
-      store.dispatch('user/attemptSignup', credentials)
-    } else {
-      validationMsg.value = 'Please enter valid information.'
+    onsubmitSignup() {
+      if (validateCredentials(credentials)) {
+        store.dispatch('user/attemptSignup', credentials)
+      } else {
+        validationMsg.value = 'Please enter valid information.'
+      }
     }
   }
 </script>
 
 <template>
-  <form class="" @submit.prevent="handleSignup">
+  <form class="" @submit.prevent="events.onsubmitSignup">
     <div class="form-group">
       <label for="name">Name</label>
-      <input class="auth-form-control" id="name" v-model="credentials.name" type="text" placeholder="Arnold Schwarzenegger" autocomplete="off" @input="clearMsg" v-focus />
+      <input class="auth-form-control" id="name" v-model="credentials.name" type="text" placeholder="Arnold Schwarzenegger" autocomplete="off" @input="events.onInput" v-focus />
     </div>
     <div class="form-group">
       <label for="email">Email</label>
-      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="arnie@terminator.com" @input="clearMsg"/>
+      <input class="auth-form-control" id="email" type="email" v-model="credentials.email" placeholder="arnie@terminator.com" @input="events.onInput"/>
     </div>
     <div class="form-group">
       <label for="password">Password</label>
-      <input class="auth-form-control" id="password" type="password" v-model="credentials.password" placeholder="******" @input="clearMsg"/>
+      <input class="auth-form-control" id="password" type="password" v-model="credentials.password" placeholder="******" @input="events.onInput"/>
     </div>
     <ButtonDefault class="modal-btn mx-auto" type="submit">Sign Up</ButtonDefault>
   </form>

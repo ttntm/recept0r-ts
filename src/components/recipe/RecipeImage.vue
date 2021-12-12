@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { computed, reactive } from 'vue'
+  import { reactive } from 'vue'
   import { useStore } from '@/store'
 
-  import { uploadImage } from '@/utils'
+  import { isImgUploaded, uploadImage } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
 
@@ -21,17 +21,15 @@
     type: '',
     body: ''
   })
-  
-  const isUploaded = computed(() => {
-    const checkImgSrc = RegExp(/^https:\/\//);
-    return checkImgSrc.test(props.currentImage);
-  })
 
-  const addImage = (evt: Event) => {
-    const eTarget = evt.target as HTMLInputElement
-    const selectedImage = eTarget.files?.length ? eTarget.files[0] : null //get the first file
-    
-    if (selectedImage) {
+  const events = {
+    onAddImage(evt: Event) {
+      const eTarget = evt.target as HTMLInputElement
+      const selectedImage = eTarget.files?.length ? eTarget.files[0] : null //get the first file
+      
+      //cancel if there's no image or if the image is removed
+      if (!selectedImage) return
+
       const reader = new FileReader()
       
       reader.onload = e => {
@@ -43,28 +41,24 @@
       }
       
       reader.readAsDataURL(selectedImage)
-    } else {
-      //cancel if there's no image or if the image is removed
-      return
-    }
-  }
+    },
 
-  const removeImage = () => {
-    if (props.currentImage) {
+    onRemoveImage() {
       emit('update:image', '')
       imageStatus.type = 'info'
       imageStatus.body = 'Image removed.'
-    } else {
-      imageStatus.type = 'error'
-      imageStatus.body = 'Please select an image first'
-    }
-  }
+    },
 
-  const uploadCurrentImage = async () => {
-    const uPreset = store.getters['app/cdnryUpreset']
-    const uploadUrl = store.getters['app/cdnryURL']
+    async onUploadImage() {
+      const uPreset = store.getters['app/cdnryUpreset']
+      const uploadUrl = store.getters['app/cdnryURL']
 
-    if (props.currentImage && !isUploaded.value) {
+      if (isImgUploaded(props.currentImage)) {
+        imageStatus.type = 'error'
+        imageStatus.body = 'This image was uploaded already. Please remove it if you want to change it.'
+        return
+      }
+
       imageStatus.type = 'info'
       imageStatus.body = `<img src="/img/loading.svg" class="w-6 inline-block"><span class="inline-block ml-2">Uploading...</span>`
       
@@ -77,12 +71,7 @@
 
       uploaded.data ? emit('update:image', uploaded.data) : imageStatus.type = 'error'
       
-      return imageStatus.body = uploaded.message
-    } else {
-      imageStatus.type = 'error'
-      return isUploaded
-        ? imageStatus.body = 'This image was uploaded already. Please remove it first if you want to change it.'
-        : imageStatus.body = 'Please select an image first'
+      imageStatus.body = uploaded.message
     }
   }
 </script>
@@ -95,23 +84,23 @@
           <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
         </svg>
         <span class="mt-2 text-base leading-normal">Select Image</span>
-        <input class="hidden" type="file" accept="image/*" @change="addImage" />
+        <input class="hidden" type="file" accept="image/*" @change="events.onAddImage" />
       </label>
     </div>
     <transition name="fade">
       <p
         v-if="imageStatus.type !== ''"
         v-html="imageStatus.body"
-        class="text-sm ml-4 mb-4"
+        class="text-sm text-center mb-4"
         :class="{
           'error': imageStatus.type === 'error',
           'text-blue-500': imageStatus.type === 'info',
         }"
       />
     </transition>
-    <div v-if="currentImage" class="flex flex-row align-items-center justify-content-start">
-      <ButtonDefault v-click-blur class="text-sm mr-4" @click="uploadCurrentImage">Upload Image</ButtonDefault>
-      <ButtonDefault v-click-blur class="opacity-50 hover:opacity-100 text-sm" @click="removeImage">Remove Image</ButtonDefault>
+    <div v-if="currentImage" class="flex flex-row items-center justify-center">
+      <ButtonDefault v-click-blur class="text-sm mr-4" @click="events.onUploadImage">Upload Image</ButtonDefault>
+      <ButtonDefault v-click-blur class="opacity-50 hover:opacity-100 text-sm" @click="events.onRemoveImage">Remove Image</ButtonDefault>
     </div>
   </section>
 </template>
