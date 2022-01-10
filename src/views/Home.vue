@@ -3,7 +3,6 @@
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
   import type { RecipeDB } from '@/types'
-
   import { showWindow, useRecipeSearch } from '@/utils'
 
   import ButtonFilter from '@/components/button/ButtonFilter.vue'
@@ -16,23 +15,23 @@
   const route = useRoute()
   const store = useStore()
 
-  const allRecipes = computed<RecipeDB[]>(() => store.getters['data/allRecipes'])
-  const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
   const forceUpdate = route.query.force || null
-  const isLoading = computed<boolean>(() => allRecipes.value.length > 0 ? false : true)
-  const lastUpdated = computed<string>(() => store.getters['data/lastUpdated'])
   const searchTerm = ref('')
-  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
+  const allRecipes = computed<RecipeDB[]>(() => store.getters['data/allRecipes'])
   const displayedRecipes = computed<RecipeDB[]>(() => {
     const reversed: any[] = allRecipes.value.slice().reverse()
     const term = searchTerm.value
-    if (term && term.length > 0) {
-      return useRecipeSearch(reversed, term)
-    } else {
-      return reversed
-    }
-  })  
+    return term && term.length > 0 ? useRecipeSearch(reversed, term) : reversed
+  })
+  const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
+  const isLoading = computed<boolean>(() => allRecipes.value.length > 0 ? false : true)
+  const lastUpdated = computed<string>(() => store.getters['data/lastUpdated'])
+  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
+
+  watch(lastUpdated, () => {
+    store.dispatch('app/setDebugInfo', { lastUpdate: lastUpdate(), updateNeeded: updateNeeded(), forceUpdate: Boolean(forceUpdate) })
+  })
 
   const getAllRecipes = () => {    
     if ((allRecipes.value.length === 0 && !filterActive.value) || forceUpdate || !lastUpdate() || updateNeeded()) {
@@ -40,8 +39,6 @@
     }
   }
 
-  // computed() makes the date that vuex generated a string
-  // we have to convert it back into a date object for math to work on it
   const lastUpdate = () => lastUpdated.value ? new Date(lastUpdated.value) : null
 
   const updateNeeded = () => {
@@ -65,10 +62,6 @@
   }
 
   getAllRecipes()
-
-  watch(lastUpdated, () => {
-    store.dispatch('app/setDebugInfo', { lastUpdate: lastUpdate(), updateNeeded: updateNeeded(), forceUpdate: Boolean(forceUpdate) })
-  })
 </script>
 
 <template>

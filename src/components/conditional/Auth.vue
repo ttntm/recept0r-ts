@@ -11,11 +11,11 @@
 
   const mode = ref('login')
 
-  const closeAuth = () => showWindow(0)
-
   watch(() => props.loggedIn, (currentVal) => {
     if (currentVal) closeAuth()
   })
+  
+  const closeAuth = () => showWindow(0)
 
   const onToggleMode = (newMode: string) => mode.value = newMode
 </script>

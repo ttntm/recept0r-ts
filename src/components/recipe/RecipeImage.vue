@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { reactive } from 'vue'
   import { useStore } from '@/store'
-
   import { isImgUploaded, uploadImage } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'

@@ -16,9 +16,6 @@
 
   const debugInfo = computed<DebugInfo>(() => store.getters['app/debugInfo'])
   const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
-  const routeFull = computed<string>(() => route.fullPath)
-  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
-
   const menuItems = computed(() => {
     const routes = router.getRoutes()
     return routes.filter(item => { 
@@ -29,6 +26,12 @@
       }
     })
   })
+  const routeFull = computed<string>(() => route.fullPath)
+  const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
+
+  watch(loggedIn, () => {
+    if (!loggedIn.value && route.meta.authRequired) router.push({ name: 'All Recipes' })
+  })
 
   onMounted(() => {
     const app = document.getElementById('app')
@@ -36,10 +39,6 @@
       app.style.opacity = '1'
       app.style.transition = 'opacity 1.5s ease'
     }
-  })
-
-  watch(loggedIn, () => {
-    if (!loggedIn.value && route.meta.authRequired) router.push({ name: 'All Recipes' })
   })
 </script>
 

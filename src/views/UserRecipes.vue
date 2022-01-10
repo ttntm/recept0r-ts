@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import { computed, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
   import type { WritableComputedRef } from 'vue'
   import type { RecipeDB, User } from '@/types'
-  
   import { useRecipeSearch } from '@/utils'
   
   import ButtonTop from '@/components/button/ButtonTop.vue'
@@ -16,26 +15,31 @@
   const route = useRoute()
   const store = useStore()
 
+  const isLoading = ref(true)
+  const myRecipesDisplay = ref<RecipeDB[]>([])
+  const userSearchTerm = ref('')
+
   const displayList: WritableComputedRef<RecipeDB[]> = computed({
     // see: https://stackoverflow.com/a/64281689
     get(): RecipeDB[] {
       const list: RecipeDB[] = myRecipesDisplay.value
       const term = userSearchTerm.value
-      if (term && term.length > 0) {
-        return useRecipeSearch(list, term)
-      } else {
-        return list
-      }
+      return term && term.length > 0 ? useRecipeSearch(list, term) : list
     },
     set(newList: any[]): void {
       myRecipesDisplay.value = newList
     }
   })
-  const isLoading = ref(true)
   const myRecipes = computed<RecipeDB[]>(() => store.getters['data/userRecipes'])
-  const myRecipesDisplay = ref<RecipeDB[]>([...myRecipes.value.slice().reverse()])
   const user = computed<User>(() => store.getters['user/currentUser'])
-  const userSearchTerm = ref('')
+
+  watch(myRecipes, (current, old) => {
+    if (current.length > 0) displayList.value = myRecipes.value.slice().reverse()
+  })
+
+  onMounted(() => {
+    myRecipesDisplay.value = [...myRecipes.value.slice().reverse()]
+  })
 
   const getMyRecipes = () => {
     const forceUpdate = route.query.force || null
@@ -58,12 +62,6 @@
   }
 
   getMyRecipes()
-
-  watch(myRecipes, (current, old) => {
-    if (current.length > 0) {
-      displayList.value = myRecipes.value.slice().reverse()
-    }
-  })
 </script>
 
 <template>

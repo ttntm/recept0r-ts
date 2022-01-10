@@ -2,17 +2,16 @@
   import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
-  import { QuillEditor } from '@vueup/vue-quill'
-  import '@vueup/vue-quill/dist/vue-quill.snow.css'
   import type { Recipe, User } from '@/types'
-
   import { getRecipeData, isImgUploaded, slugify } from '@/utils'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
   import ButtonDelete from '@/components/button/ButtonDelete.vue'
   import ButtonDuplicate from '@/components/button/ButtonDuplicate.vue'
   import InputSelect from '@/components/input/InputSelect.vue'
   import InputToggle from '@/components/input/InputToggle.vue'
+  import { QuillEditor } from '@vueup/vue-quill'
   import RecipeImage from '@/components/recipe/RecipeImage.vue'
   import RecipeIngredients from '@/components/recipe/RecipeIngredients.vue'
 
@@ -20,22 +19,9 @@
   const router = useRouter()
   const store = useStore()
 
-  const category = computed<string[]>(() => store.getters['data/recipeCategory'])
-  const diet = computed<string[]>(() => store.getters['data/recipeDiet'])
-  const draftText = computed<string>(() => recipe.draft ? 'Draft mode active' : 'Draft mode disabled')
   const editor = ref()
-  const editorOptions = {
-    bounds: '#editor',
-    debug: 'error',
-    placeholder: 'Compose an epic...',
-    readOnly: false,
-    theme: 'snow'
-  }
   const isDeleted = ref(false)
   const isSaving = ref(false)
-  const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
-  const me = computed<User>(() => store.getters['user/currentUser'])
-  const mode = computed<string>(() => route.meta.mode ? route.meta.mode : '')
   const noChanges = ref(true)
   const recipe: Recipe = reactive({
     id: '',
@@ -47,13 +33,58 @@
     duration: '30 min / 1 h',
     image: '',
     ingredients: [],
-    owner: me.value ? me.value.id : '',
+    owner: '',
     portions: '4 portions',
     body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
+  const title = ref()
+  
+  const category = computed<string[]>(() => store.getters['data/recipeCategory'])
+  const diet = computed<string[]>(() => store.getters['data/recipeDiet'])
+  const draftText = computed<string>(() => recipe.draft ? 'Draft mode active' : 'Draft mode disabled')
+  const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
+  const me = computed<User>(() => store.getters['user/currentUser'])
+  const mode = computed<string>(() => route.meta.mode ? route.meta.mode : '')
   const saveBtnText = computed<string>(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save Draft' : 'Publish')
   const saveDisabled = computed<boolean>(() => noChanges.value || isSaving.value ? true : false)
-  const title = ref()
+
+  // set owner before starting to watch 'recipe' for changes
+  if (me.value) recipe.owner = me.value.id
+
+  // this WILL ignore the 'onBeforeRouteLeave' guard - we'll accept that for the time being...
+  watch(loggedIn, () => {
+    if (!loggedIn.value) events.onCancel()
+  })
+
+  // check for changes to the initial state of the `recipe` object
+  watch(recipe, (current, old) => {
+    if (current) noChanges.value = false
+    if (current.title && (mode.value && mode.value !== 'create')) document.title = `Editing: ${current.title} - recept0r`
+  })
+
+  onMounted(() => {
+    if (mode.value && mode.value !== 'edit') title.value.focus()
+    window.addEventListener('beforeunload', events.onEditClose)
+  })
+
+  onBeforeRouteLeave((to, from) => {
+    if (loggedIn.value && !noChanges.value && !isSaving.value) {
+      const answer = isDeleted.value
+        ? true
+        : window.confirm('Do you really want to leave? There might be unsaved changes!')
+      if (!answer) return false
+    }
+  })
+
+  onUnmounted(() => window.removeEventListener('beforeunload', events.onEditClose))
+
+  const editorOptions = {
+    bounds: '#editor',
+    debug: 'error',
+    placeholder: 'Compose an epic...',
+    readOnly: false,
+    theme: 'snow'
+  }
 
   const getCurrentRefId = () => route.params.refId.toString()
 
@@ -83,7 +114,6 @@
     })
 
     // check recipe for empty fields that should be filled
-    // return false if anything's missing
     return missing <= 0 ? true : false
   }
 
@@ -160,33 +190,6 @@
   }
 
   getCurrentRecipeData()
-
-  watch(loggedIn, () => {
-    // this WILL ignore the 'onBeforeRouteLeave' guard - we'll accept that for the time being...
-    if (!loggedIn.value) events.onCancel()
-  })
-
-  // check for changes to the initial state of the `recipe` object
-  watch(recipe, (current, old) => {
-    if (current) noChanges.value = false
-    if (current.title) document.title = `Editing: ${current.title} - recept0r`
-  })
-
-  onMounted(() => {
-    if (mode.value && mode.value !== 'edit') title.value.focus()
-    window.addEventListener('beforeunload', events.onEditClose)
-  })
-
-  onUnmounted(() => window.removeEventListener('beforeunload', events.onEditClose))
-
-  onBeforeRouteLeave((to, from) => {
-    if (loggedIn.value && !noChanges.value && !isSaving.value) {
-      const answer = isDeleted.value
-        ? true
-        : window.confirm('Do you really want to leave? There might be unsaved changes!')
-      if (!answer) return false
-    }
-  })
 </script>
 
 <template>

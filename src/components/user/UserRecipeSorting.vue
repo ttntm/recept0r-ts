@@ -2,7 +2,6 @@
   import { computed, ref } from 'vue'
   import { useStore } from '@/store'
   import type { RecipeDB, SortOption } from '@/types'
-
   import { getArrayIndex, objectSort } from '@/utils'
 
   import ButtonSort from '@/components/button/ButtonSort.vue'
@@ -13,10 +12,10 @@
 
   const store = useStore()
 
+  const currentSortState = ref<string[]>(['date', 'desc'])
+
   const cachedList = computed<RecipeDB[]>(() => store.getters['data/userRecipes'])
   const sortButtons = computed<SortOption[]>(() => store.getters['data/userSortOptions'])
-
-  const currentSortState = ref<string[]>(['date', 'desc'])
 
   const isActiveBtn = (data: string, type: string) => {
     const selected = currentSortState.value

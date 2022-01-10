@@ -2,7 +2,6 @@
   import { computed } from 'vue'
   import type { RouteRecordNormalized } from 'vue-router'
   import { useStore } from '@/store'
-
   import { showWindow } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'

@@ -2,7 +2,6 @@
   import { computed, onMounted, reactive, ref } from 'vue'
   import { useStore } from '@/store'
   import type { User } from '@/types'
-
   import { validateEmail } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
@@ -13,10 +12,15 @@
     enabled: true,
     text: 'Update Profile'
   })
-  const currentUser = computed<User>(() => store.getters['user/currentUser'])
   const eml = ref('')
   const msg = ref('')
   const pwd = ref('')
+  
+  const currentUser = computed<User>(() => store.getters['user/currentUser'])
+
+  onMounted(() => {
+    eml.value = currentUser.value.email
+  })
 
   const validate = () => {
     msg.value = ''
@@ -58,10 +62,6 @@
       }, 1500)
     }
   }
-
-  onMounted(() => {
-    eml.value = currentUser.value.email
-  })
 </script>
 
 <template>

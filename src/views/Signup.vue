@@ -12,6 +12,7 @@
   const btnText = ref('Create Account')
   const msg = ref('')
   const pwd = ref('')
+  
   const token = route.query.t
 
   const validate = () => {

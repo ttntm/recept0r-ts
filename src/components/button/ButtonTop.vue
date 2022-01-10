@@ -3,14 +3,18 @@
 
   // based on: https://github.com/caiofsouza/vue-backtotop/blob/master/src/BackToTop.vue
   const visible = ref(false)
-  const visibleOffset: number = 1024
+
+  onMounted(() => window.addEventListener('scroll', events.onScroll))
+  
+  onUnmounted(() => window.removeEventListener('scroll', events.onScroll))
 
   const events = {
     onBackToTop() {
       window.smoothScroll()
     },
+    
     onScroll() {
-      visible.value = window.pageYOffset > visibleOffset
+      visible.value = window.pageYOffset > 1024
     }
   }
   
@@ -21,10 +25,6 @@
       window.scrollTo(0, Math.floor(currentScroll - (currentScroll / 5)))
     }
   }
-  
-  onMounted(() => window.addEventListener('scroll', events.onScroll))
-  
-  onUnmounted(() => window.removeEventListener('scroll', events.onScroll))
 </script>
 
 <template>

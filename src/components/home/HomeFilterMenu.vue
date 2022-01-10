@@ -2,7 +2,6 @@
   import { computed, reactive } from 'vue'
   import { useStore } from '@/store'
   import type { FilterSelection } from '@/types'
-
   import { getArrayIndex, showWindow } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
@@ -11,15 +10,16 @@
 
   const store = useStore()
 
+  const selected: FilterSelection = reactive({
+    category: [],
+    diet: []
+  })
+  
   const confirmBtnTxt = computed<string>(() => filterActive.value ? 'Apply' : 'Close')
   const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
   const filterActiveSelection = computed<FilterSelection>(() => store.getters['data/filterData'])
   const recipeCategory = computed<string[]>(() => store.getters['data/recipeCategory'])
   const recipeDiet = computed<string[]>(() => store.getters['data/recipeDiet'])
-  const selected: FilterSelection = reactive({
-    category: [],
-    diet: []
-  })
 
   const isActiveFilter = (mode: string, el: string) => getArrayIndex(selected[mode], el) !== -1
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import { useStore } from '@/store'
-  import { validateCredentials } from '@/utils'
   import type { Credentials } from '@/types'
+  import { validateCredentials } from '@/utils'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
 
@@ -21,11 +21,12 @@
     },
 
     onsubmitSignup() {
-      if (validateCredentials(credentials)) {
-        store.dispatch('user/attemptSignup', credentials)
-      } else {
+      if (!validateCredentials(credentials)) {
         validationMsg.value = 'Please enter valid information.'
+        return
       }
+        
+      store.dispatch('user/attemptSignup', credentials)
     }
   }
 </script>

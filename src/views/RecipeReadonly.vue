@@ -3,7 +3,6 @@
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
   import type { RecipeDB } from '@/types'
-
   import { getRecipeData, showWindow } from '@/utils'
 
   import ButtonShare from '@/components/button/ButtonShare.vue'
@@ -18,10 +17,15 @@
   const store = useStore()
 
   const errorMsg = ref('')
-  const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const readSuccess = ref(false)
   const recipe = ref<RecipeDB>()
+  
+  const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
+
+  watch(recipe, () => {
+    if (recipe.value?.data.title) document.title = `${recipe.value.data.title} - recept0r`
+  })
 
   const getCurrentRecipeData = async () => {
     const currentId = route.params.refId.toString()
@@ -37,10 +41,6 @@
   }
 
   getCurrentRecipeData()
-
-  watch(recipe, () => {
-    if (recipe.value?.data.title) document.title = `${recipe.value.data.title} - recept0r`
-  })
 </script>
 
 <template>

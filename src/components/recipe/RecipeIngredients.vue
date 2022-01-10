@@ -20,6 +20,8 @@
   // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
   const inputs = ref<{ [el: string]: any }[]>([])
 
+  watch(() => props.input, currentVal => ingredients.value = currentVal)
+
   const events = {
     async onAddItem(index?: number) {
       let currentEl = null
@@ -45,8 +47,6 @@
       emit('update:ingredients', ingredients.value)
     }
   }
-
-  watch(() => props.input, currentVal => ingredients.value = currentVal)
 </script>
 
 <template>

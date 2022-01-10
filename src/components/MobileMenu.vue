@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import type { RouteRecordNormalized } from 'vue-router'
-
   import { showWindow, useLogout } from '@/utils'
 
   import ButtonMenu from '@/components/button/ButtonMenu.vue'

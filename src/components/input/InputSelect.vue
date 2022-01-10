@@ -13,9 +13,9 @@
   
   const selected = ref('')
 
-  selected.value = props.current
-
   watch(() => props.current, currentVal => selected.value = currentVal)
+  
+  selected.value = props.current
 </script>
 
 <template>
