@@ -3,19 +3,25 @@
 
   import ButtonX from '@/components/button/ButtonX.vue'
 
+  const props = defineProps<{
+    show: boolean
+  }>()
+
   const onCloseMenu = () => showWindow(0)
 </script>
 
 <template>
-  <div class="user-button-modal" v-click-outside="onCloseMenu" v-esc="onCloseMenu">
-    <div class="flex items-center justify-end leading-none">
-      <ButtonX size="20" class="rounded-full p-1 mt-2 mx-2" @click="onCloseMenu" />
+  <transition name="modal">
+    <div v-if="show" class="user-button-modal" v-click-outside="onCloseMenu" v-esc="onCloseMenu">
+      <div class="flex items-center justify-end leading-none">
+        <ButtonX size="20" class="rounded-full p-1 mt-2 mx-2" @click="onCloseMenu" />
+      </div>
+      <div class="text-center mb-4">
+        <router-link :to="{ name: 'Profile'}" class="menu-item text-sm rounded-none mb-2 mx-auto">Profile</router-link>
+        <button class="menu-item w-full text-sm rounded-none mx-auto" @click="useLogout">Logout</button>
+      </div>
     </div>
-    <div class="text-center mb-4">
-      <router-link :to="{ name: 'Profile'}" class="menu-item text-sm rounded-none mb-2 mx-auto">Profile</router-link>
-      <button class="menu-item w-full text-sm rounded-none mx-auto" @click="useLogout">Logout</button>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <style lang="postcss" scoped>

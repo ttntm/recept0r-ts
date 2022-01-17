@@ -58,9 +58,7 @@
     <div class="w-full lg:w-2/5 lg:pl-8">
       <div class="flex flex-row lg:flex-col justify-between items-start">
         <div class="flex flex-row lg:self-end justify-end order-2 lg:order-1">
-          <transition name="share">
-            <RecipeShare v-if="windowOpen === 4" />
-          </transition>
+          <RecipeShare :show="windowOpen === 4" />
           <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
         </div>
         <div class="order-1 lg:order-2">
@@ -122,16 +120,5 @@
 
   .recipe-body a:hover {
     @apply no-underline;
-  }
-
-  .share-enter-active,
-  .share-leave-active {
-    transition: all 0.5s;
-  }
-
-  .share-enter-from,
-  .share-leave-to {
-    transform: translateX(-150px);
-    opacity: 0;
   }
 </style>

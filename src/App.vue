@@ -7,7 +7,7 @@
   import Auth from '@/components/conditional/Auth.vue'
   import Footer from '@/components/Footer.vue'
   import Navbar from '@/components/Navbar.vue'
-  import MobileMenu from '@/components/MobileMenu.vue'
+  import MobileMenu from '@/components/conditional/MobileMenu.vue'
   import ToastMessage from '@/components/conditional/ToastMessage.vue'
 
   const route = useRoute()
@@ -45,12 +45,8 @@
 <template>
   <div id="app" class="flex h-full flex-col">
     <Navbar :loggedIn="loggedIn" :menuItems="menuItems" />
-    <transition name="menu">
-      <MobileMenu v-if="windowOpen === 1" :loggedIn="loggedIn" :menuItems="menuItems" />
-    </transition>
-    <transition name="modal">
-      <Auth v-if="windowOpen === 2" :loggedIn="loggedIn" />
-    </transition>
+    <MobileMenu :loggedIn="loggedIn" :menuItems="menuItems" :show="windowOpen === 1" />
+    <Auth :loggedIn="loggedIn" :show="windowOpen === 2" />
     <div class="container flex-grow flex-shrink-0 px-4 md:mt-6 lg:mt-12 mx-auto">
       <router-view :key="routeFull" />
     </div>

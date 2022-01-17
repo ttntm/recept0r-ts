@@ -74,9 +74,7 @@
       <SearchBar v-model.trim="searchTerm" @update:modelValue="events.onSetSearchTerm($event)" />
       <ButtonFilter :window="windowOpen" @click="events.onFilterBtnClick" />
     </div>
-    <transition name="slide-fade">
-      <HomeFilterMenu v-if="windowOpen === 3" />
-    </transition>
+    <HomeFilterMenu :show="windowOpen === 3" />
     <transition name="fade">
       <p v-if="filterActive && windowOpen !== 3" class="text-center mb-10">
         Showing filtered recipes. <span @click.prevent="events.onFilterMsgClick" class="text-cool-gray-500 underline hover:no-underline cursor-pointer">Clear Filter</span>
@@ -91,16 +89,3 @@
   </section>
   <ButtonTop />
 </template>
-
-<style lang="postcss" scoped>
-  .slide-fade-enter-active,
-  .slide-fade-leave-active {
-    transition: all 0.5s;
-  }
-
-  .slide-fade-enter-from,
-  .slide-fade-leave-to {
-    transform: translateY(-200px);
-    opacity: 0;
-  }
-</style>

@@ -37,9 +37,7 @@
     <div class="flex flex-row items-center justify-end" style="width: 160px;">
       <ButtonDefault v-if="!loggedIn" class="hidden lg:block click-outside-ignore" @click="showWindow(2)">Login</ButtonDefault>
       <ButtonUser v-else :window="windowOpen" class="hidden lg:block click-outside-ignore" @click="showWindow(5)" />
-      <transition name="modal">
-        <UserMenu v-if="windowOpen === 5" />
-      </transition>
+      <UserMenu :show="windowOpen === 5" />
     </div>
   </nav>
 </template>
