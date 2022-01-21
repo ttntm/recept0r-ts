@@ -14,6 +14,7 @@
     "secure-ls": "^1.2.6",
     "vue": "^3.0.4",
     "vue-router": "^4.0.5",
+    "vuedraggable": "^4.1.0",
     "vuex": "^4.0.0",
     "vuex-multi-tab-state": "^1.0.16",
     "vuex-persistedstate": "^4.0.0-beta.3"

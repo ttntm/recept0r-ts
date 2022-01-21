@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { nextTick, ref, watch } from 'vue'
+  import draggable from 'vuedraggable'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
   import ButtonX from '@/components/button/ButtonX.vue'
+  import GripVertical from '@/components/icon/grip-vertical.vue'
 
   const props = defineProps<{
     input: string[],
@@ -13,14 +15,27 @@
     (e: 'update:ingredients', val?: string[]): void
   }>()
 
+  const drag = ref(false)
   // create a new array based on the input prop so we don't run into problems with reactivity
-  const ingredients = ref(Array.prototype.concat(props.input))
-  
-  // the Vue 3 way of handling refs based on v-for -- see:
-  // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
+  const ingredients = ref<{ id: number, name: string }[]>([])
+  // the Vue 3 way of handling refs based on v-for -- see: https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
   const inputs = ref<{ [el: string]: any }[]>([])
 
-  watch(() => props.input, currentVal => ingredients.value = currentVal)
+  watch(() => props.input, currentVal => ingredients.value = objectify(currentVal))
+
+  const dragOptions = {
+    animation: 350,
+    ghostClass: 'ghost',
+    handle: '.handle'
+  }
+
+  const objectify = (arr: string[]) => {
+    return arr.map((el, index) => { 
+      return { id: index, name: el }
+    })
+  }
+
+  const valuefy = (arr: { id: number, name: string }[]) => arr.map(el => el.name)
 
   const events = {
     async onAddItem(index?: number) {
@@ -29,11 +44,11 @@
       let inputEls = inputs.value
       
       if (index !== undefined && index > -1) {
-        ing.splice(index + 1, 0, '')
+        ing.splice(index + 1, 0, { id: index+1, name: '' })
         await nextTick() // await next tick to avoid 'x is undefined...' errors
         currentEl = inputEls[index+1]
       } else {
-        ing.push('')
+        ing.push({ id: ing.length, name: '' })
         await nextTick() // await next tick to avoid 'x is undefined...' errors
         currentEl = inputEls[inputEls.length-1]
       }
@@ -41,31 +56,80 @@
       if (currentEl) currentEl.focus()
     },
 
+    onChangeItem() {
+      emit('update:ingredients', valuefy(ingredients.value))
+    },
+
     onRemoveItem(index: number) {    
       ingredients.value.splice(index, 1)
       inputs.value.splice(index, 1)
-      emit('update:ingredients', ingredients.value)
-    }
+      events.onChangeItem()
+     }
   }
+
+  ingredients.value = objectify(props.input)
 </script>
 
 <template>
   <div id="recipe-ingredients">
-    <ul class="ing-list mb-0">
-      <li v-for="(ing, index) in ingredients" :key="index">
-        <span class="flex flex-row items-center mb-4">
+    <draggable
+      v-model="ingredients"
+      :component-data="{
+        tag: 'ul',
+        type: 'transition-group',
+        name: !drag ? 'flip-list' : null
+      }"
+      v-bind="dragOptions"
+      item-key="id"
+      class="ing-list list-none p-0 mb-3"
+      @start="drag=true"
+      @change="events.onChangeItem"
+      @end="drag=false"
+    >
+      <template #item="{ element, index }">
+        <li :class="{ 'grabbing' : drag }" class="flex flex-row items-center border border-transparent px-1 py-2 mb-1">
+          <span :class="{ 'text-gray-900' : drag }" class="handle mr-2" title="Move element">
+            <GripVertical />
+          </span>
           <input type="text"
-            v-model.trim="ingredients[index]"
+            v-model.trim="element.name"
             :placeholder="`Ingredient ${index + 1}`"
             :ref="el => { if (el) inputs[index] = el }"
             class="inline-block form-control text-sm"
-            @input="$emit('update:ingredients', ingredients)"
+            @input="events.onChangeItem"
             @keydown.enter="events.onAddItem(index)"
           >
           <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="events.onRemoveItem(index)" />
-        </span>
-      </li>
-    </ul>
+        </li>
+      </template>
+    </draggable>
     <ButtonDefault class="block text-sm mx-auto" @click="events.onAddItem()">Add Ingredient</ButtonDefault>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+  .flip-list-move {
+    transition: transform 0.5s;
+  }
+
+  .no-move {
+    transition: transform 0s;
+  }
+
+  .ghost {
+    @apply border border-gray-500 rounded-lg shadow-lg pointer-events-none;
+  }
+
+  .grabbing * {
+    cursor: grabbing !important;
+  }
+
+  .handle {
+    @apply cursor-move block text-gray-700;
+  }
+
+  .handle:hover,
+  .ghost .handle {
+    @apply text-gray-900;
+  }
+</style>
