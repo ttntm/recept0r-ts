@@ -4,6 +4,7 @@
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
   import ButtonX from '@/components/button/ButtonX.vue'
+  import GripVertical from '@/components/icon/grip-vertical.vue'
 
   const props = defineProps<{
     input: string[],
@@ -21,6 +22,12 @@
   const inputs = ref<{ [el: string]: any }[]>([])
 
   watch(() => props.input, currentVal => ingredients.value = objectify(currentVal))
+
+  const dragOptions = {
+    animation: 350,
+    ghostClass: 'ghost',
+    handle: '.handle'
+  }
 
   const objectify = (arr: string[]) => {
     return arr.map((el, index) => { 
@@ -49,11 +56,15 @@
       if (currentEl) currentEl.focus()
     },
 
+    onChangeItem() {
+      emit('update:ingredients', valuefy(ingredients.value))
+    },
+
     onRemoveItem(index: number) {    
       ingredients.value.splice(index, 1)
       inputs.value.splice(index, 1)
-      emit('update:ingredients', valuefy(ingredients.value))
-    }
+      events.onChangeItem()
+     }
   }
 
   ingredients.value = objectify(props.input)
@@ -62,29 +73,63 @@
 <template>
   <div id="recipe-ingredients">
     <draggable
-      tag="ul"
-      :list="ingredients"
+      v-model="ingredients"
+      :component-data="{
+        tag: 'ul',
+        type: 'transition-group',
+        name: !drag ? 'flip-list' : null
+      }"
+      v-bind="dragOptions"
       item-key="id"
-      class="ing-list mb-0"
+      class="ing-list list-none p-0 mb-3"
       @start="drag=true"
+      @change="events.onChangeItem"
       @end="drag=false"
     >
       <template #item="{ element, index }">
-        <li>
-          <span class="flex flex-row items-center mb-4">
-            <input type="text"
-              v-model.trim="element.name"
-              :placeholder="`Ingredient ${index + 1}`"
-              :ref="el => { if (el) inputs[index] = el }"
-              class="inline-block form-control text-sm"
-              @input="$emit('update:ingredients', valuefy(ingredients))"
-              @keydown.enter="events.onAddItem(index)"
-            >
-            <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="events.onRemoveItem(index)" />
+        <li :class="{ 'grabbing' : drag }" class="flex flex-row items-center border border-transparent px-1 py-2 mb-1">
+          <span :class="{ 'text-gray-900' : drag }" class="handle mr-2" title="Move element">
+            <GripVertical />
           </span>
+          <input type="text"
+            v-model.trim="element.name"
+            :placeholder="`Ingredient ${index + 1}`"
+            :ref="el => { if (el) inputs[index] = el }"
+            class="inline-block form-control text-sm"
+            @input="events.onChangeItem"
+            @keydown.enter="events.onAddItem(index)"
+          >
+          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="events.onRemoveItem(index)" />
         </li>
       </template>
     </draggable>
     <ButtonDefault class="block text-sm mx-auto" @click="events.onAddItem()">Add Ingredient</ButtonDefault>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+  .flip-list-move {
+    transition: transform 0.5s;
+  }
+
+  .no-move {
+    transition: transform 0s;
+  }
+
+  .ghost {
+    @apply border border-gray-500 rounded-lg shadow-lg pointer-events-none;
+  }
+
+  .grabbing * {
+    cursor: grabbing !important;
+  }
+
+  .handle {
+    @apply cursor-move block text-gray-700;
+  }
+
+  .handle:hover,
+  .ghost .handle {
+    @apply text-gray-900;
+  }
+</style>

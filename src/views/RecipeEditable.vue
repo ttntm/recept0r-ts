@@ -98,8 +98,6 @@
         : events.onCancel()
     }
   }
-  
-  const setRecipeId = () => recipe.id = slugify(recipe.title)
 
   const updateEditMode = (input: any) => { 
     Object.keys(input).map(key => events.onUpdateRecipe(key, input[key]))
@@ -184,6 +182,10 @@
       }
     },
 
+    onTitleChange() {
+      recipe.id = slugify(recipe.title)
+    },
+
     onUpdateRecipe(key: string, value: any) {
       recipe[key] = value
     }
@@ -201,7 +203,7 @@
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
       <h4 class="">Recipe Title</h4>
-      <input type="text" v-model.trim="recipe.title" ref="title" class="form-control mb-4" placeholder="A great title..." @input="setRecipeId">
+      <input type="text" v-model.trim="recipe.title" ref="title" class="form-control mb-4" placeholder="A great title..." @input="events.onTitleChange">
       <h4 class="mb-4">Description</h4>
       <input type="text" v-model.trim="recipe.description" class="form-control mb-4" placeholder="A fancy description...">
     </div>
@@ -218,7 +220,7 @@
       </InputSelect>
     </div>
     <div class="w-full md:w-1/2 md:pl-8 mb-4">
-      <h4 class="mb-4">Ingredients</h4>
+      <h4 class="mb-2">Ingredients</h4>
       <RecipeIngredients :input="recipe.ingredients" :mode="mode" @update:ingredients="events.onUpdateRecipe('ingredients', $event)" />
     </div>
     <div class="w-full">
