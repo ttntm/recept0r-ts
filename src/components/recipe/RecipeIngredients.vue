@@ -99,7 +99,7 @@
             @input="events.onChangeItem"
             @keydown.enter="events.onAddItem(index)"
           >
-          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="events.onRemoveItem(index)" />
+          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 ml-2" @click="events.onRemoveItem(index)" />
         </li>
       </template>
     </draggable>
