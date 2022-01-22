@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { nextTick, ref, watch } from 'vue'
   import draggable from 'vuedraggable'
+  import type { SortableEl } from '@/types'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
   import ButtonX from '@/components/button/ButtonX.vue'
@@ -16,10 +17,8 @@
   }>()
 
   const drag = ref(false)
-  // create a new array based on the input prop so we don't run into problems with reactivity
-  const ingredients = ref<{ id: number, name: string }[]>([])
-  // the Vue 3 way of handling refs based on v-for -- see: https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
-  const inputs = ref<{ [el: string]: any }[]>([])
+  const ingredients = ref<SortableEl[]>([])
+  const inputs = ref<{ [el: string]: any }[]>([]) // the Vue 3 way of handling refs based on v-for; https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
 
   watch(() => props.input, currentVal => ingredients.value = objectify(currentVal))
 
@@ -35,7 +34,7 @@
     })
   }
 
-  const valuefy = (arr: { id: number, name: string }[]) => arr.map(el => el.name)
+  const valuefy = (arr: SortableEl[]) => arr.map(el => el.name)
 
   const events = {
     async onAddItem(index?: number) {
@@ -99,7 +98,7 @@
             @input="events.onChangeItem"
             @keydown.enter="events.onAddItem(index)"
           >
-          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 p-1 ml-2" @click="events.onRemoveItem(index)" />
+          <ButtonX size="20" class="rounded-full text-gray-700 hover:text-gray-900 focus:text-gray-900 ml-2" @click="events.onRemoveItem(index)" />
         </li>
       </template>
     </draggable>

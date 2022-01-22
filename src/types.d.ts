@@ -49,6 +49,11 @@ export type RecipeDB = {
   data: Recipe
 }
 
+export type SortableEl = {
+  id: number, 
+  name: string
+}
+
 export type SortOption = {
   data: string
   type: string
