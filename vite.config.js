@@ -24,7 +24,8 @@ export default defineConfig({
       'vuex-multi-tab-state',
       'vuex-persistedstate',
       '@vueup/vue-quill',
-      'body-scroll-lock'
+      'body-scroll-lock',
+      'vuedraggable'
     ]
   },
   plugins: [
