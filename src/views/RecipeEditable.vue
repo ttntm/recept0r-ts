@@ -2,7 +2,7 @@
   import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
-  import type { Recipe, User } from '@/types'
+  import type { Recipe, RecipeDB, User } from '@/types'
   import { getRecipeData, isImgUploaded, slugify } from '@/utils'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
@@ -99,7 +99,7 @@
     }
   }
 
-  const updateEditMode = (input: any) => { 
+  const updateEditMode = (input: Recipe) => { 
     Object.keys(input).map(key => events.onUpdateRecipe(key, input[key]))
     editor.value.setHTML(recipe.body)
   }
@@ -110,8 +110,7 @@
     requiredFields.forEach((reqKey) => {
       if (recipe[reqKey].length <= 0) return missing += 1
     })
-
-    // check recipe for empty fields that should be filled
+    
     return missing <= 0 ? true : false
   }
 

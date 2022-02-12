@@ -58,7 +58,7 @@ export async function getAuthHeaders() {
  * Get recipe data from Vuex or DB
  * Used for both editable and readonly recipe views
  */
-export async function getRecipeData(id: string) {
+export async function getRecipeData(id: string): Promise<RecipeDB | 'error'> {
   const existing: RecipeDB[] = await store.dispatch('data/getRecipeById', id)
   return existing.length > 0
     ? existing[0]
