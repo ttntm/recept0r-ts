@@ -43,9 +43,20 @@ export type Recipe = {
 export type RecipeDB = {
   ref: {
     '@ref': {
-      id: string
-    }
-  }
+      id: string,
+      collection: {
+        '@ref': {
+          id: string,
+          collection: {
+            '@ref': {
+              id: string
+            }
+          }
+        }
+      }
+    },
+  },
+  ts: number,
   data: Recipe
 }
 

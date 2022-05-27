@@ -2,7 +2,7 @@
   import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
-  import type { Recipe, RecipeDB, User } from '@/types'
+  import type { Recipe, User } from '@/types'
   import { getRecipeData, isImgUploaded, slugify } from '@/utils'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
