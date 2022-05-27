@@ -17,7 +17,7 @@ Fauna documentation:
 
 `ref['@ref'].id` -> unique ID for Fauna records
 
-`user` -> GUID obtained from Netlify Identity via [gotrue-js](https://github.com/netlify/gotrue-js)
+`owner` -> GUID obtained from Netlify Identity via [gotrue-js](https://github.com/netlify/gotrue-js)
 
 ### Recipes
 

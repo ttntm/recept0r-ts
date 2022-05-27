@@ -43,10 +43,10 @@ export type Recipe = {
 export type RecipeDB = {
   ref: {
     '@ref': {
-      id: string,
+      id: string
       collection: {
         '@ref': {
-          id: string,
+          id: string
           collection: {
             '@ref': {
               id: string
@@ -54,14 +54,14 @@ export type RecipeDB = {
           }
         }
       }
-    },
-  },
-  ts: number,
+    }
+  }
+  ts: number
   data: Recipe
 }
 
 export type SortableEl = {
-  id: number, 
+  id: number 
   name: string
 }
 
@@ -73,7 +73,7 @@ export type SortOption = {
 }
 
 export type ToastMessage = {
-  text: string,
+  text: string
   type: 'error' | 'success' |'info'
 }
 
