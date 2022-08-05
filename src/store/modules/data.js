@@ -108,9 +108,7 @@ export default {
       commit('SET_FILTER_STATE', false)
       commit('SET_USER_RECIPES', [])
     },
-    /**
-    * @param args - an array provided by 'RecipeFilter.vue' that provides input for 'mode' in [0] and 'selection' in [1]
-    */
+
     applyFilter({ commit, getters}, args) {
       const allRecipes = getters.allRecipes
       const fData = getters.filterData
