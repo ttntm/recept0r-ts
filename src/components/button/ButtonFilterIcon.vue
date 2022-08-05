@@ -1,5 +1,8 @@
 <script setup lang="ts">
   import { computed } from 'vue'
+  import { useStore } from '@/store'
+  import type { FilterSelection } from '@/types'
+  import { getArrayIndex } from '@/utils'
 
   import bread from '@/components/icon/filter/bread.vue'
   import dessert from '@/components/icon/filter/dessert.vue'
@@ -17,12 +20,15 @@
     current: string
   }>()
 
+  const store = useStore()
+
+  const filterActiveSelection = computed<FilterSelection>(() => store.getters['data/filterData'])
   /**
    * This function is required so we can actually get the imported components
    * Placing the 'string' type prop in the ':is' binding below doesn't work at all
    * See: https://stackoverflow.com/a/66960318
   */
-  const getFilterImg = computed(() => {
+  const getFilterImg = computed<string>(() => {
     switch (props.current.toLowerCase()) {
       case 'bread':
         return bread
@@ -51,16 +57,32 @@
         return keto
     }
   })
+
+  const isActive = computed<boolean>(() => {   
+    if (!filterActiveSelection.value)
+      return false
+    
+    let c = props.current.toLowerCase()
+    let catIdx = getArrayIndex(filterActiveSelection.value.category || [], c)
+    let dietIdx = getArrayIndex(filterActiveSelection.value.diet || [], c)
+    
+    return catIdx !== -1 || dietIdx !== -1
+  })
 </script>
 
 <template>
-  <button class="filter-group mb-4 md:mr-4" v-click-blur>
+  <button class="filter-group mb-4 md:mr-4" :class="{ 'activeFilter': isActive }" :active="isActive" v-click-blur>
     <component :is="getFilterImg" class="filter-img" />
     <span class="filter-text">{{ current }}</span>
   </button>
 </template>
 
 <style lang="postcss" scoped>
+  .activeFilter .filter-img,
+  .activeFilter .filter-text {
+    @apply opacity-100;
+  }
+
   .filter-group {
     @apply cursor-pointer outline-none;
   }

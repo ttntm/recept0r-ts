@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, reactive } from 'vue'
+  import { computed, toRaw } from 'vue'
   import { useStore } from '@/store'
   import type { FilterSelection } from '@/types'
   import { getArrayIndex, showWindow } from '@/utils'
@@ -13,60 +13,50 @@
   }>()
 
   const store = useStore()
-
-  const selected: FilterSelection = reactive({
-    category: [],
-    diet: []
-  })
   
   const confirmBtnTxt = computed<string>(() => filterActive.value ? 'Apply' : 'Close')
   const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
-  const filterActiveSelection = computed<FilterSelection>(() => store.getters['data/filterData'])
+  const filterActiveSelection = computed<FilterSelection>({
+    get: () => store.getters['data/filterData'],
+    set: val => {
+      store.dispatch('data/applyFilter', [val])
+    }
+  })
+  const hasFilterSelected = computed<boolean>(() => {
+    return filterActiveSelection.value && (filterActiveSelection.value.category?.length >= 1 || filterActiveSelection.value.diet?.length >= 1)
+  })
   const recipeCategory = computed<string[]>(() => store.getters['data/recipeCategory'])
   const recipeDiet = computed<string[]>(() => store.getters['data/recipeDiet'])
-
-  const isActiveFilter = (mode: string, el: string) => getArrayIndex(selected[mode], el) !== -1
-
-  const updateFilterState = () => {
-    if (filterActive.value) {
-      return Object.keys(selected).forEach(key => {
-        if (filterActiveSelection.value[key] && filterActiveSelection.value[key].length > 0) {
-          selected[key] = filterActiveSelection.value[key]
-        }
-      })
-    }
-  }
 
   const events = {
     onClearFilterClick() {
       if (filterActive.value) {
-        Object.keys(selected).forEach(key => selected[key] = [])
         return store.dispatch('data/clearFilter')
       }
     },
 
     onFilterClick(mode: string, el: string) {
-      const current = selected[mode]
-      let idx = getArrayIndex(selected[mode], el)
+      let current = {
+        [mode]: toRaw(filterActiveSelection.value[mode]) || []
+      }
+      let idx = getArrayIndex(current[mode], el)
 
       if (idx === -1) {
-        current.push(el.toLowerCase())
+        current[mode].push(el.toLowerCase())
       } else {
-        current.splice(idx, 1)
+        current[mode].splice(idx, 1)
       }
 
-      return store.dispatch('data/applyFilter', [mode, selected[mode]])
+      filterActiveSelection.value = Object.assign(toRaw(filterActiveSelection.value), current)
     },
 
     onFilterClose() {
-      if (filterActive.value && selected.category.length === 0 && selected.diet.length === 0) {
+      if (filterActive.value && !hasFilterSelected.value) {
         store.dispatch('data/clearFilter')
       }
       return showWindow(0)
     }
   }
-
-  updateFilterState()
 </script>
 
 <template>
@@ -83,7 +73,6 @@
         <div class="flex flex-row flex-wrap justify-between md:justify-start items-center">
           <ButtonFilterIcon
             v-for="(cat, index) in recipeCategory"
-            :class="{ 'activeFilter': isActiveFilter('category', cat) }"
             :current="cat"
             :key="index"
             @click="events.onFilterClick('category', cat)"
@@ -95,7 +84,6 @@
         <div class="flex flex-row flex-wrap justify-between md:justify-start items-center">
           <ButtonFilterIcon
             v-for="(diet, index) in recipeDiet"
-            :class="{ 'activeFilter': isActiveFilter('diet', diet) }"
             :current="diet"
             :key="index"
             @click="events.onFilterClick('diet', diet)"
@@ -111,11 +99,6 @@
 </template>
 
 <style lang="postcss">
-  .activeFilter .filter-img,
-  .activeFilter .filter-text {
-    @apply opacity-100;
-  }
-
   .slide-fade-enter-active,
   .slide-fade-leave-active {
     transition: all 0.5s;

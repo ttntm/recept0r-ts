@@ -116,10 +116,9 @@ export default {
       const fData = getters.filterData
       const fState = getters.filterActive
       const recipeCache = getters.filterCache
-      const [mode, selection] = args
+      const [newFilterData] = args
       
-      let currentFilterData = Object.assign(fData, { [mode]: selection }) // format the data for filtering
-      commit('SET_FILTER_DATA', currentFilterData) // commit the filter settings
+      commit('SET_FILTER_DATA', Object.assign({}, fData, newFilterData)) // MUST use _new_ object here; kills reactivity otherwise!
       
       const findIndex = (arr, el) => {
         if (!arr) return -1
