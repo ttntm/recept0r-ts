@@ -30,6 +30,7 @@
   const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
   watch(lastUpdated, () => {
+    console.log(lastUpdated.value, typeof lastUpdated.value)
     store.dispatch('app/setDebugInfo', { lastUpdate: lastUpdate(), updateNeeded: updateNeeded(), forceUpdate: Boolean(forceUpdate) })
   })
 
@@ -39,7 +40,7 @@
     }
   }
 
-  const lastUpdate = () => lastUpdated.value ? new Date(lastUpdated.value) : null
+  const lastUpdate = () => lastUpdated.value ? new Date(lastUpdated.value) : ''
 
   const updateNeeded = () => {
     const now: Date = new Date

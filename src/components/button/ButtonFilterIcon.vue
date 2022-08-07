@@ -17,7 +17,8 @@
   import vegetarian from '@/components/icon/filter/vegetarian.vue'
 
   const props = defineProps<{
-    current: string
+    current: string,
+    type: string
   }>()
 
   const store = useStore()
@@ -63,10 +64,9 @@
       return false
     
     let c = props.current.toLowerCase()
-    let catIdx = getArrayIndex(filterActiveSelection.value.category || [], c)
-    let dietIdx = getArrayIndex(filterActiveSelection.value.diet || [], c)
+    let idx = getArrayIndex(filterActiveSelection.value[props.type.toLowerCase()] || [], c)
     
-    return catIdx !== -1 || dietIdx !== -1
+    return idx !== -1
   })
 </script>
 

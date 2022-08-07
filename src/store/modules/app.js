@@ -47,8 +47,8 @@ export default {
     },
 
     /**
-    * @param {object} message - a message object as required by ToastMeassage.vue with 2 keys, "text" and "type"
-    */
+     * @param {object} message - a message object as required by ToastMeassage.vue with 2 keys, "text" and "type"
+     */
     sendToastMessage({ commit }, message) {
       let timer
 

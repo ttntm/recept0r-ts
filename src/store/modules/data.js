@@ -78,6 +78,9 @@ export default {
       state.allRecipes = [...state.allRecipes, value]
       state.userRecipes = [...state.userRecipes, value]
     },
+    ADD_RECIPE_CACHE(state, value) {
+      state.filterCache = [...state.filterCache, value]
+    },
     ADD_RECIPE_USER(state, value) {
       state.userRecipes = [...state.userRecipes, value]
     },
@@ -102,11 +105,14 @@ export default {
   },
 
   actions: {
-    initializeData({ commit }) {
-      commit('SET_FILTER_CACHE', [])
-      commit('SET_FILTER_DATA', {})
-      commit('SET_FILTER_STATE', false)
+    initializeData({ commit, getters }) {
       commit('SET_USER_RECIPES', [])
+      
+      if (!getters.filterActive) {
+        commit('SET_FILTER_CACHE', [])
+        commit('SET_FILTER_DATA', {})
+        commit('SET_FILTER_STATE', false)
+      }
     },
 
     applyFilter({ commit, getters}, args) {
@@ -154,7 +160,7 @@ export default {
 
       let filtered = []
 
-      if(!fState) {
+      if (!fState) {
         // if there is NO active filter
         commit('SET_FILTER_STATE', true)
         // create cache
@@ -186,7 +192,7 @@ export default {
         // it's always a new recipe, let's add it to the respective local state
         // keep in mind that `allRecipes` doesn't include drafts
         // NB: this _doesn't_ consider concurrency at all, due to the (intentionally) small amount of users
-        const target = () => {
+        const getTarget = () => {
           if (getters.userRecipesLength <= 0 && !apiResponse.data.draft) return 'all'
           if (getters.userRecipesLength > 0) {
             return apiResponse.data.draft ? 'user' : 'both'
@@ -195,8 +201,15 @@ export default {
           }
         }
 
-        if (target()) {
-          commit(`ADD_RECIPE_${target().toUpperCase()}`, apiResponse)
+        const target = getTarget()
+
+        if (target) {
+          commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
+          
+          if (getters.filterActive && (target === 'all' || target === 'both')) {
+            commit('ADD_RECIPE_CACHE', apiResponse)
+            dispatch('applyFilter', [getters.filterData])
+          }
         }
         
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
@@ -224,14 +237,20 @@ export default {
       }
     },
 
-    async readAll({ commit, dispatch, rootGetters }) {
+    async readAll({ commit, dispatch, getters, rootGetters }) {
       const fn = rootGetters['app/functions']
       const request = await fetch(fn.readAll, { method: 'GET' })
       const response = await request.json()
 
       if (response.length > 0) {
         commit('SET_ALL_RECIPES', response)
-        commit('SET_LAST_UPDATED', new Date)
+        
+        if (getters.filterActive) {
+          commit('SET_FILTER_CACHE', response)
+          dispatch('applyFilter', [getters.filterData])
+        }
+        
+        commit('SET_LAST_UPDATED', String(new Date))
       } else {
         dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
         return 'error'
@@ -293,7 +312,8 @@ export default {
           result.push(inAll)
         } else {
           const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
-          if (inUser) result.push(inUser)
+          if (inUser)
+            result.push(inUser)
         }
       }
       
@@ -303,6 +323,7 @@ export default {
     updateLocalRecipes({ commit, getters }, args) {
       const [mode, recipeUpdate] = args
       const allRecipes = getters.allRecipes
+      const cachedRecipes = getters.filterCache
       const userRecipes = getters.userRecipes
       const id = recipeUpdate.ref['@ref'].id
 
@@ -320,17 +341,29 @@ export default {
             return recordData
           }
         })
-        if (!replaced) processed.push(recordData)
+        
+        if (!replaced && !getters.filterActive) {
+          // add record; only if there's no filter active
+          processed.push(recordData)
+        }
+        
         return processed
       }
 
       let updatedArr = []
+      let updatedCache = []
       let updatedUsrArr = []
 
       switch (mode) {
         case 'update':
           // keep in mind that we have to remove drafts from `allRecipes`
           updatedArr = recipeUpdate.data.draft ? removeRecord(allRecipes, id) : upsertRecord(allRecipes, id, recipeUpdate)
+          
+          // update cached recipes if a filter is active
+          if (cachedRecipes && cachedRecipes.length > 0) {
+            updatedCache = recipeUpdate.data.draft ? removeRecord(cachedRecipes, id) : upsertRecord(cachedRecipes, id, recipeUpdate)
+          }
+          
           // update user recipes whenever we have any
           updatedUsrArr = mustUpdateUR() ? upsertRecord(userRecipes, id, recipeUpdate) : updatedUsrArr
           break
@@ -338,6 +371,12 @@ export default {
         case 'remove':
           // deleting a draft: not necessary in 'allRecipes' - drafts aren't in there
           updatedArr = recipeUpdate.data.draft ? updatedArr : removeRecord(allRecipes, id)
+          
+          // update cached recipes if a filter is active          
+          if (cachedRecipes && cachedRecipes.length > 0) {
+            updatedCache = recipeUpdate.data.draft ? updatedCache : removeRecord(cachedRecipes, id)
+          }
+          
           // update user recipes whenever we have any
           updatedUsrArr = mustUpdateUR() ? removeRecord(userRecipes, id) : updatedUsrArr
           break
@@ -346,11 +385,16 @@ export default {
           break
       }
 
-      commit('SET_LAST_UPDATED', new Date)
+      commit('SET_LAST_UPDATED', String(new Date))
       
       if (allRecipes.length > 0 && updatedArr.length > 0) {
         // update 'allRecipes' if the update isn't 0 length (see case: 'remove')
         commit('SET_ALL_RECIPES', updatedArr)
+      }
+
+      if (updatedCache.length > 0) {
+        // update cache if an update was done
+        commit('SET_FILTER_CACHE', updatedCache)
       }
 
       if (mustUpdateUR()) {

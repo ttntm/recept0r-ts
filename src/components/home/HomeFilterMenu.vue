@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, toRaw } from 'vue'
+  import { computed, toRaw, WritableComputedRef } from 'vue'
   import { useStore } from '@/store'
   import type { FilterSelection } from '@/types'
   import { getArrayIndex, showWindow } from '@/utils'
@@ -16,9 +16,11 @@
   
   const confirmBtnTxt = computed<string>(() => filterActive.value ? 'Apply' : 'Close')
   const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
-  const filterActiveSelection = computed<FilterSelection>({
-    get: () => store.getters['data/filterData'],
-    set: val => {
+  const filterActiveSelection: WritableComputedRef<FilterSelection> = computed({
+    get(): FilterSelection {
+      return store.getters['data/filterData']
+    },
+    set(val: FilterSelection): void {
       store.dispatch('data/applyFilter', [val])
     }
   })
@@ -75,6 +77,7 @@
             v-for="(cat, index) in recipeCategory"
             :current="cat"
             :key="index"
+            type="category"
             @click="events.onFilterClick('category', cat)"
           />
         </div>
@@ -86,6 +89,7 @@
             v-for="(diet, index) in recipeDiet"
             :current="diet"
             :key="index"
+            type="diet"
             @click="events.onFilterClick('diet', diet)"
           />
         </div>

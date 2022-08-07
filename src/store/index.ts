@@ -29,6 +29,9 @@ export const store = createStore<State>({
       statesPaths: [ // name/s of the states to be synchronized with dot notation. If the param is not provided, the whole state of your app will be in sync. Defaults to []
         'app.debugInfo',
         'data.allRecipes',
+        'data.filterActive',
+        'data.filterCache',
+        'data.filterData',
         'data.lastUpdated',
         'data.userRecipes',
         'user.currentUser'
