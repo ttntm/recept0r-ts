@@ -30,7 +30,6 @@
   const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
   watch(lastUpdated, () => {
-    console.log(lastUpdated.value, typeof lastUpdated.value)
     store.dispatch('app/setDebugInfo', { lastUpdate: lastUpdate(), updateNeeded: updateNeeded(), forceUpdate: Boolean(forceUpdate) })
   })
 
