@@ -203,13 +203,13 @@ export default {
 
         const target = getTarget()
 
-        if (target) {
+        if (target && !getters.filterActive) {
           commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
+        }
           
-          if (getters.filterActive && (target === 'all' || target === 'both')) {
-            commit('ADD_RECIPE_CACHE', apiResponse)
-            dispatch('applyFilter', [getters.filterData])
-          }
+        if (getters.filterActive && (target === 'all' || target === 'both')) {
+          commit('ADD_RECIPE_CACHE', apiResponse)
+          dispatch('applyFilter', [getters.filterData])
         }
         
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
