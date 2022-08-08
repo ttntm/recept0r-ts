@@ -20,7 +20,7 @@
 
   const allRecipes = computed<RecipeDB[]>(() => store.getters['data/allRecipes'])
   const displayedRecipes = computed<RecipeDB[]>(() => {
-    const reversed: any[] = allRecipes.value.slice().reverse()
+    const reversed: RecipeDB[] = allRecipes.value.slice().reverse()
     const term = searchTerm.value
     return term && term.length > 0 ? useRecipeSearch(reversed, term) : reversed
   })

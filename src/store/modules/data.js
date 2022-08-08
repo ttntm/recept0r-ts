@@ -171,6 +171,7 @@ export default {
         // overwrite previously filtered list based on current filter selection
         filtered = doFilter(recipeCache)
       }
+
       commit('SET_ALL_RECIPES', filtered)
     },
 
@@ -227,9 +228,9 @@ export default {
       const current = response.ref ? response.ref['@ref'].id : null
 
       if (current) {
-        // -- questionable use case --
+        // -- questionable use case >> breaks persistent filtered list --
         // add the record to `allRecipes` before returning the data to the view
-        commit(`ADD_RECIPE_ALL`, response)
+        // commit(`ADD_RECIPE_ALL`, response)
         return response
       } else {
         dispatch('app/sendToastMessage', { text: `Couldn't get recipe data. Please try again later.`, type: 'error' }, { root: true })
