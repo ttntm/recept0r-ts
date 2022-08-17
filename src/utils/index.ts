@@ -29,6 +29,7 @@ export async function apiRequest(reqMethod: string, payload?: any, reqPath: stri
  * Returns the index of an element in the given array
  */
 export function getArrayIndex(arr: string[], item: string) {
+  if (!arr) return -1
   const target: string[] = [...arr]
   return target.indexOf(item.toLowerCase())
 }

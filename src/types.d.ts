@@ -1,7 +1,10 @@
 import type { UserData } from 'gotrue-js'
 
-export type Credentials = {
-  [CKey: string]: string
+export interface GenObj {
+  [OKey: string]: any
+}
+
+export interface Credentials extends GenObj {
   name?: string
   email: string
   password: string
@@ -18,14 +21,12 @@ export type Headers = {
   'Content-Type': string
 }
 
-export type FilterSelection = {
-  [FKey: string]: string[]
+export interface FilterSelection extends GenObj {
   category: string[]
   diet: string[]
 }
 
-export type Recipe = {
-  [RKey: string]: any
+export interface Recipe extends GenObj {
   id: string
   draft?: boolean
   title: string

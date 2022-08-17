@@ -1,4 +1,4 @@
-import { apiRequest } from '@/utils'
+import { apiRequest, getArrayIndex } from '@/utils'
 
 export default {
   strict: false,
@@ -124,30 +124,25 @@ export default {
       
       commit('SET_FILTER_DATA', Object.assign({}, fData, newFilterData)) // MUST use _new_ object here; kills reactivity otherwise!
       
-      const findIndex = (arr, el) => {
-        if (!arr) return -1
-        return arr.length === 0 ? 0 : arr.indexOf(el)
-      }
-      
       const doFilter = (input) => {
         let fDataLength = Object.keys(fData).length
 
         return input.filter((item) => {
           // prepare the data
-          let cat = findIndex(fData.category, item.data.category.toLowerCase())
-          let dt = findIndex(fData.diet, item.data.diet.toLowerCase())
+          let cat = getArrayIndex(fData.category, item.data.category)
+          let dt = getArrayIndex(fData.diet, item.data.diet)
           // handle the possibilities
           switch(fDataLength) {
             case 2:
               // fDataLength = 2 -- BOTH conditions are set
-              if(cat !== -1 && dt !== -1) {
+              if (cat !== -1 && dt !== -1) {
                 return true
               }
               break
 
             case 1:
               // fDataLength = 1 -- ONE condition is set
-              if(cat !== -1 || dt !== -1) {
+              if (cat !== -1 || dt !== -1) {
                 return true
               }
               break
