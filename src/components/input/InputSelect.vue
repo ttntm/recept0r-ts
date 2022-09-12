@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue'
+  import { computed, WritableComputedRef } from 'vue'
   
   const props = defineProps<{
     current: string,
@@ -11,16 +11,19 @@
     (e: 'update:select', val: string): void
   }>()
   
-  const selected = ref('')
-
-  watch(() => props.current, currentVal => selected.value = currentVal)
-  
-  selected.value = props.current
+  const selected: WritableComputedRef<string> = computed({
+    get(): string {
+      return props.current
+    },
+    set(newVal: string): void {
+      emit('update:select', newVal)
+    }
+  })
 </script>
 
 <template>
   <div class="relative mb-4">
-    <select :name="name" :id="`select${name}`" v-model="selected" class="form-control text-sm appearance-none" @change="$emit('update:select', selected)">
+    <select :name="name" :id="`select${name}`" v-model="selected" class="form-control text-sm appearance-none">
       <option disabled value="">
         <slot></slot>
       </option>
