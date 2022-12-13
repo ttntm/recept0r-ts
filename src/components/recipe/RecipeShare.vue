@@ -79,7 +79,7 @@
     @apply shadow-none;
     text-decoration: none;
     color: #fff;
-    margin: 0.5em
+    margin: 0.5em;
   }
 
   .resp-sharing-button {
@@ -98,31 +98,7 @@
   .resp-sharing-button__icon--solid,
   .resp-sharing-button__icon--solidcircle {
     fill: #fff;
-    stroke: none
-  }
-
-  .resp-sharing-button--twitter {
-    background-color: #55acee
-  }
-
-  .resp-sharing-button--twitter:hover {
-    background-color: #2795e9
-  }
-
-  .resp-sharing-button--facebook {
-    background-color: #3b5998
-  }
-
-  .resp-sharing-button--facebook:hover {
-    background-color: #2d4373
-  }
-
-  .resp-sharing-button--email {
-    background-color: #777
-  }
-
-  .resp-sharing-button--email:hover {
-    background-color: #5e5e5e
+    stroke: none;
   }
 
   .resp-sharing-button--facebook {
