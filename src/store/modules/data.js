@@ -128,10 +128,14 @@ export default {
         let fDataLength = Object.keys(fData).length
 
         return input.filter((item) => {
-          // prepare the data
-          let cat = getArrayIndex(fData.category, item.data.category)
-          let dt = getArrayIndex(fData.diet, item.data.diet)
-          // handle the possibilities
+          let cat = fData.category.length === 0
+            ? 0
+            : getArrayIndex(fData.category, item.data.category)
+          
+          let dt = fData.diet.length == 0
+            ? 0
+            : getArrayIndex(fData.diet, item.data.diet)
+          
           switch(fDataLength) {
             case 2:
               // fDataLength = 2 -- BOTH conditions are set
