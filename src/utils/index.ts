@@ -30,8 +30,7 @@ export async function apiRequest(reqMethod: string, payload?: any, reqPath: stri
  */
 export function getArrayIndex(arr: string[], item: string) {
   if (!arr) return -1
-  const target: string[] = [...arr]
-  return target.indexOf(item.toLowerCase())
+  return arr.indexOf(item.toLowerCase())
 }
 
 /**
@@ -135,11 +134,13 @@ export function useLogout() {
 
 /**
  * Search an array of recipes based on a string value
+ * Check both `title` and `description` of recipes
  */
 export function useRecipeSearch(data: RecipeDB[], term: string) {
+  const currentTerm: string = term.toLowerCase()
   return data.filter((item: any) => {
-    if (item.data.title.toLowerCase().indexOf(term.toLowerCase()) === -1) { //if there was no match for the title...
-      return item.data.description.toLowerCase().indexOf(term.toLowerCase()) !== -1 ? true : false //...evaluate the description
+    if (item.data.title.toLowerCase().indexOf(currentTerm) === -1) {
+      return item.data.description.toLowerCase().indexOf(currentTerm) !== -1
     } else { 
       return true 
     }

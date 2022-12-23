@@ -28,7 +28,7 @@
    * This function is required so we can actually get the imported components
    * Placing the 'string' type prop in the ':is' binding below doesn't work at all
    * See: https://stackoverflow.com/a/66960318
-  */
+   */
   const getFilterImg = computed<string>(() => {
     switch (props.current.toLowerCase()) {
       case 'bread':
@@ -63,10 +63,7 @@
     if (!filterActiveSelection.value)
       return false
     
-    let c = props.current.toLowerCase()
-    let idx = getArrayIndex(filterActiveSelection.value[props.type.toLowerCase()] || [], c)
-    
-    return idx !== -1
+    return getArrayIndex(filterActiveSelection.value[props.type.toLowerCase()] || [], props.current) !== -1
   })
 </script>
 
