@@ -128,11 +128,11 @@ export default {
         let fDataLength = Object.keys(fData).length
 
         return input.filter((item) => {
-          let cat = fData.category.length === 0
+          let cat = fData.category?.length === 0
             ? 0
             : getArrayIndex(fData.category, item.data.category)
           
-          let dt = fData.diet.length == 0
+          let dt = fData.diet?.length == 0
             ? 0
             : getArrayIndex(fData.diet, item.data.diet)
           
