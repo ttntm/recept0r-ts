@@ -35,13 +35,13 @@
     handle: '.handle'
   }
 
-  const objectify = (arr: string[]) => {
-    return arr.map((el, index) => { 
+  const objectify = (arr: string[]): SortableEl[] => {
+    return arr.map((el, index) => {
       return { id: index, name: el }
     })
   }
 
-  const valuefy = (arr: SortableEl[]) => arr.map(el => el.name)
+  const valuefy = (arr: SortableEl[]): string[] => arr.map(el => el.name)
 
   const events = {
     async onAddItem(index?: number) {
