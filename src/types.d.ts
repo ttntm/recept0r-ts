@@ -75,7 +75,7 @@ export type SortOption = {
 
 export type ToastMessage = {
   text: string
-  type: 'error' | 'success' |'info'
+  type: 'error' | 'success' | 'info'
 }
 
 export type User = UserData
