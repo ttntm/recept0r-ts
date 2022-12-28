@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { nextTick, ref, watch } from 'vue'
+  import { computed, nextTick, ref, WritableComputedRef } from 'vue'
   import draggable from 'vuedraggable'
   import type { SortableEl } from '@/types'
 
@@ -17,10 +17,17 @@
   }>()
 
   const drag = ref(false)
-  const ingredients = ref<SortableEl[]>([])
-  const inputs = ref<{ [el: string]: any }[]>([]) // the Vue 3 way of handling refs based on v-for; https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
-
-  watch(() => props.input, currentVal => ingredients.value = objectify(currentVal))
+  const ingredients: WritableComputedRef<SortableEl[]> = computed({
+    get(): SortableEl[] {
+      return objectify(props.input)
+    },
+    set(newVal: SortableEl[]): void {
+      emit('update:ingredients', valuefy(newVal))
+    }
+  })
+  // the Vue 3 way of handling refs based on v-for
+  // https://v3.vuejs.org/guide/composition-api-template-refs.html#usage-inside-v-for
+  const inputs = ref<{ [el: string]: any }[]>([])
 
   const dragOptions = {
     animation: 350,
@@ -39,15 +46,16 @@
   const events = {
     async onAddItem(index?: number) {
       let currentEl = null
-      let ing = ingredients.value
+      let ing = [...ingredients.value]
       let inputEls = inputs.value
       
       if (index !== undefined && index > -1) {
         ing.splice(index + 1, 0, { id: index+1, name: '' })
+        ingredients.value = ing
         await nextTick() // await next tick to avoid 'x is undefined...' errors
         currentEl = inputEls[index+1]
       } else {
-        ing.push({ id: ing.length, name: '' })
+        ingredients.value = ing.concat({ id: ing.length, name: '' })
         await nextTick() // await next tick to avoid 'x is undefined...' errors
         currentEl = inputEls[inputEls.length-1]
       }
@@ -60,13 +68,10 @@
     },
 
     onRemoveItem(index: number) {    
-      ingredients.value.splice(index, 1)
+      ingredients.value = ingredients.value.filter(el => el.id !== index)
       inputs.value.splice(index, 1)
-      events.onChangeItem()
-     }
+    }
   }
-
-  ingredients.value = objectify(props.input)
 </script>
 
 <template>
@@ -82,7 +87,6 @@
       item-key="id"
       class="ing-list list-none p-0 mb-3"
       @start="drag=true"
-      @change="events.onChangeItem"
       @end="drag=false"
     >
       <template #item="{ element, index }">
