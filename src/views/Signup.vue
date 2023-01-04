@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
 
@@ -14,6 +14,12 @@
   const pwd = ref('')
   
   const token = route.query.t
+
+  onMounted(() => {
+    if (!token) {
+      router.push({ name: 'All Recipes' })
+    }
+  })
 
   const validate = () => {
     msg.value = ''
