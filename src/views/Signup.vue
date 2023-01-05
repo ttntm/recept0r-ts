@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
 
@@ -15,15 +15,21 @@
   
   const token = route.query.t
 
+  onMounted(() => {
+    if (!token) {
+      router.push({ name: 'All Recipes' })
+    }
+  })
+
   const validate = () => {
     msg.value = ''
     
-    if(!token) {
+    if (!token) {
       msg.value = 'Invalid token...'
       return false
     }
 
-    if(pwd.value.length < 6) {
+    if (pwd.value.length < 6) {
       msg.value = 'Please choose a more secure password'
       return false
     }
@@ -71,7 +77,6 @@
       <br><br>
       We don't use analytics, cookies or tracking and we <em>don't</em> collect and/or store any personally identifiable information.
     </p>
-    Token: {{ token }}
   </section>
 </template>
 
