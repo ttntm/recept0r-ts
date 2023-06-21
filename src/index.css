@@ -144,7 +144,7 @@ hr {
 }
 
 .menu-item {
-  @apply block font-bold text-lg text-blue-500 rounded-lg px-4 py-2;
+  @apply block font-bold text-lg text-cool-gray-600 rounded-lg px-4 py-2;
 }
 
 .menu-item:focus {
@@ -160,7 +160,7 @@ svg {
 }
 
 .router-link-exact-active {
-  @apply text-cool-gray-600;
+  @apply text-blue-500;
 }
 
 /* ---------- BUTTONS ---------- */
