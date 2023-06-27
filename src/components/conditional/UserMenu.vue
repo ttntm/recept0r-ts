@@ -17,8 +17,8 @@
         <ButtonX size="20" class="rounded-full p-1 mt-2 mx-2" @click="onCloseMenu" />
       </div>
       <div class="text-center mb-4">
-        <router-link :to="{ name: 'Profile'}" class="menu-item text-sm rounded-none mb-2 mx-auto">Profile</router-link>
-        <button class="menu-item w-full text-sm rounded-none mx-auto" @click="useLogout">Logout</button>
+        <router-link :to="{ name: 'Profile'}" class="menu-item text-blue-600 text-sm rounded-none mb-2 mx-auto">Profile</router-link>
+        <button class="menu-item w-full text-blue-600 text-sm rounded-none mx-auto" @click="useLogout">Logout</button>
       </div>
     </div>
   </transition>
