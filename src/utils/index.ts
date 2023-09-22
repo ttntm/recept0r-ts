@@ -1,5 +1,16 @@
 import { store } from '@/store'
-import type { Credentials, Headers, RecipeDB, User } from '@/types'
+import { ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import type {
+  Credentials,
+  Headers,
+  IntersectionObserverOptions,
+  IntersectionObserverReturn,
+  RecipeDB,
+  User
+} from '@/types'
+
+const noop: () => void = () => {}
 
 /**
  * Shared logic to handle API requests to the app's serverless back end functions
@@ -121,6 +132,65 @@ export async function uploadImage(url: string, data: FormData) {
     return res? { message: 'Image successfully uploaded.', data: res.secure_url } : error
   } catch (err) {
     return error
+  }
+}
+
+/**
+ * Port of the vueUse composable; see: https://github.com/vueuse/vueuse/blob/main/packages/core/useIntersectionObserver/index.ts#L4
+ * @see https://vueuse.org/useIntersectionObserver 
+ * @param target The element that should be observed
+ * @param callback Callback fn for the IntersectionObserver
+ * @param options IntersectionObserver options
+ */
+export function useIntersectionObserver(
+  target: Ref<HTMLElement>,
+  callback: IntersectionObserverCallback,
+  options: IntersectionObserverOptions = {}
+): IntersectionObserverReturn {
+  const {
+    immediate = true,
+    root = null,
+    rootMargin = '0px',
+    threshold = 0.1,
+  } = options
+
+  let cleanup = noop
+  const isActive = ref(immediate)
+  
+  const stopWatch = watch([isActive, target], () => {
+    cleanup()
+
+    if (!isActive.value) return
+    if (!target?.value) return
+
+    const observer = new IntersectionObserver(
+      callback,
+      {
+        root: (root?.value as HTMLElement) || undefined,
+        rootMargin,
+        threshold
+      }
+    )
+
+    observer.observe(target.value)
+
+    cleanup = () => {
+      observer.disconnect()
+      cleanup = noop
+    }
+  }, { 
+    flush: 'post', immediate
+  })
+
+  const stop = () => {
+    cleanup()
+    stopWatch()
+    isActive.value = false
+  }
+
+  return {
+    isActive,
+    stop
   }
 }
 

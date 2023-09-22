@@ -12,12 +12,12 @@
 </script>
 
 <template>
-  <div :class="{ 'list-card--draft' : recipe.data.draft }" class="list-card flex flex-col md:flex-row justify-between mb-8" style="min-height: 200px;">
+  <div :class="{ 'list-card--draft' : recipe.data.draft }" class="list-card flex flex-col md:flex-row justify-between min-h-200px mb-8">
     <div class="w-full md:w-1/2 lg:w-1/3 rounded-t-lg md:rounded-t-none md:rounded-l-lg flex-shrink-0">
       <router-link v-if="recipe.data.image" :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }" class="block focus:shadow-none" title="View recipe">
         <img :src="recipe.data.image" crossorigin="anonymous" :alt="recipe.data.title" :class="{ 'opacity-75' : recipe.data.draft }" class="w-full rounded-t-lg md:rounded-t-none md:rounded-l-lg img-cover" height="200" loading="lazy">
       </router-link>
-      <div v-else class="w-full h-full flex items-center justify-center bg-blue-600 bg-opacity-75 rounded-t-lg md:rounded-t-none md:rounded-l-lg" style="min-height: 200px;">
+      <div v-else class="w-full h-full flex items-center justify-center bg-blue-600 bg-opacity-75 rounded-t-lg md:rounded-t-none md:rounded-l-lg min-h-200px">
         <span class="self-center text-white">No Image</span>
       </div>
     </div>

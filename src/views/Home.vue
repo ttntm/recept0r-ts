@@ -9,6 +9,7 @@
   import ButtonTop from '@/components/button/ButtonTop.vue'
   import HomeFilterMenu from '@/components/home/HomeFilterMenu.vue'
   import HomeRecipeCard from '@/components/home/HomeRecipeCard.vue'
+  import LazyWrapper from '@/components/LazyWrapper.vue'
   import Loading from '@/components/icon/loading.vue'
   import SearchBar from '@/components/SearchBar.vue'
 
@@ -30,7 +31,11 @@
   const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
   watch(lastUpdated, () => {
-    store.dispatch('app/setDebugInfo', { lastUpdate: lastUpdate(), updateNeeded: updateNeeded(), forceUpdate: Boolean(forceUpdate) })
+    store.dispatch('app/setDebugInfo', {
+      lastUpdate: lastUpdate(),
+      updateNeeded: updateNeeded(),
+      forceUpdate: Boolean(forceUpdate)
+    })
   })
 
   const getAllRecipes = () => {    
@@ -43,7 +48,8 @@
 
   const updateNeeded = () => {
     const now: Date = new Date
-    const diff: number = Math.round((Number(now) - Number(lastUpdate())) / (1000 * 60)) // time difference between now (view init) and last read operation
+    // Get the time difference between now (view init) and last read operation
+    const diff: number = Math.round((Number(now) - Number(lastUpdate())) / (1000 * 60))
     return diff > 60
   }
 
@@ -84,7 +90,9 @@
       <p v-if="searchTerm && displayedRecipes.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>
     <transition-group name="list" tag="div" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <HomeRecipeCard v-for="recipe in displayedRecipes" :recipe="recipe" :key="recipe.data.id" />
+      <LazyWrapper v-for="recipe in displayedRecipes" :key="recipe.data.id" element="article" className="recipe-card rounded-lg">
+        <HomeRecipeCard :recipe="recipe" />
+      </LazyWrapper>
     </transition-group>
   </section>
   <ButtonTop />

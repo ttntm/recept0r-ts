@@ -12,10 +12,10 @@
     "body-scroll-lock": "^4.0.0-beta.0",
     "gotrue-js": "^0.9.29",
     "secure-ls": "^1.2.6",
-    "vue": "^3.0.4",
-    "vue-router": "^4.0.5",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4",
     "vuedraggable": "^4.1.0",
-    "vuex": "^4.0.0",
+    "vuex": "^4.1.0",
     "vuex-multi-tab-state": "^1.0.16",
     "vuex-persistedstate": "^4.0.0-beta.3"
   },

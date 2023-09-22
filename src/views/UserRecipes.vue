@@ -7,6 +7,7 @@
   import { useRecipeSearch } from '@/utils'
   
   import ButtonTop from '@/components/button/ButtonTop.vue'
+  import LazyWrapper from '@/components/LazyWrapper.vue'
   import Loading from '@/components/icon/loading.vue'
   import SearchBar from '@/components/SearchBar.vue'
   import UserRecipeCard from '@/components/user/UserRecipeCard.vue'
@@ -84,7 +85,9 @@
       <p v-if="userSearchTerm && displayList.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>
     <transition-group name="list" tag="section">
-      <UserRecipeCard v-for="recipe in displayList" :key="recipe.data.id" :recipe="recipe" />
+      <LazyWrapper v-for="recipe in displayList" :key="recipe.data.id" element="article" className="min-h-200px">
+        <UserRecipeCard :recipe="recipe" />
+      </LazyWrapper>
     </transition-group>
   </div>
   <ButtonTop />

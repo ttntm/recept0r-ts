@@ -1,4 +1,5 @@
 import type { UserData } from 'gotrue-js'
+import type { Ref } from 'vue'
 
 export interface GenObj {
   [OKey: string]: any
@@ -24,6 +25,18 @@ export type Headers = {
 export interface FilterSelection extends GenObj {
   category: string[]
   diet: string[]
+}
+
+export interface IntersectionObserverOptions extends GenObj {
+  immediate?: boolean
+  root?: Ref
+  rootMargin?: string
+  threshold?: number | number[]
+}
+
+export interface IntersectionObserverReturn {
+  isActive: Ref<boolean>
+  stop: () => void
 }
 
 export interface Recipe extends GenObj {
