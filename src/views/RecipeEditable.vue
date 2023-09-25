@@ -228,9 +228,13 @@
         <QuillEditor v-model:content="recipe.body" ref="editor" contentType="html" :options="editorOptions" />
       </section>
       <div class="flex flex-col md:flex-row items-center justify-between mt-8">
-        <div class="flex">
-          <ButtonDefault class="mr-4" :disabled="saveDisabled" @click="events.onSaveRecipe()">{{ saveBtnText }}</ButtonDefault>
-          <ButtonDefault @click="events.onCancel(false)">Cancel</ButtonDefault>
+        <div class="flex w-full sm:w-auto">
+          <ButtonDefault class="w-full sm:w-auto mr-4" :disabled="saveDisabled" @click="events.onSaveRecipe()">
+            {{ saveBtnText }}
+          </ButtonDefault>
+          <ButtonDefault class="w-full sm:w-auto" @click="events.onCancel(false)">
+            Cancel
+          </ButtonDefault>
         </div>
         <div v-if="mode === 'edit'" class="flex mt-4 md:mt-0">
           <ButtonDelete :id="getCurrentRefId()" :title="recipe.title" @event:delete="() => isDeleted = true" class="mr-4" />
