@@ -8,7 +8,7 @@
   import ButtonShare from '@/components/button/ButtonShare.vue'
   import ButtonTop from '@/components/button/ButtonTop.vue'
   import Duration from '@/components/icon/duration.vue'
-  import Loading from '@/components/icon/loading.vue'
+  import LoadingMessage from '@/components/conditional/LoadingMessage.vue'
   import Portions from '@/components/icon/portions.vue'
   import RecipeShare from '@/components/recipe/RecipeShare.vue'
 
@@ -44,12 +44,11 @@
 </script>
 
 <template>
-  <div v-if="!readSuccess" class="w-full">
-    <div v-if="!errorMsg" class="text-center my-12">
-      <Loading class="mx-auto" />
-      <p class="text-cool-gray-500 mt-12">Loading recipe data...</p>
-    </div>
-    <div v-else v-html="errorMsg" class="text-center my-12" />
+  <div v-if="!readSuccess" class="w-full my-12">
+    <LoadingMessage v-if="!errorMsg">
+      Loading recipe data...
+    </LoadingMessage>
+    <div v-else v-html="errorMsg" class="text-center" />
   </div>
   <section v-else id="recipe" class="w-full xl:w-4/5 flex flex-row flex-wrap mx-auto">
     <div class="w-full lg:w-3/5 mb-6 lg:mb-4">
@@ -120,5 +119,9 @@
 
   .recipe-body a:hover {
     @apply no-underline;
+  }
+
+  .recipe-body hr {
+    margin: 1.5rem 0;
   }
 </style>

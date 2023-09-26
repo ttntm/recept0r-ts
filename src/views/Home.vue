@@ -10,7 +10,7 @@
   import HomeFilterMenu from '@/components/home/HomeFilterMenu.vue'
   import HomeRecipeCard from '@/components/home/HomeRecipeCard.vue'
   import LazyWrapper from '@/components/LazyWrapper.vue'
-  import Loading from '@/components/icon/loading.vue'
+  import LoadingMessage from '@/components/conditional/LoadingMessage.vue'
   import SearchBar from '@/components/SearchBar.vue'
 
   const route = useRoute()
@@ -71,11 +71,10 @@
 </script>
 
 <template>
-  <div v-if="isLoading && !filterActive" class="text-center my-12">
-    <Loading class="mx-auto" />
-    <p class="text-cool-gray-500 mt-12">Loading recipes...</p>
-  </div>
-  <section v-else class="">
+  <LoadingMessage v-if="isLoading && !filterActive" class="my-12">
+    Loading recipes...
+  </LoadingMessage>
+  <section v-else>
     <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
       <SearchBar v-model.trim="searchTerm" @update:modelValue="events.onSetSearchTerm($event)" />
       <ButtonFilter :window="windowOpen" @click="events.onFilterBtnClick" />

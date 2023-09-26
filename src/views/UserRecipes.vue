@@ -8,7 +8,7 @@
   
   import ButtonTop from '@/components/button/ButtonTop.vue'
   import LazyWrapper from '@/components/LazyWrapper.vue'
-  import Loading from '@/components/icon/loading.vue'
+  import LoadingMessage from '@/components/conditional/LoadingMessage.vue'
   import SearchBar from '@/components/SearchBar.vue'
   import UserRecipeCard from '@/components/user/UserRecipeCard.vue'
   import UserRecipeSorting from '@/components/user/UserRecipeSorting.vue'
@@ -68,10 +68,9 @@
 <template>
   <div id="my-recipes" class="w-full lg:w-4/5 flex flex-col mx-auto">
     <h3 class="text-center mb-8">Recipes You Created</h3>
-    <div v-if="isLoading && myRecipesDisplay.length === 0" class="text-center">
-      <Loading class="mx-auto" />
-      <p class="text-cool-gray-500 mt-12">Loading data...</p>
-    </div>
+    <LoadingMessage v-if="isLoading && myRecipesDisplay.length === 0">
+      Loading data...
+    </LoadingMessage>
     <div v-if="!isLoading && myRecipesDisplay.length === 0" class="text-center">
       <p class="">It seems like you haven't created any recipes yet...</p>
       <p class="mb-12">How about giving it a try?</p>

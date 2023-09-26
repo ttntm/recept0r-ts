@@ -59,7 +59,9 @@
   // check for changes to the initial state of the `recipe` object
   watch(recipe, (current, old) => {
     if (current) noChanges.value = false
-    if (current.title && (mode.value && mode.value !== 'create')) document.title = `Editing: ${current.title} - recept0r`
+    if (current.title && (mode.value && mode.value !== 'create')) {
+      document.title = `Editing: ${current.title} - recept0r`
+    }
   })
 
   onMounted(() => {
@@ -78,6 +80,7 @@
 
   onUnmounted(() => window.removeEventListener('beforeunload', events.onEditClose))
 
+  const editorHrPattern = /\<p\>\&lt\;hr\&gt\;\<\/p\>/gi
   const editorOptions = {
     bounds: '#editor',
     debug: 'error',
@@ -101,7 +104,9 @@
 
   const updateEditMode = (input: Recipe) => { 
     Object.keys(input).map(key => events.onUpdateRecipe(key, input[key]))
-    editor.value.setHTML(recipe.body)
+    // We've got to add in a marker for <hr> elements that will actually get rendered by Quill
+    // `onSaveRecipe()` converts it back to valid HTML
+    editor.value.setHTML(recipe.body.replaceAll('<hr>', '<p>&lt;hr&gt;</p>'))
   }
 
   const validateInput = (requiredFields: string[]) => {
@@ -143,6 +148,11 @@
 
       if (!recipe.draft && !validateInput(required)) {
         return alert(`Please fill all of the following fields: ${required.toString().replace(/\W/g,', ')}!`)
+      }
+
+      if (editorHrPattern.test(recipe.body)) {
+        // Replace <hr> marker with valid HTML
+        recipe.body = recipe.body.replaceAll(editorHrPattern, '<hr>')
       }
       
       let publishedId = ''
