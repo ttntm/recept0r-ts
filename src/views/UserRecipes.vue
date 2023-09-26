@@ -25,7 +25,7 @@
     get(): RecipeDB[] {
       const list: RecipeDB[] = myRecipesDisplay.value
       const term = userSearchTerm.value
-      return term && term.length > 0 ? useRecipeSearch(list, term) : list
+      return term && term.length > 0 ? useRecipeSearch(list, term, true) : list
     },
     set(newList: any[]): void {
       myRecipesDisplay.value = newList
@@ -77,7 +77,12 @@
       <router-link :to="{ name: 'Add Recipe' }" class="btn btn-gray">Add Recipe</router-link>
     </div>
     <div class="w-full xl:w-2/3 flex flex-row justify-center mb-12 mx-auto">
-      <SearchBar v-if="displayList.length > 0 || userSearchTerm" v-model.trim="userSearchTerm" @update:modelValue="events.onSetSearchTerm($event)" />
+      <SearchBar
+        v-if="displayList.length > 0 || userSearchTerm"
+        v-model.trim="userSearchTerm"
+        placeholder="Use 'draft' to filter or enter title/description to search the list"
+        @update:modelValue="events.onSetSearchTerm($event)"
+      />
     </div>
     <UserRecipeSorting v-if="myRecipesDisplay.length > 0" :data="myRecipesDisplay" @update:list="events.onUpdateList($event)" />
     <transition name="fade">

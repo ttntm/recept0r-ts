@@ -206,13 +206,23 @@ export function useLogout() {
  * Search an array of recipes based on a string value
  * Check both `title` and `description` of recipes
  */
-export function useRecipeSearch(data: RecipeDB[], term: string) {
+export function useRecipeSearch(
+  data: RecipeDB[],
+  term: string,
+  useDraft: boolean = false
+): RecipeDB[] {
   const currentTerm: string = term.toLowerCase()
-  return data.filter((item: any) => {
-    if (item.data.title.toLowerCase().indexOf(currentTerm) === -1) {
-      return item.data.description.toLowerCase().indexOf(currentTerm) !== -1
-    } else { 
-      return true 
+  return data.filter((item: RecipeDB) => {
+    if (useDraft && currentTerm === 'draft') {
+      // option for keyword "draft" entered in search is active
+      // > check draft status; otherwise proceed with regular search
+      return item.data?.draft === true
+    } else {
+      if (item.data.title.toLowerCase().indexOf(currentTerm) === -1) {
+        return item.data.description.toLowerCase().indexOf(currentTerm) !== -1
+      } else { 
+        return true 
+      }
     }
   })
 }

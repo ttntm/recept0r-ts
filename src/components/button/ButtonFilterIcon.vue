@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { computed } from 'vue'
   import { useStore } from '@/store'
+  import type { Component } from 'vue'
   import type { FilterSelection } from '@/types'
   import { getArrayIndex } from '@/utils'
 
@@ -29,7 +30,7 @@
    * Placing the 'string' type prop in the ':is' binding below doesn't work at all
    * See: https://stackoverflow.com/a/66960318
    */
-  const getFilterImg = computed<string>(() => {
+  const getFilterImg = computed<Component>(() => {
     switch (props.current.toLowerCase()) {
       case 'bread':
         return bread
@@ -68,7 +69,7 @@
 </script>
 
 <template>
-  <button class="filter-group mb-4 md:mr-4" :class="{ 'activeFilter': isActive }" :active="isActive" v-click-blur>
+  <button class="filter-group md:mr-4" :class="{ 'activeFilter': isActive }" :active="isActive" v-click-blur>
     <component :is="getFilterImg" class="filter-img" />
     <span class="filter-text">{{ current }}</span>
   </button>
@@ -92,15 +93,16 @@
   .filter-text {
     @apply pointer-events-none;
     transition: opacity .35s ease-in-out;
+    width: 60px;
   }
 
   .filter-img {
-    width: 60px;
     @apply opacity-50 pointer-events-none;
   }
 
   .filter-text {
     @apply block text-xs font-bold text-center text-blue-500 opacity-50;
+    word-break: normal;
   }
 
   .filter-group:focus .filter-img,

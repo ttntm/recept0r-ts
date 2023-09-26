@@ -23,6 +23,7 @@ export default {
       ],
       recipeDiet: [
         'Keto',
+        'Keto-Adaptable',
         'Vegetarian',
         'Vegan',
         'Other'

@@ -1,7 +1,13 @@
-<script setup lang="ts"> 
-  const props = defineProps<{
+<script setup lang="ts">
+  interface Props {
     modelValue: string | undefined
-  }>()
+    placeholder?: string
+  }
+  
+  const props = withDefaults(defineProps<Props>(), {
+    modelValue: undefined,
+    placeholder: 'What do you want to eat?'
+  })
 
   const emit = defineEmits<{
     (e: 'update:modelValue', val: string): void
@@ -18,7 +24,7 @@
       <circle cx="10" cy="10" r="7" />
       <line x1="21" y1="21" x2="15" y2="15" />
     </svg>
-    <input :value="modelValue" type="text" class="w-full search-input" id="search-input" placeholder="What do you want to eat?" @input="onInput">
+    <input :value="modelValue" type="text" class="w-full search-input" id="search-input" :placeholder="placeholder" @input="onInput">
     <div class="input-group-append">
       <button
         v-if="modelValue"

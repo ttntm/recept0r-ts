@@ -70,7 +70,7 @@
       <div class="w-full -mt-8">
         <h2 class="text-base text-cool-gray-500 text-center">Filter Selection</h2>
       </div>
-      <div class="w-full mb-4">
+      <div class="w-full mb-8">
         <h5>Category</h5>
         <div class="flex flex-row flex-wrap justify-between md:justify-start items-center">
           <ButtonFilterIcon
@@ -84,7 +84,7 @@
       </div>
       <div class="w-full mb-4">
         <h5>Diet</h5>
-        <div class="flex flex-row flex-wrap justify-between md:justify-start items-center">
+        <div class="flex flex-row flex-wrap justify-between md:justify-start items-start">
           <ButtonFilterIcon
             v-for="(diet, index) in recipeDiet"
             :current="diet"

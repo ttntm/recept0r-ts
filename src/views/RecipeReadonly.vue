@@ -88,7 +88,7 @@
     <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
       <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
         <h3 class="mb-4">Ingredients</h3>
-        <ul class="mb-0">
+        <ul class="capitalize mb-0">
           <li v-for="(item, index) in recipe?.data.ingredients" :key="index" class="text-blue-500 font-semibold mb-2">
             {{ item }}
           </li>
@@ -96,7 +96,7 @@
       </div>
     </div>
     <div class="w-full order-3">
-      <hr class="mt-4 mb-8" />
+      <hr class="border-cool-gray-500 mt-2 mb-8" />
       <div class="flex flex-row flex-wrap md:flex-no-wrap justify-center md:justify-start">
         <router-link :to="{ name: 'All Recipes' }" class="btn btn-gray flex flex-row items-center mr-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="inline-block pointer-events-none" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -122,6 +122,7 @@
   }
 
   .recipe-body hr {
+    @apply border-cool-gray-500;
     margin: 1.5rem 0;
   }
 </style>
