@@ -14,8 +14,21 @@
 <template>
   <div :class="{ 'list-card--draft' : recipe.data.draft }" class="list-card flex flex-col md:flex-row justify-between min-h-200px mb-8">
     <div class="w-full md:w-1/2 lg:w-1/3 rounded-t-lg md:rounded-t-none md:rounded-l-lg flex-shrink-0">
-      <router-link v-if="recipe.data.image" :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }" class="block focus:shadow-none" title="View recipe">
-        <img :src="recipe.data.image" crossorigin="anonymous" :alt="recipe.data.title" :class="{ 'opacity-75' : recipe.data.draft }" class="w-full rounded-t-lg md:rounded-t-none md:rounded-l-lg img-cover" height="200" loading="lazy">
+      <router-link
+        v-if="recipe.data.image"
+        :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }"
+        class="block focus:shadow-none"
+        title="View recipe"
+      >
+        <UnLazyImage
+          :class="{ 'opacity-75' : recipe.data.draft }"
+          :src-set="recipe.data.image"
+          :alt="recipe.data.title"
+          class="w-full rounded-t-lg md:rounded-t-none md:rounded-l-lg img-cover"
+          height="200"
+          placeholder-src="/img/blurred.png"
+          auto-sizes
+        />
       </router-link>
       <div v-else class="w-full h-full flex items-center justify-center bg-blue-600 bg-opacity-75 rounded-t-lg md:rounded-t-none md:rounded-l-lg min-h-200px">
         <span class="self-center text-white">No Image</span>
@@ -23,14 +36,20 @@
     </div>
     <div class="flex flex-col md:w-1/2 xl:w-2/3 justify-center p-8 md:py-4 xl:pl-12 xl:ml-12">
       <h4 class="text-2xl">
-        <span v-if="recipe.data.draft" class="block text-cool-gray-700 uppercase text-xs font-light">Draft</span>
+        <span v-if="recipe.data.draft" class="block text-cool-gray-700 uppercase text-xs font-light">
+          Draft
+        </span>
         <router-link :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }">
           {{ recipe.data.title }}
         </router-link>
       </h4>
       <p>{{ recipe.data.description }}</p>
       <div class="w-full flex flex-row items-center mt-4">
-        <router-link :to="{ name: 'Edit Recipe', params: { refId: recipe.ref['@ref'].id } }" class="btn btn-gray btn-outline rounded-md p-2" :title="recipe.data.draft ? 'Edit Draft' : 'Edit Recipe'">
+        <router-link
+          :to="{ name: 'Edit Recipe', params: { refId: recipe.ref['@ref'].id } }"
+          :title="recipe.data.draft ? 'Edit Draft' : 'Edit Recipe'"
+          class="btn btn-gray btn-outline rounded-md p-2"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit-circle pointer-events-none" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
             <path d="M12 15l8.385 -8.415a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3z" />

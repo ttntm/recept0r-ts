@@ -4,14 +4,16 @@ import { store, key } from './store'
 import detectTokens from './utils/token'
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import Unlazy from '@unlazy/vue'
 
 import App from './App.vue'
 
 import './index.css'
 
 const app = createApp(App)
-  app.use(router)
-  app.use(store, key)
+app.use(router)
+app.use(store, key)
+app.use(Unlazy)
 
 store.dispatch('user/initAuth')
 
