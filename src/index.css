@@ -419,3 +419,20 @@ svg {
 }
 
 @tailwind utilities;
+
+/* Should target iOS devices */
+@supports (-webkit-touch-callout: none) {
+  /* Disable the callout on long presses of links */
+  * {
+    -webkit-touch-callout: none !important;
+  }
+  /* Disable the auto zoom on input:focus events */
+  input,
+  input:focus,
+  select,
+  select:focus,
+  textarea,
+  textarea:focus {
+    font-size: 16px !important;
+  }
+}
