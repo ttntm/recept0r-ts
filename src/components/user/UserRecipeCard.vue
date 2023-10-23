@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useBlurredPlaceholder } from '@/utils'
   import type { RecipeDB } from '@/types'
 
   import ButtonDelete from '@/components/button/ButtonDelete.vue'
@@ -8,6 +9,7 @@
     recipe: RecipeDB
   }>()
 
+  const blurredSrc: string = useBlurredPlaceholder()
   const target: string = props.recipe.data.draft ? 'Edit Recipe' : 'Recipe'
 </script>
 
@@ -24,9 +26,9 @@
           :class="{ 'opacity-75' : recipe.data.draft }"
           :src-set="recipe.data.image"
           :alt="recipe.data.title"
+          :placeholder-src="blurredSrc"
           class="w-full rounded-t-lg md:rounded-t-none md:rounded-l-lg img-cover"
           height="200"
-          placeholder-src="/img/blurred.png"
           auto-sizes
         />
       </router-link>

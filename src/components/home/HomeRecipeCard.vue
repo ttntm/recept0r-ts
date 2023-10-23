@@ -1,9 +1,12 @@
 <script setup lang="ts">
+  import { useBlurredPlaceholder } from '@/utils'
   import type { RecipeDB } from '@/types'
 
   const props = defineProps<{
     recipe: RecipeDB
   }>()
+
+  const blurredSrc: string = useBlurredPlaceholder()
 </script>
 
 <template>
@@ -14,8 +17,8 @@
     <UnLazyImage
       :src-set="recipe.data.image"
       :alt="recipe.data.title"
+      :placeholder-src="blurredSrc"
       class="recipe-card-img"
-      placeholder-src="/img/blurred.png"
       auto-sizes
     />
   </router-link>

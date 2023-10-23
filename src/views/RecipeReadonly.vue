@@ -3,7 +3,7 @@
   import { useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
   import type { RecipeDB } from '@/types'
-  import { getRecipeData, showWindow } from '@/utils'
+  import { getRecipeData, showWindow, useBlurredPlaceholder } from '@/utils'
 
   import ButtonShare from '@/components/button/ButtonShare.vue'
   import ButtonTop from '@/components/button/ButtonTop.vue'
@@ -26,6 +26,8 @@
   watch(recipe, () => {
     if (recipe.value?.data.title) document.title = `${recipe.value.data.title} - recept0r`
   })
+
+  const blurredSrc: string = useBlurredPlaceholder()
 
   const getCurrentRecipeData = async () => {
     const currentId = route.params.refId.toString()
@@ -52,7 +54,14 @@
   </div>
   <section v-else id="recipe" class="w-full xl:w-4/5 flex flex-row flex-wrap mx-auto">
     <div class="w-full lg:w-3/5 mb-6 lg:mb-4">
-      <img v-if="recipe?.data.image" class="w-full rounded-lg shadow-sm" :src="recipe.data.image" :alt="recipe.data.title" loading="lazy">
+      <UnLazyImage
+        v-if="recipe?.data.image"
+        :src-set="recipe.data.image"
+        :alt="recipe.data.title"
+        :placeholder-src="blurredSrc"
+        class="recipe-img"
+        auto-sizes
+      />
     </div>
     <div class="w-full lg:w-2/5 lg:pl-8">
       <div class="flex flex-row lg:flex-col justify-between items-start">
@@ -113,6 +122,23 @@
 </template>
 
 <style lang="postcss">
+  .recipe-img {
+    @apply w-full rounded-lg shadow-sm;
+    max-height: 300px;
+  }
+
+  @media screen and (min-width:768px) {
+    .recipe-img {
+      max-height: 550px;
+    }
+  }
+
+  @media screen and (min-width:1024px) {
+    .recipe-img {
+      max-height: 450px;
+    }
+  }
+
   .recipe-body a {
     @apply text-blue-500 font-bold underline;
   }
