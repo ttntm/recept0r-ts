@@ -336,6 +336,10 @@ svg {
   transition: transform .5s;
 }
 
+.list-leave-active {
+  position: absolute;
+}
+
 .menu-enter-active,
 .menu-leave-active {
   transition: all 0.75s;
