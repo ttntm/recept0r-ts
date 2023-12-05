@@ -1,6 +1,6 @@
 ## About
 
-This is the 2021 version of [recept0r](https://github.com/ttntm/recept0r/), a minimal open source recipes app.
+This is the 2021 version of recept0r, a minimal open source recipes app.
 
 Re-written from scratch using Vue 3 with TypeScript.
 
@@ -32,3 +32,11 @@ If you want to enable that, you've got to import and use the `AuthSignup` compon
 NB: invite processing and pwd reset are not working atm - the needed routes/views are missing.
 
 Regarding Netlify: any serverless "back end" code (functions) can probably run elsewhere without bigger changes, but re-building the whole user management (Netlify Identity) might end up being a major change.
+
+## Contribute
+
+All future development of this project has moved to Codeberg:
+
+[![Contribute on Codeberg](/public/img/contribute_on_codeberg.png)](https://codeberg.org/ttntm/recept0r)
+
+Commits are mirrored to GitHub, this project still utilizes GH > Netlify CI/CD for the time being.

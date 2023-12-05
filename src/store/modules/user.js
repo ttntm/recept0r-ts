@@ -47,7 +47,7 @@ export default {
         state.GoTrueAuth.login(credentials.email, credentials.password, true)
           .then(response => {
             commit('SET_CURRENT_USER', response)
-            dispatch('data/readAll', null, { root: true }) // re-build cache; see https://github.com/ttntm/recept0r-ts/issues/17
+            dispatch('data/readAll', null, { root: true }) // re-build cache; see https://codeberg.org/ttntm/recept0r/issues/17
             dispatch('app/sendToastMessage', { text: `Login successful.`, type: 'success' }, { root: true })
             resolve(response)
           })
