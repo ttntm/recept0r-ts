@@ -6,3 +6,6 @@ https://main--next-recept0r.netlify.app/* https://recept0r.com/:splat 301!
 
 # SPA
 /*  /index.html 200
+
+# Ads
+/app-ads.txt /ads.txt 301!

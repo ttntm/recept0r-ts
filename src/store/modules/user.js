@@ -60,21 +60,32 @@ export default {
     },
 
     attemptLogout({ commit, dispatch, state }) {
+      const handleError = () => {
+        console.error('Could not log user out', error)
+        // force logout
+        commit('SET_CURRENT_USER', null)
+        // force cleanup
+        dispatch('app/initialize', null, { root: true })
+      }
+      
       return new Promise((resolve, reject) => {
-        const user = state.GoTrueAuth.currentUser()
-        user
-          .logout()
-          .then(response => {
-            commit('SET_CURRENT_USER', null)
-            dispatch('app/initialize', null, { root: true })
-            resolve(response)
-          })
-          .catch(error => {
-            console.error('Could not log user out', error)
-            commit('SET_CURRENT_USER', null) // force logout
-            dispatch('app/initialize', null, { root: true }) // force app cleanup
-            reject(error)
-          })
+        const user = state?.GoTrueAuth?.currentUser()
+
+        if (user) {
+          user
+            .logout()
+            .then(response => {
+              commit('SET_CURRENT_USER', null)
+              dispatch('app/initialize', null, { root: true })
+              resolve(response)
+            })
+            .catch(error => {
+              handleError()
+              reject(error)
+            })
+        } else {
+          handleError()
+        }
       })
     },
 
