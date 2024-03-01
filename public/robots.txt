@@ -1,4 +1,7 @@
 User-agent: *
+Disallow: /
+
+### THANK YOU, SEIRDY!
 
 # I opt out of online advertising so malware that injects ads on my site won't get paid.
 # You should do the same. my ads.txt file contains a standard placeholder to forbid any
@@ -44,7 +47,6 @@ Disallow: /
 # Eat shit, OpenAI.
 User-agent: ChatGPT-User
 Disallow: /
-
 User-agent: GPTBot
 Disallow: /
 
@@ -61,4 +63,37 @@ User-Agent: FacebookBot
 Disallow: /
 
 User-agent: Amazonbot
+Disallow: /
+
+User-agent: Mediapartners-Google
+Disallow: /
+
+User-agent: AdsBot-Google
+Disallow: /
+
+User-agent: AdsBot-Google-Mobile
+Disallow: /
+
+User-agent: GoogleOther
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/omgili
+
+User-agent: omgili
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/anthropic-ai
+
+User-agent: anthropic-ai
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/bytespider
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Applebot
 Disallow: /
