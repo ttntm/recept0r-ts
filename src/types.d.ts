@@ -42,15 +42,16 @@ export interface IntersectionObserverReturn {
 export interface Recipe extends GenObj {
   id: string
   draft?: boolean
-  title: string
-  category: string
-  description: string
-  diet: string
-  duration: string
-  image: string
-  ingredients: string[]
   owner: string
+  title: string
+  description: string
+  image: string
   portions: string
+  duration: string
+  calories?: string
+  diet: string
+  category: string
+  ingredients: string[]
   body: string
 }
 
@@ -75,7 +76,7 @@ export type RecipeDB = {
 }
 
 export type SortableEl = {
-  id: number 
+  id: number
   name: string
 }
 

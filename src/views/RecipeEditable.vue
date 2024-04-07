@@ -26,19 +26,20 @@
   const recipe: Recipe = reactive({
     id: '',
     draft: true,
-    title: '',
-    category: '',
-    description: '',
-    diet: '',
-    duration: '30 min / 1 h',
-    image: '',
-    ingredients: [],
     owner: '',
+    title: '',
+    description: '',
+    image: '',
     portions: '4 portions',
+    duration: '30 min / 1 h',
+    calories: '',
+    diet: '',
+    category: '',
+    ingredients: [],
     body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
   const title = ref()
-  
+
   const category = computed<string[]>(() => store.getters['data/recipeCategory'])
   const diet = computed<string[]>(() => store.getters['data/recipeDiet'])
   const draftText = computed<string>(() => recipe.draft ? 'Draft mode active' : 'Draft mode disabled')
@@ -102,7 +103,7 @@
     }
   }
 
-  const updateEditMode = (input: Recipe) => { 
+  const updateEditMode = (input: Recipe) => {
     Object.keys(input).map(key => events.onUpdateRecipe(key, input[key]))
     // We've got to add in a marker for <hr> elements that will actually get rendered by Quill
     // `onSaveRecipe()` converts it back to valid HTML
@@ -111,17 +112,17 @@
 
   const validateInput = (requiredFields: string[]) => {
     let missing = 0
-    
+
     requiredFields.forEach((reqKey) => {
       if (recipe[reqKey].length <= 0) return missing += 1
     })
-    
+
     return missing <= 0 ? true : false
   }
 
   const events = {
     onCancel(goHome: boolean = true) {
-      if (goHome || mode.value === 'create') { 
+      if (goHome || mode.value === 'create') {
         router.push({ name: 'All Recipes' })
       } else {
         return recipe.draft
@@ -129,7 +130,7 @@
           : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
       }
     },
-    
+
     onEditClose(e: BeforeUnloadEvent) {
       if (!noChanges.value && !isSaving.value) {
         e.preventDefault() // FF
@@ -154,7 +155,7 @@
         // Replace <hr> marker with valid HTML
         recipe.body = recipe.body.replaceAll(editorHrPattern, '<hr>')
       }
-      
+
       let publishedId = ''
       isSaving.value = true
 
@@ -185,7 +186,7 @@
             isSaving.value = false
           }
           break
-      
+
         default:
           break
       }
@@ -218,9 +219,12 @@
     </div>
     <div class="w-full md:w-1/2">
       <h4 class="mb-4">Metadata</h4>
-      <InputToggle v-model="recipe.draft" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">{{ draftText }}</InputToggle>
+      <InputToggle v-model="recipe.draft" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">
+        {{ draftText }}
+      </InputToggle>
       <input type="text" v-model.trim="recipe.portions" class="form-control text-sm mb-4" placeholder="Portions; how many people does this recipe serve?">
       <input type="text" v-model.trim="recipe.duration" class="form-control text-sm mb-4" placeholder="Duration; how long does it take to cook this?">
+      <input type="text" inputmode="numeric" v-model.trim="recipe.calories" class="form-control text-sm mb-4" placeholder="Calories; how many calories does this food have?">
       <InputSelect :current="recipe.diet" :data="diet" name="diet" class="relative mb-4" @update:select="events.onUpdateRecipe('diet', $event)">
         Please select a diet
       </InputSelect>

@@ -10,6 +10,7 @@
   import Duration from '@/components/icon/duration.vue'
   import LoadingMessage from '@/components/conditional/LoadingMessage.vue'
   import Portions from '@/components/icon/portions.vue'
+  import RecipeIngredientsReadonly from '@/components/recipe/RecipeIngredientsReadonly.vue'
   import RecipeShare from '@/components/recipe/RecipeShare.vue'
 
   const route = useRoute()
@@ -19,7 +20,7 @@
   const errorMsg = ref('')
   const readSuccess = ref(false)
   const recipe = ref<RecipeDB>()
-  
+
   const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
@@ -84,6 +85,10 @@
           <p class="text-blue-500 mb-0">{{ recipe?.data.duration }}</p>
         </div>
       </div>
+      <p v-if="recipe?.data?.calories && recipe?.data?.calories?.length > 0" class="text-blue-500 font-semibold mb-2">
+        <span class="inline-block text-cool-gray-500" style="width: 6rem">Calories:</span>
+        {{ recipe.data.calories }}&nbsp;kcal
+      </p>
       <p class="text-blue-500 font-semibold mb-2">
         <span class="inline-block text-cool-gray-500" style="width: 6rem">Diet:</span>
         {{ recipe?.data.diet }}
@@ -96,12 +101,7 @@
     <div v-html="recipe?.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-8" />
     <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
       <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
-        <h3 class="mb-4">Ingredients</h3>
-        <ul class="capitalize mb-0">
-          <li v-for="(item, index) in recipe?.data.ingredients" :key="index" class="text-blue-500 font-semibold mb-2">
-            {{ item }}
-          </li>
-        </ul>
+        <RecipeIngredientsReadonly :ingredients="recipe?.data.ingredients || []" />
       </div>
     </div>
     <div class="w-full order-3">
