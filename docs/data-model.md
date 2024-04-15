@@ -6,7 +6,7 @@ This application is currently using Fauna for data storage.
 
 Collections hold documents, they're Fauna's equivalent of tables.
 
-Fauna documentation: 
+Fauna documentation:
 
 - https://docs.fauna.com/fauna/current/learn/understanding/collections
 - https://docs.fauna.com/fauna/current/learn/understanding/documents?lang=javascript
@@ -59,7 +59,8 @@ These records are typed as `RecipeDB` and `Recipe` in [types.d.ts](/src/types.d.
     ],
     "owner": "d77da4db-ecbe-48be-beda-169f9716ec86",
     "portions": "4 portions",
-    "body": "HTML recipe body"
+    "body": "HTML recipe body",
+    "calories": "1.200"
   }
 }
 ```

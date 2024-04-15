@@ -4,6 +4,7 @@ dist
 dist-ssr
 .env
 *.local
+backup/*.json
 
 # local env files
 .env.local

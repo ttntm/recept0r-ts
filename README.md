@@ -33,6 +33,11 @@ NB: invite processing and pwd reset are not working atm - the needed routes/view
 
 Regarding Netlify: any serverless "back end" code (functions) can probably run elsewhere without bigger changes, but re-building the whole user management (Netlify Identity) might end up being a major change.
 
+## Documentation
+
+- Backups: [docs/backups](./docs/backups.md)
+- Data Model: [docs/data-model](./docs/data-model.md)
+
 ## Contribute
 
 All future development of this project has moved to Codeberg:
