@@ -30,7 +30,7 @@
     </div>
     <h2 class="h3">More Information</h2>
     <p>This is FOSS, feel free to fork the project and deploy your own instance!</p>
-    <p>Re-written from scratch in summer 2021, a year after it's initial release; using Vite and Vue 3 with TypeScript now.</p>
+    <p>Re-written from scratch in summer 2021, a year after its initial release; using Vite and Vue 3 with TypeScript now.</p>
   </section>
 </template>
 
