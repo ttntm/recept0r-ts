@@ -23,14 +23,14 @@
     />
   </router-link>
   <div class="p-8">
-    <h3 class="font-bold text-2xl tracking-wide text-blue-500 hover:text-blue-600">
+    <h2 class="h3 font-bold text-2xl tracking-wide text-blue-500 hover:text-blue-600">
       <router-link
         :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }"
         tabindex="-1"
       >
         {{ recipe.data.title }}
       </router-link>
-    </h3>
+    </h2>
     <p class="text-blue-600 mt-4">{{ recipe.data.description }}</p>
   </div>
 </template>

@@ -38,7 +38,7 @@
     })
   })
 
-  const getAllRecipes = () => {    
+  const getAllRecipes = () => {
     if ((allRecipes.value.length === 0 && !filterActive.value) || forceUpdate || !lastUpdate() || updateNeeded()) {
       store.dispatch('data/readAll')
     }
@@ -71,6 +71,7 @@
 </script>
 
 <template>
+  <h1 class="invisible h-0 w-0 absolute">All Recipes</h1>
   <LoadingMessage v-if="isLoading && !filterActive" class="my-12">
     Loading recipes...
   </LoadingMessage>

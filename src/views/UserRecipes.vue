@@ -5,7 +5,7 @@
   import type { WritableComputedRef } from 'vue'
   import type { RecipeDB, User } from '@/types'
   import { useRecipeSearch } from '@/utils'
-  
+
   import ButtonTop from '@/components/button/ButtonTop.vue'
   import LazyWrapper from '@/components/LazyWrapper.vue'
   import LoadingMessage from '@/components/conditional/LoadingMessage.vue'
@@ -67,7 +67,7 @@
 
 <template>
   <div id="my-recipes" class="w-full lg:w-4/5 flex flex-col mx-auto">
-    <h3 class="text-center mb-8">Recipes You Created</h3>
+    <h1 class="h3 text-center mb-8">Recipes You Created</h1>
     <LoadingMessage v-if="isLoading && myRecipesDisplay.length === 0">
       Loading data...
     </LoadingMessage>

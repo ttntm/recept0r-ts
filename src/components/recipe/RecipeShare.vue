@@ -28,7 +28,7 @@
       <div class="flex items-center justify-center text-xs px-12 pb-8">
         <!-- from: https://sharingbuttons.io -->
         <!-- Sharingbutton E-Mail -->
-        <a class="resp-sharing-button__link" :href="eml" target="_self" rel="noopener" aria-label="E-Mail">
+        <a class="resp-sharing-button__link" :href="eml" target="_self" aria-label="E-Mail">
           <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--medium">
             <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
           </div>
         </a>
         <!-- Sharingbutton Facebook -->
-        <a class="resp-sharing-button__link" :href="fb" target="_blank" rel="noopener" aria-label="Facebook">
+        <a class="resp-sharing-button__link" :href="fb" target="_blank" aria-label="Facebook">
           <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--medium">
             <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@
           </div>
         </a>
         <!-- Sharingbutton Twitter -->
-        <a class="resp-sharing-button__link" :href="tw" target="_blank" rel="noopener" aria-label="Twitter">
+        <a class="resp-sharing-button__link" :href="tw" target="_blank" aria-label="Twitter">
           <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--medium">
             <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

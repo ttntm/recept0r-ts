@@ -18,7 +18,7 @@ const noop: () => void = () => {}
 export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
   const url = String(import.meta.env.VITE_APP_API)
   const path = reqPath ? `${url}/${reqPath}` : url
-  
+
   const body = payload ? JSON.stringify(payload) : undefined
   const headers = await getAuthHeaders()
   const method = reqMethod
@@ -40,7 +40,10 @@ export async function apiRequest(reqMethod: string, payload?: any, reqPath: stri
  * Returns the index of an element in the given array
  */
 export function getArrayIndex(arr: string[], item: string) {
-  if (!arr) return -1
+  if (!arr) {
+    return -1
+  }
+
   return arr.indexOf(item.toLowerCase())
 }
 
@@ -60,7 +63,9 @@ export async function getAuthHeaders() {
     ? await store.dispatch('user/refreshUserToken')
     : user.token.access_token
 
-  if (token) headers['Authorization'] = `Bearer ${token}`
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
 
   return headers
 }
@@ -88,12 +93,15 @@ export function isImgUploaded(path: string) {
  * Sorts objects based on a specific key using an optional `primer` function
  */
 export function objectSort(field: any, reverse: boolean, primer: Function) {
-  const key = primer ? (x: any) => primer(x.data[field]) : (x: any) => x.data[field]
-  
+  const key = primer
+    ? (x: any) => primer(x.data[field])
+    : (x: any) => x.data[field]
+
   const reversed = !reverse ? 1 : -1
 
   return function(a: any, b:any) {
-    return a = key(a), b = key(b), reversed * (Number(a > b) - Number(b > a)) // keep this Number() in mind in case there are issues with this sorting function
+    // keep this Number() in mind in case there are issues with this sorting function
+    return a = key(a), b = key(b), reversed * (Number(a > b) - Number(b > a))
   }
 }
 
@@ -129,7 +137,12 @@ export async function uploadImage(url: string, data: FormData) {
 
     const res = await req.json()
 
-    return res? { message: 'Image successfully uploaded.', data: res.secure_url } : error
+    return res
+      ? {
+        message: 'Image successfully uploaded.',
+        data: res.secure_url
+      }
+      : error
   } catch (err) {
     return error
   }
@@ -142,7 +155,7 @@ export function useBlurredPlaceholder() {
 
 /**
  * Port of the vueUse composable; see: https://github.com/vueuse/vueuse/blob/main/packages/core/useIntersectionObserver/index.ts#L4
- * @see https://vueuse.org/useIntersectionObserver 
+ * @see https://vueuse.org/useIntersectionObserver
  * @param target The element that should be observed
  * @param callback Callback fn for the IntersectionObserver
  * @param options IntersectionObserver options
@@ -161,7 +174,7 @@ export function useIntersectionObserver(
 
   let cleanup = noop
   const isActive = ref(immediate)
-  
+
   const stopWatch = watch([isActive, target], () => {
     cleanup()
 
@@ -183,7 +196,7 @@ export function useIntersectionObserver(
       observer.disconnect()
       cleanup = noop
     }
-  }, { 
+  }, {
     flush: 'post', immediate
   })
 
@@ -225,8 +238,8 @@ export function useRecipeSearch(
     } else {
       if (item.data.title.toLowerCase().indexOf(currentTerm) === -1) {
         return item.data.description.toLowerCase().indexOf(currentTerm) !== -1
-      } else { 
-        return true 
+      } else {
+        return true
       }
     }
   })
@@ -239,9 +252,15 @@ export function validateCredentials(input: Credentials) {
   // check for empty keys on our credentials object -- otherwise an empty user name might not get caught
   let emptyKeys: string[] = Object.keys(input).filter((key: string) => input[key].length < 1)
 
-  if (emptyKeys.length > 0) return false
+  if (emptyKeys.length > 0) {
+    return false
+  }
 
-  return Boolean(input.password && input.email && validateEmail(input.email))
+  return Boolean(
+    input.password
+    && input.email
+    && validateEmail(input.email)
+  )
 }
 
 /**

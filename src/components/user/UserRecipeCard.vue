@@ -37,14 +37,14 @@
       </div>
     </div>
     <div class="flex flex-col md:w-1/2 xl:w-2/3 justify-center p-8 md:py-4 xl:pl-12 xl:ml-12">
-      <h4 class="text-2xl">
+      <h2 class="h4 text-2xl">
         <span v-if="recipe.data.draft" class="block text-cool-gray-700 uppercase text-xs font-light">
           Draft
         </span>
         <router-link :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }">
           {{ recipe.data.title }}
         </router-link>
-      </h4>
+      </h2>
       <p>{{ recipe.data.description }}</p>
       <div class="w-full flex flex-row items-center mt-4">
         <router-link
@@ -70,7 +70,7 @@
   .list-card {
     @apply flex-no-wrap bg-gray-500 rounded-lg border border-transparent;
   }
-  
+
   @media (hover: hover) and (pointer: fine) {
     .list-card:hover {
       @apply border-cool-gray-500 shadow;

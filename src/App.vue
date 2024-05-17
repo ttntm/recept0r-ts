@@ -18,7 +18,7 @@
   const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const menuItems = computed(() => {
     const routes = router.getRoutes()
-    return routes.filter(item => { 
+    return routes.filter(item => {
       if (!item.meta.authRequired) {
         return item.meta.menuVisible
       } else {
@@ -43,14 +43,12 @@
 </script>
 
 <template>
-  <div id="app" class="flex h-full flex-col">
-    <Navbar :loggedIn="loggedIn" :menuItems="menuItems" />
-    <MobileMenu :loggedIn="loggedIn" :menuItems="menuItems" :show="windowOpen === 1" />
-    <Auth :loggedIn="loggedIn" :show="windowOpen === 2" />
-    <div class="container flex-grow flex-shrink-0 px-4 md:mt-6 lg:mt-12 mx-auto">
-      <router-view :key="routeFull" />
-    </div>
-    <ToastMessage />
-    <Footer :debug="debugInfo" :loggedIn="loggedIn" />
-  </div>
+  <Navbar :loggedIn="loggedIn" :menuItems="menuItems" />
+  <MobileMenu :loggedIn="loggedIn" :menuItems="menuItems" :show="windowOpen === 1" />
+  <Auth :loggedIn="loggedIn" :show="windowOpen === 2" />
+  <main class="container flex-grow flex-shrink-0 px-4 md:mt-6 lg:mt-12 mx-auto">
+    <router-view :key="routeFull" />
+  </main>
+  <ToastMessage />
+  <Footer :debug="debugInfo" :loggedIn="loggedIn" />
 </template>

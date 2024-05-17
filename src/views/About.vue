@@ -1,10 +1,10 @@
 <template>
   <section id="about" class="w-full md:w-2/3 lg:w-3/5 mx-auto">
-    <h1 class="h2">About This App</h1>
+    <h1 class="h2">About This Website</h1>
     <p>
       If you're into cooking, you might find some inspiration here 😁
     </p>
-    <p>recept0r is a minimal <a href="https://codeberg.org/ttntm/recept0r" target="_blank" rel="noopener">open source</a> recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like database access and user authentication.</p>
+    <p>recept0r is a minimal <a href="https://codeberg.org/ttntm/recept0r" target="_blank">open source</a> recipes app based on vue.js and Fauna DB. It's a serverless web application making use of Netlify functions to handle all backend functionality like database access and user authentication.</p>
     <p>It's designed to scale well while keeping operational costs at a bare minimum; both Fauna and Netlify offer generous free tiers that are enough to host and operate the application you see here for zero runtime cost.</p>
     <p>At the moment, recept0r is a semi-public personal/family service. That means that even though public signup is in the code, it's currently disabled.</p>
     <h3 class="mb-0">Credits</h3>
@@ -15,7 +15,7 @@
         </div>
         <p class="ml-6 mb-0">
           <strong class="text-sm">Design</strong><br>
-          Sahar&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://sahar.design" target="_blank" rel="noopener">website</a>
+          Sahar&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://sahar.design" target="_blank">website</a>
         </p>
       </div>
       <div class="flex flex-row items-center justify-start my-4 sm:ml-12">
@@ -24,7 +24,7 @@
         </div>
         <p class="ml-6 mb-0">
           <strong class="text-sm">Code</strong><br>
-          Tom&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://ttntm.me" target="_blank" rel="noopener">website</a>
+          Tom&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://ttntm.me" target="_blank">website</a>
         </p>
       </div>
     </div>
