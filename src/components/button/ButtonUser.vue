@@ -4,15 +4,13 @@
   }>()
 </script>
 <template>
-  <button 
+  <button
     :class="{ 'bg-white border border-blue-500 pointer-events-none' : window === 5 }"
-    class="btn btn-gray border border-transparent focus:outline-none focus:shadow-none rounded-full p-3"
+    class="btn btn-gray border border-transparent focus:outline-none focus:shadow-none rounded-full p-2"
     v-click-blur
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user pointer-events-none" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="7" r="4" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon pointer-events-none" width="32" height="32" viewBox="0 0 200 200">
+      <path d="M114.11,100.14h-28.42c-17.05,0-30.92,15.97-30.92,35.59v16.55c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-14.03c.42-.05.83-.19,1.2-.45,6.19-4.51,9.14-3.71,13.81-.05,6.71,5.26,15.4,5.25,20.21-.02,3.65-4,9.81-2.55,12.85.04,3.27,2.79,6.88,4.18,10.42,4.18,3.53,0,7-1.38,10.04-4.15,3.43-3.13,7.08-3.11,11.76.05v14.43c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-16.55c0-19.63-13.87-35.59-30.92-35.59ZM124.92,134.1c-4.2,3.83-9.25,3.78-13.85-.14-6.75-5.75-15.52-4.27-19.78.39-2.98,3.26-8.88,3.02-13.43-.55-6.39-5-11.43-5.43-17.94-1.33,1.38-15.34,12.41-27.34,25.78-27.34h28.42c13.22,0,24.16,11.75,25.72,26.86-6.75-3.18-11.75-.78-14.92,2.11ZM99.98,91.91c12.87,0,23.34-10.47,23.34-23.34s-10.47-23.34-23.34-23.34-23.34,10.47-23.34,23.34,10.47,23.34,23.34,23.34ZM99.98,50.22c10.11,0,18.34,8.23,18.34,18.34s-8.23,18.34-18.34,18.34-18.34-8.23-18.34-18.34,8.23-18.34,18.34-18.34Z" fill="currentColor" stroke-width="5" stroke="currentColor" />
     </svg>
   </button>
 </template>

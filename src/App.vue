@@ -30,7 +30,7 @@
   const windowOpen = computed<number>(() => store.getters['app/windowOpen'])
 
   watch(loggedIn, () => {
-    if (!loggedIn.value && route.meta.authRequired) router.push({ name: 'All Recipes' })
+    if (!loggedIn.value && route.meta.authRequired) router.push({ name: 'Recipes' })
   })
 
   onMounted(() => {

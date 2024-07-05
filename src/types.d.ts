@@ -89,13 +89,13 @@ export type SortOption = {
 
 export type ToastMessage = {
   text: string
-  type: 'error' | 'success' | 'info'
+  type: 'error' | 'info' | 'success'
 }
 
 export type User = UserData
 
 /**
- * We need to tell TS about custom properties/methods on the Window object
+ * Tells TS about custom properties/methods on the Window object
  * See: https://www.cloudhadoop.com/typescript-add-property-window/
  */
 declare global {

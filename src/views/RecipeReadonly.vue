@@ -35,7 +35,7 @@
     const currentItem = await getRecipeData(currentId)
     if (currentItem !== 'error' && currentItem.data) {
       recipe.value = Object.assign({}, currentItem)
-      currentItem.data.draft ? router.push({ name: 'All Recipes' }) : readSuccess.value = true
+      currentItem.data.draft ? router.push({ name: 'Recipes' }) : readSuccess.value = true
     } else {
       errorMsg.value = `<h3>Oops, something went wrong :(</h3>
         <p>Error: couldn't load recipe data.<br><br>
@@ -107,7 +107,7 @@
     <div class="w-full order-3">
       <hr class="border-cool-gray-500 mt-2 mb-8" />
       <div class="flex flex-row flex-wrap md:flex-no-wrap justify-center md:justify-start">
-        <router-link :to="{ name: 'All Recipes' }" class="btn btn-gray flex flex-row items-center mr-4">
+        <router-link :to="{ name: 'Recipes' }" class="btn btn-gray flex flex-row items-center mr-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="inline-block pointer-events-none" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z"/>
             <polyline points="15 6 9 12 15 18" />

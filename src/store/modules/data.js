@@ -1,4 +1,5 @@
-import { apiRequest, getArrayIndex } from '@/utils'
+import { getArrayIndex } from '@/utils'
+import { apiRequest } from '@/utils/useAPI'
 
 export default {
   strict: false,
@@ -108,7 +109,7 @@ export default {
   actions: {
     initializeData({ commit, getters }) {
       commit('SET_USER_RECIPES', [])
-      
+
       if (!getters.filterActive) {
         commit('SET_FILTER_CACHE', [])
         commit('SET_FILTER_DATA', {})
@@ -122,9 +123,9 @@ export default {
       const fState = getters.filterActive
       const recipeCache = getters.filterCache
       const [newFilterData] = args
-      
+
       commit('SET_FILTER_DATA', Object.assign({}, fData, newFilterData)) // MUST use _new_ object here; kills reactivity otherwise!
-      
+
       const doFilter = (input) => {
         let fDataLength = Object.keys(fData).length
 
@@ -132,11 +133,11 @@ export default {
           let cat = fData.category?.length === 0
             ? 0
             : getArrayIndex(fData.category, item.data.category)
-          
+
           let dt = fData.diet?.length == 0
             ? 0
             : getArrayIndex(fData.diet, item.data.diet)
-          
+
           switch(fDataLength) {
             case 2:
               // fDataLength = 2 -- BOTH conditions are set
@@ -207,12 +208,12 @@ export default {
         if (target && !getters.filterActive) {
           commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
         }
-          
+
         if (getters.filterActive && (target === 'all' || target === 'both')) {
           commit('ADD_RECIPE_CACHE', apiResponse)
           dispatch('applyFilter', [getters.filterData])
         }
-        
+
         dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
         return created
       } else {
@@ -245,12 +246,12 @@ export default {
 
       if (response.length > 0) {
         commit('SET_ALL_RECIPES', response)
-        
+
         if (getters.filterActive) {
           commit('SET_FILTER_CACHE', response)
           dispatch('applyFilter', [getters.filterData])
         }
-        
+
         commit('SET_LAST_UPDATED', String(new Date))
       } else {
         dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
@@ -304,12 +305,12 @@ export default {
       const allRecipes = getters.allRecipes
       const userRecipes = getters.userRecipes
       const result = []
-      
+
       const getRecipe = (source, lookup) => source.find(item => item.ref['@ref'].id === lookup)
-      
+
       if (allRecipes.length > 0) {
         const inAll = getRecipe(allRecipes, id)
-        if (inAll) { 
+        if (inAll) {
           result.push(inAll)
         } else {
           const inUser = userRecipes.length > 0 ? getRecipe(userRecipes, id) : null
@@ -317,7 +318,7 @@ export default {
             result.push(inUser)
         }
       }
-      
+
       return result
     },
 
@@ -342,12 +343,12 @@ export default {
             return recordData
           }
         })
-        
+
         if (!replaced && !getters.filterActive) {
           // add record; only if there's no filter active
           processed.push(recordData)
         }
-        
+
         return processed
       }
 
@@ -359,25 +360,25 @@ export default {
         case 'update':
           // keep in mind that we have to remove drafts from `allRecipes`
           updatedArr = recipeUpdate.data.draft ? removeRecord(allRecipes, id) : upsertRecord(allRecipes, id, recipeUpdate)
-          
+
           // update cached recipes if a filter is active
           if (cachedRecipes && cachedRecipes.length > 0) {
             updatedCache = recipeUpdate.data.draft ? removeRecord(cachedRecipes, id) : upsertRecord(cachedRecipes, id, recipeUpdate)
           }
-          
+
           // update user recipes whenever we have any
           updatedUsrArr = mustUpdateUR() ? upsertRecord(userRecipes, id, recipeUpdate) : updatedUsrArr
           break
-        
+
         case 'remove':
           // deleting a draft: not necessary in 'allRecipes' - drafts aren't in there
           updatedArr = recipeUpdate.data.draft ? updatedArr : removeRecord(allRecipes, id)
-          
-          // update cached recipes if a filter is active          
+
+          // update cached recipes if a filter is active
           if (cachedRecipes && cachedRecipes.length > 0) {
             updatedCache = recipeUpdate.data.draft ? updatedCache : removeRecord(cachedRecipes, id)
           }
-          
+
           // update user recipes whenever we have any
           updatedUsrArr = mustUpdateUR() ? removeRecord(userRecipes, id) : updatedUsrArr
           break
@@ -387,7 +388,7 @@ export default {
       }
 
       commit('SET_LAST_UPDATED', String(new Date))
-      
+
       if (allRecipes.length > 0 && updatedArr.length > 0) {
         // update 'allRecipes' if the update isn't 0 length (see case: 'remove')
         commit('SET_ALL_RECIPES', updatedArr)

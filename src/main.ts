@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import router from './router'
 import { store, key } from './store'
-import detectTokens from './utils/token'
+import detectTokens from './utils/useToken'
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import Unlazy from '@unlazy/vue'

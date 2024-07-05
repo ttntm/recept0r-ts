@@ -3,38 +3,12 @@ import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import type {
   Credentials,
-  Headers,
   IntersectionObserverOptions,
   IntersectionObserverReturn,
   RecipeDB,
-  User
 } from '@/types'
 
 const noop: () => void = () => {}
-
-/**
- * Shared logic to handle API requests to the app's serverless back end functions
- */
-export async function apiRequest(reqMethod: string, payload?: any, reqPath: string = '') {
-  const url = String(import.meta.env.VITE_APP_API)
-  const path = reqPath ? `${url}/${reqPath}` : url
-
-  const body = payload ? JSON.stringify(payload) : undefined
-  const headers = await getAuthHeaders()
-  const method = reqMethod
-  const reqData = { body, headers, method }
-
-  let response
-
-  try {
-    const request = await fetch(path, reqData)
-    response = request ? await request.json() : null
-  } catch (err) {
-    response = err
-  }
-
-  return response
-}
 
 /**
  * Returns the index of an element in the given array
@@ -48,29 +22,6 @@ export function getArrayIndex(arr: string[], item: string) {
 }
 
 /**
- * Set authorization headers based on GoTrue's current user session
- */
-export async function getAuthHeaders() {
-  const now = Date.now()
-  const user: User = store.getters['user/currentUser']
-
-  let headers: Headers = {
-    'Content-Type': 'application/json'
-  }
-
-  // only get a new token if the old one has expired
-  const token = user.token && user.token.expires_at < now
-    ? await store.dispatch('user/refreshUserToken')
-    : user.token.access_token
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
-
-  return headers
-}
-
-/**
  * Get recipe data from Vuex or DB
  * Used for both editable and readonly recipe views
  */
@@ -79,14 +30,6 @@ export async function getRecipeData(id: string): Promise<RecipeDB | 'error'> {
   return existing.length > 0
     ? existing[0]
     : await store.dispatch('data/read', id)
-}
-
-/**
- * Checks a path for starting with 'https' and returns 'true' if that's the case
- */
-export function isImgUploaded(path: string) {
-  const checkImgSrc = RegExp(/^https:\/\//)
-  return checkImgSrc.test(path)
 }
 
 /**
@@ -119,35 +62,6 @@ export function slugify(text: string) {
   return text.replace(/[^a-z0-9]+/gi, '-').replace(/^-*|-*$/g, '').toLowerCase()
 }
 
-/**
- * Uploads an image to Cloudinary
- * @param data String representation of the image coming from file reader
- */
-export async function uploadImage(url: string, data: FormData) {
-  const error = {
-    message: 'Error uploading image.',
-    data: null
-  }
-
-  try {
-    const req = await fetch(url, {
-      body: data,
-      method: 'POST'
-    })
-
-    const res = await req.json()
-
-    return res
-      ? {
-        message: 'Image successfully uploaded.',
-        data: res.secure_url
-      }
-      : error
-  } catch (err) {
-    return error
-  }
-}
-
 export function useBlurredPlaceholder() {
   // Base64 version of ./public/img/blurred.png
   return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADsklEQVRYR41XC3bbMAyLsvufb2uaf5OdYkkmkgAFyk5f17daVlwDAkBKaX9v19em//Nf9jsGORP3+al8zucw1cb92sg/nt/dp9pPCQgPfVN/54T8hkhL8MLkHQE8/cLKK7rqs7LY91K0IUH+nSuwKn+CT2QW8ArYxz+xQmi3OzKwAWDk4IVbjDMbqogZyDdh4JfBoNlYCWEthfL9K0KYCXFwmyKRZxDyR2ik3ctrGgkY5BhP9BZ22ZOtEDAAB5vAX0sSmSkH77BCotw7bNJakggCLD+svgO+7P/T5mNciOXSppW3bceCCrAjiRVzhuChQAYOQAb4BAknYvP9SmUKAfMZChQCJMLVazb4gm7k/XrJZLn3uXoj8HDwUICEpKAh/6YD+0oX15GJNRMiAyCQ4Fz508BJ4PE9ga0RMPnjWsi4/1ENtRuGCu1+uYQBZfUEf3QnMO5qRHmiQvyvY9UE3oBIkNA8VBuUSLt1AlpyLrmD/ovro5NwK6gCCYT3SYAqbH9BBSpBG5YmuAW38xkCwH+s+GkEOngSsXnPAQjQ/62R6KBOYFyZh6gCzUKtRCcQDCLtsfoAfj6gAtVQAm4qgtfBN77yiYg/E0pEDaASOiBron2dTIHReAp4JxAZABH2hCxDeG2rNwKUH9cBHioIhZShEzjBgkkBBzcbDBxEWI4I4Eh7EHAVMgOmiPUHhnHA69bcrkcjMCkg4E4iKwE9QRUw+U3mBKcNUyW8acedwNE7of+sZmAmUKvAwveOwJoFqQN3xsvhIJ1whDACGOChwuiGYSZbsAVQKkDK0AkgrHMIufs2I8DSYtstPUACGO1YNvX0GBbQimxOYz9I16ST+zrO+32G0K1gvTN44n/phLIBeeejFRxv5kYECjOB0/6Tpw1swdyKRzvWzai0EU35TMJUKPK/I/C5G52QQfSmhM4n3pd9wGMw7YC5Kan0cnLyhjd1wiMIpLy57aIv5FaM9FsGcNgY5wCtd9Q9W3XFizvd0Y+7DzkV64nIxkx+gGcAUUuZcCpByRXcxgmIQXQef2c7dAJ5W86ESHzZgvFoKoDTHgOZZ0Nu/iJ/GK1ftEjgj2TA5vRQOq98aDeO3DyOYcP5RnrsemJDV2C/MwIpQp77Yoq+r6VHARHIPJJnv4O42esyACTT9h+/J4dIZvK8xNdWPUD0SK6Zry+u3y3gSFcABBiKkVL8AVMs6U8Q3edpuz/PJ9TzQUAr0QmMiZFSicyikPQrVz33A9gu+SrKz4m6sP/rkqhzkpZ7YwAAAABJRU5ErkJggg=='
@@ -178,8 +92,9 @@ export function useIntersectionObserver(
   const stopWatch = watch([isActive, target], () => {
     cleanup()
 
-    if (!isActive.value) return
-    if (!target?.value) return
+    if (!isActive.value || !target?.value) {
+      return
+    }
 
     const observer = new IntersectionObserver(
       callback,

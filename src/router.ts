@@ -15,7 +15,7 @@ declare module 'vue-router' {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'All Recipes',
+    name: 'Recipes',
     component: () => import('@/views/Home.vue'),
     meta: {
       menuPosition: 1,
@@ -34,8 +34,8 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/my-recipes',
-    name: 'My Recipes',
+    path: '/edit-mode',
+    name: 'Edit Mode',
     component: () => import('@/views/UserRecipes.vue'),
     meta: {
       authRequired: true,
@@ -87,13 +87,13 @@ const routes: Array<RouteRecordRaw> = [
       menuVisible: false
     },
     beforeEnter: (to, from, next) => {
-      return store.getters['user/loggedIn'] ? router.push({ name: 'All Recipes' }) : next()
+      return store.getters['user/loggedIn'] ? router.push({ name: 'Recipes' }) : next()
     }
   },
   {
     path: '/:pathMatch(.*)',
     name: '404',
-    redirect: { name: 'All Recipes' },
+    redirect: { name: 'Recipes' },
     meta: {
       menuVisible: false
     }
@@ -118,12 +118,14 @@ router.beforeEach((to, from, next) => {
   if (to.meta.authRequired && store.getters['user/loggedIn']) {
     return next()
   } else {
-    router.push({ name: 'All Recipes' })
+    router.push({ name: 'Recipes' })
   }
 })
 
 router.afterEach((to, from, failure) => {
-  document.title = to.name ? `${to.name?.toString()} - recept0r.com` : 'recept0r'
+  document.title = to.name
+    ? `${to.name?.toString()} - recept0r.com`
+    : 'recept0r'
 })
 
 export default router

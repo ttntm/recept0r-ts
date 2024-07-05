@@ -22,7 +22,7 @@
       auto-sizes
     />
   </router-link>
-  <div class="p-8">
+  <div class="px-8 py-4">
     <h2 class="h3 font-bold text-2xl tracking-wide text-blue-500 hover:text-blue-600">
       <router-link
         :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }"
@@ -31,7 +31,9 @@
         {{ recipe.data.title }}
       </router-link>
     </h2>
-    <p class="text-blue-600 mt-4">{{ recipe.data.description }}</p>
+    <p class="text-blue-600 mt-4">
+      {{ recipe.data.description }}
+    </p>
   </div>
 </template>
 

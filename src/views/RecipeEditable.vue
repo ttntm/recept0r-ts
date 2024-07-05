@@ -3,7 +3,8 @@
   import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/store'
   import type { Recipe, User } from '@/types'
-  import { getRecipeData, isImgUploaded, slugify } from '@/utils'
+  import { getRecipeData, slugify } from '@/utils'
+  import { isImgUploaded } from '@/utils/useCloudinary'
   import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
   import ButtonDefault from '@/components/button/ButtonDefault.vue'
@@ -123,7 +124,7 @@
   const events = {
     onCancel(goHome: boolean = true) {
       if (goHome || mode.value === 'create') {
-        router.push({ name: 'All Recipes' })
+        router.push({ name: 'Recipes' })
       } else {
         return recipe.draft
           ? router.push({ name: 'My Recipes' })
@@ -251,8 +252,8 @@
           </ButtonDefault>
         </div>
         <div v-if="mode === 'edit'" class="flex mt-4 md:mt-0">
-          <ButtonDelete :id="getCurrentRefId()" :title="recipe.title" @event:delete="() => isDeleted = true" class="mr-4" />
-          <ButtonDuplicate :recipe="recipe" />
+          <ButtonDelete :id="getCurrentRefId()" :title="recipe.title" @event:delete="() => isDeleted = true" class="py-1 mr-4" />
+          <ButtonDuplicate :recipe="recipe" class="py-1" />
         </div>
       </div>
     </div>

@@ -144,7 +144,8 @@ hr {
 }
 
 .menu-item {
-  @apply block font-bold text-lg text-cool-gray-600 rounded-lg px-4 py-2;
+  @apply block font-bold text-lg text-blue-500 rounded-lg px-4 py-2;
+  text-decoration-color: #b9c7e5;
 }
 
 .menu-item:focus {
@@ -160,7 +161,11 @@ svg {
 }
 
 .router-link-exact-active {
-  @apply text-blue-500;
+  --color: #b9c7e5;
+  text-decoration: underline;
+  text-decoration-color: #b9c7e5;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 2px;
 }
 
 /* ---------- BUTTONS ---------- */
@@ -296,38 +301,38 @@ svg {
   overflow-y: auto;
 }
 
-.ql-editor p, 
-.ql-editor ol, 
-.ql-editor ul, 
-.ql-editor pre, 
-.ql-editor blockquote, 
-.ql-editor h1, 
-.ql-editor h2, 
-.ql-editor h3, 
-.ql-editor h4, 
-.ql-editor h5, 
+.ql-editor p,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor pre,
+.ql-editor blockquote,
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
 .ql-editor h6 {
   @apply mb-4 !important;
 }
 
 /* ---------- TRANSITIONS ---------- */
 
-.fade-enter-active, 
-.fade-leave-active { 
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.25s ease-in-out;
 }
 
-.fade-enter-from, 
-.fade-leave-to { 
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
-.list-enter-active, 
+.list-enter-active,
 .list-leave-active {
   transition: all .5s;
 }
 
-.list-enter-from, 
+.list-enter-from,
 .list-leave-to {
   opacity: 0;
 }
@@ -351,14 +356,14 @@ svg {
   opacity: 0;
 }
 
-.modal-enter-active, 
-.modal-leave-active { 
+.modal-enter-active,
+.modal-leave-active {
   transform: translateY(0px);
-  transition: opacity 0.25s ease-in-out, transform 0.35s ease-in-out; 
+  transition: opacity 0.25s ease-in-out, transform 0.35s ease-in-out;
 }
 
-.modal-enter-from, 
-.modal-leave-to { 
+.modal-enter-from,
+.modal-leave-to {
   opacity: 0;
   transform: translateY(-100px);
 }

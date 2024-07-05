@@ -66,7 +66,7 @@
 </script>
 
 <template>
-  <div id="my-recipes" class="w-full lg:w-4/5 flex flex-col mx-auto">
+  <div id="edit-mode" class="w-full lg:w-4/5 flex flex-col mx-auto">
     <h1 class="h3 text-center mb-8">Recipes You Created</h1>
     <LoadingMessage v-if="isLoading && myRecipesDisplay.length === 0">
       Loading data...

@@ -12,18 +12,18 @@
   const btnText = ref('Create Account')
   const msg = ref('')
   const pwd = ref('')
-  
+
   const token = route.query.t
 
   onMounted(() => {
     if (!token) {
-      router.push({ name: 'All Recipes' })
+      router.push({ name: 'Recipes' })
     }
   })
 
   const validate = () => {
     msg.value = ''
-    
+
     if (!token) {
       msg.value = 'Invalid token...'
       return false
@@ -38,16 +38,16 @@
   }
 
   const events = {
-    onSignup() {    
+    onSignup() {
       if (!validate()) return alert(msg.value)
 
       btnText.value = `Processing...`
-      
+
       store.dispatch('user/processInvite', { token: token, pwd: pwd.value })
         .then(() => {
           store.dispatch('app/sendToastMessage', { text: 'Account created, redirecting...', type: 'success' })
           setTimeout(() => {
-            router.push({ name: 'All Recipes' })
+            router.push({ name: 'Recipes' })
           }, 2000)
         })
         .catch(error => {

@@ -10,6 +10,7 @@
   import drink from '@/components/icon/filter/drink.vue'
   import keto from '@/components/icon/filter/keto.vue'
   import main from '@/components/icon/filter/main.vue'
+  import other from '@/components/icon/filter/other.vue'
   import pastry from '@/components/icon/filter/pastry.vue'
   import salad from '@/components/icon/filter/salad.vue'
   import snack from '@/components/icon/filter/snack.vue'
@@ -54,16 +55,16 @@
         return vegan
       case 'vegetarian':
         return vegetarian
-    
+
       default:
-        return keto
+        return other
     }
   })
 
-  const isActive = computed<boolean>(() => {   
+  const isActive = computed<boolean>(() => {
     if (!filterActiveSelection.value)
       return false
-    
+
     return getArrayIndex(filterActiveSelection.value[props.type.toLowerCase()] || [], props.current) !== -1
   })
 </script>
@@ -97,7 +98,7 @@
   }
 
   .filter-img {
-    @apply opacity-50 pointer-events-none;
+    @apply border border-blue-500 rounded-md opacity-50 pointer-events-none;
   }
 
   .filter-text {
