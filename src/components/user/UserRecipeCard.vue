@@ -87,8 +87,8 @@
 
   .img-cover {
     @apply object-cover;
-    height: 200px;
-    max-height: 200px;
+    height: 100%;
+    max-height: 230px;
     min-width: 333px;
     min-height: 100%;
   }

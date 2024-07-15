@@ -15,7 +15,7 @@
   watch(() => props.loggedIn, (currentVal) => {
     if (currentVal) closeAuth()
   })
-  
+
   const closeAuth = () => showWindow(0)
 
   const onToggleMode = (newMode: string) => mode.value = newMode
@@ -60,7 +60,7 @@
 
 <style lang="postcss" scoped>
   .user-modal {
-    @apply fixed left-0 right-0 opacity-100 rounded-lg shadow-lg bg-gray-500 text-left mx-auto;
+    @apply fixed left-0 right-0 opacity-100 rounded-lg shadow-lg bg-gray-500 border border-cool-gray-400 text-left mx-auto;
     width: 450px;
     top: 100px;
     z-index: 99;
