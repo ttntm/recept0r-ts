@@ -11,6 +11,10 @@ export interface Credentials extends GenObj {
   password: string
 }
 
+export interface DietMap extends GenObj {
+  [DKey: string]: boolean
+}
+
 export type DebugInfo = {
   lastUpdate: Date | null
   updateNeeded: boolean
@@ -46,10 +50,11 @@ export interface Recipe extends GenObj {
   title: string
   description: string
   image: string
-  portions: string
+  preparation?: string
   duration: string
+  portions: string
   calories?: string
-  diet: string
+  diet: string | string[]
   category: string
   ingredients: string[]
   body: string

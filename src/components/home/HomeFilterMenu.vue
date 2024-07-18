@@ -13,7 +13,7 @@
   }>()
 
   const store = useStore()
-  
+
   const confirmBtnTxt = computed<string>(() => filterActive.value ? 'Apply' : 'Close')
   const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
   const filterActiveSelection: WritableComputedRef<FilterSelection> = computed({
@@ -72,7 +72,7 @@
       </div>
       <div class="w-full mb-8">
         <h5>Category</h5>
-        <div class="flex flex-row flex-wrap justify-between md:justify-start items-center">
+        <div class="flex flex-row flex-wrap justify-between md:justify-start items-center gap-4">
           <ButtonFilterIcon
             v-for="(cat, index) in recipeCategory"
             :current="cat"
@@ -84,7 +84,7 @@
       </div>
       <div class="w-full mb-4">
         <h5>Diet</h5>
-        <div class="flex flex-row flex-wrap justify-between md:justify-start items-start">
+        <div class="flex flex-row flex-wrap justify-between md:justify-start items-start gap-4">
           <ButtonFilterIcon
             v-for="(diet, index) in recipeDiet"
             :current="diet"

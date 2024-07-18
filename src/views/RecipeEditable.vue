@@ -11,8 +11,10 @@
   import ButtonDelete from '@/components/button/ButtonDelete.vue'
   import ButtonDuplicate from '@/components/button/ButtonDuplicate.vue'
   import InputSelect from '@/components/input/InputSelect.vue'
+  import InputText from '@/components/input/InputText.vue'
   import InputToggle from '@/components/input/InputToggle.vue'
   import { QuillEditor } from '@vueup/vue-quill'
+  import RecipeDiet from '@/components/recipe/RecipeDiet.vue'
   import RecipeImage from '@/components/recipe/RecipeImage.vue'
   import RecipeIngredients from '@/components/recipe/RecipeIngredients.vue'
 
@@ -32,17 +34,18 @@
     description: '',
     image: '',
     portions: '4 portions',
+    preparation: '30 min',
     duration: '30 min / 1 h',
     calories: '',
-    diet: '',
+    diet: [],
     category: '',
     ingredients: [],
     body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
   })
   const title = ref()
 
-  const category = computed<string[]>(() => store.getters['data/recipeCategory'])
-  const diet = computed<string[]>(() => store.getters['data/recipeDiet'])
+  const categories = computed<string[]>(() => store.getters['data/recipeCategory'])
+  const diets = computed<string[]>(() => store.getters['data/recipeDiet'])
   const draftText = computed<string>(() => recipe.draft ? 'Draft mode active' : 'Draft mode disabled')
   const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const me = computed<User>(() => store.getters['user/currentUser'])
@@ -51,7 +54,9 @@
   const saveDisabled = computed<boolean>(() => noChanges.value || isSaving.value ? true : false)
 
   // set owner before starting to watch 'recipe' for changes
-  if (me.value) recipe.owner = me.value.id
+  if (me.value) {
+    recipe.owner = me.value.id
+  }
 
   // this WILL ignore the 'onBeforeRouteLeave' guard - we'll accept that for the time being...
   watch(loggedIn, () => {
@@ -60,14 +65,20 @@
 
   // check for changes to the initial state of the `recipe` object
   watch(recipe, (current, old) => {
-    if (current) noChanges.value = false
+    if (current) {
+      noChanges.value = false
+    }
+
     if (current.title && (mode.value && mode.value !== 'create')) {
       document.title = `Editing: ${current.title} - recept0r`
     }
   })
 
   onMounted(() => {
-    if (mode.value && mode.value !== 'edit') title.value.focus()
+    if (mode.value && mode.value !== 'edit') {
+      title.value.focus()
+    }
+
     window.addEventListener('beforeunload', events.onEditClose)
   })
 
@@ -76,7 +87,10 @@
       const answer = isDeleted.value
         ? true
         : window.confirm('Do you really want to leave? There might be unsaved changes!')
-      if (!answer) return false
+
+      if (!answer) {
+        return false
+      }
     }
   })
 
@@ -98,6 +112,7 @@
     if (mode.value && mode.value === 'edit') {
       const currentId = getCurrentRefId()
       const currentItem = await getRecipeData(currentId)
+
       return currentItem !== 'error' && currentItem.data
         ? updateEditMode(currentItem.data)
         : events.onCancel()
@@ -115,7 +130,9 @@
     let missing = 0
 
     requiredFields.forEach((reqKey) => {
-      if (recipe[reqKey].length <= 0) return missing += 1
+      if (recipe[reqKey].length <= 0) {
+        return missing += 1
+      }
     })
 
     return missing <= 0 ? true : false
@@ -127,7 +144,7 @@
         router.push({ name: 'Recipes' })
       } else {
         return recipe.draft
-          ? router.push({ name: 'My Recipes' })
+          ? router.push({ name: 'Edit Mode' })
           : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
       }
     },
@@ -208,37 +225,49 @@
 <template>
   <div id="create-recipe" class="w-full md:w-4/5 flex flex-row flex-wrap mx-auto">
     <div class="w-full md:w-1/2">
-      <h4>Image</h4>
+      <h2>Image</h2>
       <img v-if="recipe.image" class="rounded-lg mt-4 mb-4" :src="recipe.image" :alt="recipe.title">
       <RecipeImage :currentImage="recipe.image" :recipe="recipe.id" @update:image="events.onUpdateRecipe('image', $event)" class="mb-4" />
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
-      <h4 class="">Recipe Title</h4>
+      <h2>Recipe Title</h2>
       <input type="text" v-model.trim="recipe.title" ref="title" class="form-control mb-4" placeholder="A great title..." @input="events.onTitleChange">
-      <h4 class="mb-4">Description</h4>
+      <h2 class="mb-4">Description</h2>
       <input type="text" v-model.trim="recipe.description" class="form-control mb-4" placeholder="A fancy description...">
     </div>
     <div class="w-full md:w-1/2">
-      <h4 class="mb-4">Metadata</h4>
+      <h2 class="mb-4">Metadata</h2>
       <InputToggle v-model="recipe.draft" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">
         {{ draftText }}
       </InputToggle>
-      <input type="text" v-model.trim="recipe.portions" class="form-control text-sm mb-4" placeholder="Portions; how many people does this recipe serve?">
-      <input type="text" v-model.trim="recipe.duration" class="form-control text-sm mb-4" placeholder="Duration; how long does it take to cook this?">
-      <input type="text" inputmode="numeric" v-model.trim="recipe.calories" class="form-control text-sm mb-4" placeholder="Calories; how many calories does this food have?">
-      <InputSelect :current="recipe.diet" :data="diet" name="diet" class="relative mb-4" @update:select="events.onUpdateRecipe('diet', $event)">
-        Please select a diet
+      <InputSelect :current="recipe.category" :data="categories" name="category" class="relative mt-6 mb-4" @update:select="events.onUpdateRecipe('category', $event)">
+        Recipe category
       </InputSelect>
-      <InputSelect :current="recipe.category" :data="category" name="category" class="relative mb-4" @update:select="events.onUpdateRecipe('category', $event)">
-        Please select a category
-      </InputSelect>
+      <InputText
+        v-model.trim="recipe.portions"
+        name="portions"
+        class="mb-4"
+        placeholder="How many people does this recipe serve?"
+      />
+      <InputText
+        v-model.trim="recipe.duration"
+        name="duration"
+        class="mb-4"
+        placeholder="How long does it take to cook this?"
+      />
+      <InputText
+        v-model.trim="recipe.calories"
+        name="calories"
+        class="mb-4"
+        placeholder="How many calories does this food have?"
+      />
+      <RecipeDiet :data="diets" :selected="recipe.diet" @update:diet="events.onUpdateRecipe('diet', $event)" />
     </div>
     <div class="w-full md:w-1/2 md:pl-8 mb-4">
-      <h4 class="mb-2">Ingredients</h4>
       <RecipeIngredients :input="recipe.ingredients" :mode="mode" @update:ingredients="events.onUpdateRecipe('ingredients', $event)" />
     </div>
     <div class="w-full">
-      <h4 class="mb-4">Instructions</h4>
+      <h2 class="mb-4">Instructions</h2>
       <section id="editor">
         <QuillEditor v-model:content="recipe.body" ref="editor" contentType="html" :options="editorOptions" />
       </section>
@@ -259,3 +288,13 @@
     </div>
   </div>
 </template>
+
+<style lang="postcss">
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+</style>

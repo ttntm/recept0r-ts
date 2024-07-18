@@ -26,7 +26,7 @@
 
 <style lang="postcss" scoped>
   .user-button-modal {
-    @apply absolute bg-white border border-gray-500 rounded-lg shadow-lg z-10;
+    @apply absolute bg-white border border-cool-gray-400 rounded-lg shadow-lg z-10;
     width: 250px;
     top: 7rem;
   }

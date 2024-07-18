@@ -48,7 +48,7 @@
       let currentEl = null
       let ing = [...ingredients.value]
       let inputEls = inputs.value
-      
+
       if (index !== undefined && index > -1) {
         ing.splice(index + 1, 0, { id: index+1, name: '' })
         ingredients.value = ing
@@ -59,7 +59,7 @@
         await nextTick() // await next tick to avoid 'x is undefined...' errors
         currentEl = inputEls[inputEls.length-1]
       }
-      
+
       if (currentEl) currentEl.focus()
     },
 
@@ -67,7 +67,7 @@
       emit('update:ingredients', valuefy(ingredients.value))
     },
 
-    onRemoveItem(index: number) {    
+    onRemoveItem(index: number) {
       ingredients.value = ingredients.value.filter(el => el.id !== index)
       inputs.value.splice(index, 1)
     }
@@ -75,6 +75,7 @@
 </script>
 
 <template>
+  <h2 class="mb-2">Ingredients</h2>
   <div id="recipe-ingredients">
     <draggable
       v-model="ingredients"

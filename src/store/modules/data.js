@@ -14,17 +14,24 @@ export default {
       lastUpdated: '',
       recipeCategory: [
         'Bread',
-        'Salad',
+        'Cookies',
         'Dessert',
+        'Dip',
         'Drink',
+        'Jam',
         'Main',
+        'Pastry',
+        'Salad',
         'Snack',
+        'Sauce',
+        'Side',
         'Soup',
-        'Pastry'
+        'Spread'
       ],
       recipeDiet: [
+        'Histamine',
         'Keto',
-        'Keto-Adaptable',
+        'LowCal',
         'Vegetarian',
         'Vegan',
         'Other'
