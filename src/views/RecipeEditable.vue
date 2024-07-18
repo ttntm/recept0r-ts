@@ -11,6 +11,7 @@
   import ButtonDelete from '@/components/button/ButtonDelete.vue'
   import ButtonDuplicate from '@/components/button/ButtonDuplicate.vue'
   import InputSelect from '@/components/input/InputSelect.vue'
+  import InputText from '@/components/input/InputText.vue'
   import InputToggle from '@/components/input/InputToggle.vue'
   import { QuillEditor } from '@vueup/vue-quill'
   import RecipeDiet from '@/components/recipe/RecipeDiet.vue'
@@ -33,6 +34,7 @@
     description: '',
     image: '',
     portions: '4 portions',
+    preparation: '30 min',
     duration: '30 min / 1 h',
     calories: '',
     diet: [],
@@ -142,7 +144,7 @@
         router.push({ name: 'Recipes' })
       } else {
         return recipe.draft
-          ? router.push({ name: 'My Recipes' })
+          ? router.push({ name: 'Edit Mode' })
           : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
       }
     },
@@ -238,12 +240,27 @@
       <InputToggle v-model="recipe.draft" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">
         {{ draftText }}
       </InputToggle>
-      <input type="text" v-model.trim="recipe.portions" class="form-control text-sm mb-4" placeholder="Portions; how many people does this recipe serve?">
-      <input type="text" v-model.trim="recipe.duration" class="form-control text-sm mb-4" placeholder="Duration; how long does it take to cook this?">
-      <input type="text" inputmode="numeric" v-model.trim="recipe.calories" class="form-control text-sm mb-4" placeholder="Calories; how many calories does this food have?">
-      <InputSelect :current="recipe.category" :data="categories" name="category" class="relative mb-4" @update:select="events.onUpdateRecipe('category', $event)">
+      <InputSelect :current="recipe.category" :data="categories" name="category" class="relative mt-6 mb-4" @update:select="events.onUpdateRecipe('category', $event)">
         Recipe category
       </InputSelect>
+      <InputText
+        v-model.trim="recipe.portions"
+        name="portions"
+        class="mb-4"
+        placeholder="How many people does this recipe serve?"
+      />
+      <InputText
+        v-model.trim="recipe.duration"
+        name="duration"
+        class="mb-4"
+        placeholder="How long does it take to cook this?"
+      />
+      <InputText
+        v-model.trim="recipe.calories"
+        name="calories"
+        class="mb-4"
+        placeholder="How many calories does this food have?"
+      />
       <RecipeDiet :data="diets" :selected="recipe.diet" @update:diet="events.onUpdateRecipe('diet', $event)" />
     </div>
     <div class="w-full md:w-1/2 md:pl-8 mb-4">
@@ -275,5 +292,9 @@
 <style lang="postcss">
   h2 {
     @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
   }
 </style>

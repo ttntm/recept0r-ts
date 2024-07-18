@@ -50,8 +50,9 @@ export interface Recipe extends GenObj {
   title: string
   description: string
   image: string
-  portions: string
+  preparation?: string
   duration: string
+  portions: string
   calories?: string
   diet: string | string[]
   category: string

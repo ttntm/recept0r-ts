@@ -24,7 +24,7 @@
 </script>
 
 <template>
-  <button class="filter-group md:mr-4" :class="{ 'activeFilter': isActive }" :active="isActive" v-click-blur>
+  <button class="filter-group" :class="{ 'activeFilter': isActive }" :active="isActive" v-click-blur>
     <IconResolver :icon="current" class="filter-img" />
     <span class="filter-text">{{ current }}</span>
   </button>

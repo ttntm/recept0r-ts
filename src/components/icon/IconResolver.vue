@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed } from 'vue'
   import type { Component } from 'vue'
-
+  // filter icons
   import bread from '@/components/icon/filter/bread.vue'
   import cookies from '@/components/icon/filter/cookies.vue'
   import dessert from '@/components/icon/filter/dessert.vue'
@@ -22,6 +22,11 @@
   import spread from '@/components/icon/filter/spread.vue'
   import vegan from '@/components/icon/filter/vegan.vue'
   import vegetarian from '@/components/icon/filter/vegetarian.vue'
+  // other icons
+  import calories from '@/components/icon//calories.vue'
+  import duration from '@/components/icon/duration.vue'
+  import hat from '@/components/icon/hat.vue'
+  import portions from '@/components/icon/portions.vue'
 
   const props = defineProps<{
     icon: string
@@ -36,14 +41,20 @@
     switch (props.icon.toLowerCase()) {
       case 'bread':
         return bread
+      case 'calories':
+        return calories
       case 'cookies':
         return cookies
       case 'dessert':
         return dessert
+      case 'duration':
+        return duration
       case 'dip':
         return dip
       case 'drink':
         return drink
+      case 'hat':
+        return hat
       case 'histamine':
         return histamine
       case 'jam':
@@ -56,6 +67,8 @@
         return main
       case 'pastry':
         return pastry
+      case 'portions':
+        return portions
       case 'salad':
         return salad
       case 'sauce':

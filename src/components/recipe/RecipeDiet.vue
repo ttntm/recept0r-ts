@@ -51,7 +51,7 @@
 
 <template>
   <div id="recipe-ingredients" class="mb-4">
-    <h2>Diet Selection</h2>
+    <h3>Diet Selection</h3>
     <ul class="list-none flex flex-row flex-wrap items-center gap-4 p-0 m-0">
       <ButtonCheckbox
         v-for="(value, name, index) in dietList"

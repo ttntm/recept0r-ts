@@ -7,11 +7,12 @@
 
   import ButtonShare from '@/components/button/ButtonShare.vue'
   import ButtonTop from '@/components/button/ButtonTop.vue'
-  import Duration from '@/components/icon/duration.vue'
+  import IconResolver from '@/components/icon/IconResolver.vue'
   import LoadingMessage from '@/components/conditional/LoadingMessage.vue'
-  import Portions from '@/components/icon/portions.vue'
-  import RecipeIngredientsReadonly from '@/components/recipe/RecipeIngredientsReadonly.vue'
-  import RecipeShare from '@/components/recipe/RecipeShare.vue'
+  import RecipeDietReadonly from '@/components/recipe/readonly/RecipeDiet.vue'
+  import RecipeIngredientsReadonly from '@/components/recipe/readonly/RecipeIngredients.vue'
+  import RecipeMetaReadonly from '@/components/recipe/readonly/RecipeMeta.vue'
+  import RecipeShare from '@/components/recipe/readonly/RecipeShare.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -65,38 +66,47 @@
       />
     </div>
     <div class="w-full lg:w-2/5 lg:pl-8">
-      <div class="flex flex-row lg:flex-col justify-between items-start">
-        <div class="flex flex-row lg:self-end justify-end order-2 lg:order-1">
+      <div class="flex flex-row justify-between items-center mb-6">
+        <div class="flex items-center gap-4">
+          <IconResolver :icon="String(recipe?.data.category)" class="border border-cool-gray-500 rounded"/>
+          <p class="text-cool-gray-500 font-semibold m-0">
+            {{ recipe?.data.category }}
+          </p>
+        </div>
+        <div class="flex flex-row justify-end">
           <RecipeShare :show="windowOpen === 4" />
           <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
         </div>
-        <div class="order-1 lg:order-2">
-          <h2 class="mb-4 lg:my-4">{{ recipe?.data.title }}</h2>
-          <p class="text-blue-500 mb-8">{{ recipe?.data.description }}</p>
-        </div>
       </div>
-      <div class="flex flex-row flex-no-wrap leading-none border-t border-b border-cool-gray-500 mb-8 py-4">
-        <div class="flex-1 flex flex-row items-center justify-center px-4">
-          <Portions class="mr-4" />
-          <p class="text-blue-500 mb-0">{{ recipe?.data.portions }}</p>
-        </div>
-        <div class="flex-1 flex flex-row items-center justify-center border-l border-cool-gray-500 px-4">
-          <Duration class="mr-4" />
-          <p class="text-blue-500 mb-0">{{ recipe?.data.duration }}</p>
-        </div>
+      <h2 class="mb-4 lg:my-4">
+        {{ recipe?.data.title }}
+      </h2>
+      <p class="text-blue-500 mb-8">
+        {{ recipe?.data.description }}
+      </p>
+      <div class="flex flex-row flex-no-wrap leading-none border-t border-b border-cool-gray-500 py-4">
+        <RecipeMetaReadonly
+          :text="recipe?.data.preparation || '-'"
+          icon="hat"
+        />
+        <RecipeMetaReadonly
+          :text="recipe?.data.duration"
+          icon="duration"
+          class="border-l border-cool-gray-500"
+        />
       </div>
-      <p v-if="recipe?.data?.calories && recipe?.data?.calories?.length > 0" class="text-blue-500 font-semibold mb-2">
-        <span class="inline-block text-cool-gray-500" style="width: 6rem">Calories:</span>
-        {{ recipe.data.calories }}&nbsp;kcal
-      </p>
-      <p class="text-blue-500 font-semibold mb-2">
-        <span class="inline-block text-cool-gray-500" style="width: 6rem">Diet:</span>
-        {{ recipe?.data.diet }}
-      </p>
-      <p class="text-blue-500 font-semibold mb-4">
-        <span class="inline-block text-cool-gray-500" style="width: 6rem">Category:</span>
-        {{ recipe?.data.category }}
-      </p>
+      <div class="flex flex-row flex-no-wrap leading-none border-b border-cool-gray-500 mb-8 py-4">
+        <RecipeMetaReadonly
+          :text="recipe?.data.portions"
+          icon="portions"
+        />
+        <RecipeMetaReadonly
+          :text="`${recipe?.data?.calories || '-'} kcal`"
+          icon="calories"
+          class="border-l border-cool-gray-500"
+        />
+      </div>
+      <RecipeDietReadonly :diet="recipe?.data.diet" />
     </div>
     <div v-html="recipe?.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-8" />
     <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
