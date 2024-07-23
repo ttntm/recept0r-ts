@@ -392,11 +392,11 @@ svg {
     @apply opacity-75;
   }
 
-  .btn-gray:hover {
+  .btn-gray:not(:disabled):hover {
     @apply bg-cool-gray-500;
   }
 
-  .btn-outline:hover,
+  .btn-outline:not(:disabled):hover,
   .modal-btn:hover {
     @apply bg-cool-gray-500 border-cool-gray-500 shadow-none;
   }

@@ -55,7 +55,7 @@
     <div v-else v-html="errorMsg" class="text-center" />
   </div>
   <section v-else id="recipe" class="w-full xl:w-4/5 flex flex-row flex-wrap mx-auto">
-    <div class="w-full lg:w-3/5 mb-6 lg:mb-4">
+    <div class="w-full lg:w-3/5">
       <UnLazyImage
         v-if="recipe?.data.image"
         :src-set="recipe.data.image"
@@ -68,7 +68,7 @@
     <div class="w-full lg:w-2/5 lg:pl-8">
       <div class="flex flex-row justify-between items-center mb-6">
         <div class="flex items-center gap-4">
-          <IconResolver :icon="String(recipe?.data.category)" class="border border-cool-gray-500 rounded"/>
+          <IconResolver :icon="String(recipe?.data.category)" class="border border-cool-gray-500 rounded shadow-sm"/>
           <p class="text-cool-gray-500 font-semibold m-0">
             {{ recipe?.data.category }}
           </p>
@@ -108,9 +108,9 @@
       </div>
       <RecipeDietReadonly :diet="recipe?.data.diet" />
     </div>
-    <div v-html="recipe?.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-8" />
-    <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2">
-      <div class="bg-gray-500 rounded-lg p-8 mt-4 lg:mt-0 mb-8 lg:mb-0">
+    <div v-html="recipe?.data.body" class="recipe-body w-full lg:w-3/5 order-2 lg:order-1 lg:mt-12" />
+    <div class="w-full lg:w-2/5 lg:pl-8 order-1 lg:order-2 my-8 lg:mb-0">
+      <div class="bg-gray-500 rounded-lg p-8">
         <RecipeIngredientsReadonly :ingredients="recipe?.data.ingredients || []" />
       </div>
     </div>

@@ -51,7 +51,7 @@
   }
 
   .filter-img {
-    @apply border border-blue-500 rounded-md pointer-events-none;
+    @apply border border-blue-500 rounded-md pointer-events-none shadow;
   }
 
   .filter-text {
@@ -64,10 +64,11 @@
     @apply opacity-100;
   }
 
+
   @media (hover: hover) and (pointer: fine) {
-    .filter-group:hover .filter-img,
-    .filter-group:hover .filter-text {
-      @apply opacity-100;
+    .filter-group:hover .filter-img {
+      @apply border-cool-gray-600 shadow-none;
+      transition: all .35s ease-in-out;
     }
   }
 </style>

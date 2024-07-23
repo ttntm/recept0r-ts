@@ -27,9 +27,9 @@
 
 <style lang="postcss" scoped>
   .diet-img {
-    --size: 75px;
+    --size: 60px;
 
-    @apply border border-cool-gray-500 rounded;
+    @apply border border-cool-gray-500 rounded shadow-sm;
     width: var(--size);
     height: var(--size);
   }
