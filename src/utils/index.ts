@@ -22,6 +22,26 @@ export function getArrayIndex(arr: string[], item: string) {
 }
 
 /**
+ * Checks an array with a list of items
+ * Returns `-1` when there are no matches, and a number >0 if there were matches (min. 1)
+ */
+export function getArrayIndexList(arr: string[], list: string[]): number {
+  if (!arr || !list) {
+    return -1
+  }
+
+  const included: number[] = []
+
+  list.forEach((el, index) => {
+    if (arr.includes(el.toLowerCase())) {
+      included.push(index)
+    }
+  })
+
+  return included.length || -1
+}
+
+/**
  * Get recipe data from Vuex or DB
  * Used for both editable and readonly recipe views
  */

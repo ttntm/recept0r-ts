@@ -1,4 +1,4 @@
-import { getArrayIndex } from '@/utils'
+import { getArrayIndex, getArrayIndexList } from '@/utils'
 import { apiRequest } from '@/utils/useAPI'
 
 export default {
@@ -134,16 +134,20 @@ export default {
       commit('SET_FILTER_DATA', Object.assign({}, fData, newFilterData)) // MUST use _new_ object here; kills reactivity otherwise!
 
       const doFilter = (input) => {
-        let fDataLength = Object.keys(fData).length
+        const fDataLength = Object.keys(fData).length
 
         return input.filter((item) => {
-          let cat = fData.category?.length === 0
+          const dietList = typeof item.data.diet === 'string'
+            ? [item.data.diet]
+            : item.data.diet
+
+          const cat = fData.category?.length === 0
             ? 0
             : getArrayIndex(fData.category, item.data.category)
 
-          let dt = fData.diet?.length == 0
+          const dt = fData.diet?.length === 0
             ? 0
-            : getArrayIndex(fData.diet, item.data.diet)
+            : getArrayIndexList(fData.diet, dietList)
 
           switch(fDataLength) {
             case 2:
@@ -173,7 +177,7 @@ export default {
         commit('SET_FILTER_STATE', true)
         // create cache
         commit('SET_FILTER_CACHE', allRecipes.slice())
-        // apply to the current state of 'allRecies'
+        // apply to the current state of 'allRecipes'
         filtered = doFilter(allRecipes)
       } else {
         // overwrite previously filtered list based on current filter selection

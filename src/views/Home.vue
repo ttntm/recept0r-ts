@@ -90,7 +90,7 @@
       <p v-if="searchTerm && displayedRecipes.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>
     <transition-group name="list" tag="div" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <LazyWrapper v-for="recipe in displayedRecipes" :key="recipe.data.id" element="article" className="recipe-card rounded-lg">
+      <LazyWrapper v-for="recipe in displayedRecipes" :key="recipe.ref['@ref'].id" element="article" className="recipe-card rounded-lg">
         <HomeRecipeCard :recipe="recipe" />
       </LazyWrapper>
     </transition-group>
