@@ -66,7 +66,7 @@
       />
     </div>
     <div class="w-full lg:w-2/5 lg:pl-8">
-      <div class="flex flex-row justify-between items-center mt-6 lg:mt-0 sm:mb-6">
+      <div class="flex flex-row justify-between items-center mt-6 lg:mt-0 mb-6">
         <div class="flex items-center gap-4">
           <IconResolver :icon="String(recipe?.data.category)" class="border border-cool-gray-500 rounded shadow-sm"/>
           <p class="text-cool-gray-500 font-semibold m-0">
