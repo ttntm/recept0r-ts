@@ -29,6 +29,7 @@
   <button
     v-click-blur
     class="btn btn-gray focus:outline-none focus:shadow-none rounded-full p-3"
+    title="Copy link"
     @click="onShareRecipe"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="icon pointer-events-none" width="32" height="32" viewBox="0 0 200 200">
