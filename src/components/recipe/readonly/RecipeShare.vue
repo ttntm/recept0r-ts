@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  // ---------------------------------------------
+  // 02/2025: UNUSED LEGACY COMPONENT
+  // ---------------------------------------------
+
   import { useRoute } from 'vue-router'
   import { showWindow } from '@/utils'
 

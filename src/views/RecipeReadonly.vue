@@ -12,7 +12,6 @@
   import RecipeDietReadonly from '@/components/recipe/readonly/RecipeDiet.vue'
   import RecipeIngredientsReadonly from '@/components/recipe/readonly/RecipeIngredients.vue'
   import RecipeMetaReadonly from '@/components/recipe/readonly/RecipeMeta.vue'
-  import RecipeShare from '@/components/recipe/readonly/RecipeShare.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -74,7 +73,6 @@
           </p>
         </div>
         <div class="flex flex-row justify-end">
-          <RecipeShare :show="windowOpen === 4" />
           <ButtonShare class="click-outside-ignore" @click="showWindow(4)" />
         </div>
       </div>
