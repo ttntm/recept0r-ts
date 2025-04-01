@@ -72,7 +72,7 @@
       </div>
       <div class="w-full mb-8">
         <h5>Category</h5>
-        <div class="flex flex-row flex-wrap justify-between md:justify-start items-center gap-4">
+        <div class="grid grid-cols-3 md:flex md:justify-start md:flex-wrap gap-6">
           <ButtonFilterIcon
             v-for="(cat, index) in recipeCategory"
             :current="cat"
@@ -82,9 +82,9 @@
           />
         </div>
       </div>
-      <div class="w-full mb-4">
+      <div class="w-full">
         <h5>Diet</h5>
-        <div class="flex flex-row flex-wrap justify-between md:justify-start items-start gap-4">
+        <div class="grid grid-cols-3 md:flex md:justify-start md:flex-wrap gap-6">
           <ButtonFilterIcon
             v-for="(diet, index) in recipeDiet"
             :current="diet"
@@ -94,9 +94,9 @@
           />
         </div>
       </div>
-      <div class="w-full flex flex-row justify-center lg:justify-end">
+      <div class="w-full flex flex-row justify-center lg:justify-end gap-4 mt-8">
         <ButtonDefault class="btn-outline px-8" :disabled="!filterActive" @click="events.onClearFilterClick()">Clear</ButtonDefault>
-        <ButtonDefault class="btn-outline px-8 ml-4" @click="events.onFilterClose">{{ confirmBtnTxt }}</ButtonDefault>
+        <ButtonDefault class="btn-outline px-8" @click="events.onFilterClose">{{ confirmBtnTxt }}</ButtonDefault>
       </div>
     </div>
   </transition>
