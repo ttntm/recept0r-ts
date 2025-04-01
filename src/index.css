@@ -152,7 +152,7 @@ hr {
   @apply outline-none shadow-outline;
 }
 
-.menu-item:hover {
+.menu-item:not(.router-link-exact-active):hover {
   @apply bg-gray-500;
 }
 
