@@ -3,7 +3,7 @@
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
   import type { WritableComputedRef } from 'vue'
-  import type { RecipeDB, User } from '@/types'
+  import type { Recipe, User } from '@/types'
   import { useRecipeSearch } from '@/utils'
 
   import ButtonTop from '@/components/button/ButtonTop.vue'
@@ -17,13 +17,12 @@
   const store = useStore()
 
   const isLoading = ref(true)
-  const myRecipesDisplay = ref<RecipeDB[]>([])
+  const myRecipesDisplay = ref<Recipe[]>([])
   const userSearchTerm = ref('')
 
-  const displayList: WritableComputedRef<RecipeDB[]> = computed({
-    // see: https://stackoverflow.com/a/64281689
-    get(): RecipeDB[] {
-      const list: RecipeDB[] = myRecipesDisplay.value
+  const displayList: WritableComputedRef<Recipe[]> = computed({
+    get(): Recipe[] {
+      const list: Recipe[] = myRecipesDisplay.value
       const term = userSearchTerm.value
       return term && term.length > 0 ? useRecipeSearch(list, term, true) : list
     },
@@ -31,15 +30,17 @@
       myRecipesDisplay.value = newList
     }
   })
-  const myRecipes = computed<RecipeDB[]>(() => store.getters['data/userRecipes'])
+  const myRecipes = computed<Recipe[]>(() => store.getters['data/userRecipes'])
   const user = computed<User>(() => store.getters['user/currentUser'])
 
   watch(myRecipes, (current, old) => {
-    if (current.length > 0) displayList.value = myRecipes.value.slice().reverse()
+    if (current.length > 0) {
+      displayList.value = myRecipes.value
+    }
   })
 
   onMounted(() => {
-    myRecipesDisplay.value = [...myRecipes.value.slice().reverse()]
+    myRecipesDisplay.value = [...myRecipes.value]
   })
 
   const getMyRecipes = () => {
@@ -57,7 +58,7 @@
       userSearchTerm.value = val
     },
 
-    onUpdateList(list: RecipeDB[]) {
+    onUpdateList(list: Recipe[]) {
       displayList.value = list
     }
   }
@@ -89,7 +90,7 @@
       <p v-if="userSearchTerm && displayList.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>
     <transition-group name="list" tag="section">
-      <LazyWrapper v-for="recipe in displayList" :key="recipe.data.id" element="article" className="min-h-200px">
+      <LazyWrapper v-for="recipe in displayList" :key="recipe.id" element="article" className="min-h-200px">
         <UserRecipeCard :recipe="recipe" />
       </LazyWrapper>
     </transition-group>

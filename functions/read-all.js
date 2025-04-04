@@ -1,32 +1,41 @@
-const faunadb = require('faunadb')
+const fields = require('./_shared/fields.js')
 const fnHeaders = require('./_shared/headers.js')
+const spb = require('@supabase/supabase-js')
 
-exports.handler = (event, context) => {
-  const client = new faunadb.Client({
-    secret: process.env.FAUNA_SECRET,
-    domain: 'db.us.fauna.com'
-  })
-  const q = faunadb.query
-
+exports.handler = async (event, context) => {
   console.log("Function 'readAll' invoked")
 
   const headers = { ...fnHeaders }
   const origin = event.headers.Origin || event.headers.origin
+  const supabase = spb.createClient(process.env.SPB_URL, process.env.SPB_API_KEY)
+
   headers['Access-Control-Allow-Origin'] = origin ? origin : '*'
 
-  return client.query(q.Paginate(q.Match(q.Index('all_recipes'), false), { size: 500 }))
-    .then((response) => {
-      const listRefs = response.data
-      console.log(`${listRefs.length} entries found`)
-      // create new query out of list refs. http://bit.ly/2LG3MLg
-      const getListDataQuery = listRefs.map(ref => q.Get(ref))
-      // then query the refs
-      return client.query(getListDataQuery).then((records) => {
-        return { statusCode: 200, headers: headers, body: JSON.stringify(records) }
-      })
-    })
-    .catch((error) => {
-      console.log('error', error)
-      return { statusCode: 400, headers: headers, body: JSON.stringify(error) }
-    })
+  try {
+    const { data, error } = await supabase
+      .from(process.env.SPB_TABLE)
+      .select(fields.recipe_full)
+      .eq('status', 'published')
+      .order('updated', { ascending: false })
+
+    if (error) {
+      throw JSON.stringify(error)
+    }
+
+    return {
+      statusCode: 200,
+      headers: headers,
+      body: JSON.stringify(data)
+    }
+  } catch (ex) {
+    console.log('error', ex)
+
+    return {
+      statusCode: 400,
+      headers: headers,
+      body: typeof ex === 'string'
+        ? ex
+        : JSON.stringify(ex)
+    }
+  }
 }

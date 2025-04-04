@@ -24,11 +24,11 @@
 
   const editor = ref()
   const isDeleted = ref(false)
+  const isDraftSelected = ref(true)
   const isSaving = ref(false)
   const noChanges = ref(true)
   const recipe: Recipe = reactive({
-    id: '',
-    draft: true,
+    slug: '',
     owner: '',
     title: '',
     description: '',
@@ -40,27 +40,49 @@
     diet: [],
     category: '',
     ingredients: [],
-    body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>'
+    body: '<h2>About this Recipe</h2><p>About text</p><h2>Instructions</h2><p>What to do...</p><ol><li>first</li><li>second</li><li>third</li></ol><h2>Notes</h2><p>Notes and remarks</p><p>Also a link: <a href=\"https://other.site\" rel=\"noopener noreferrer\" target=\"_blank\">Link to some other site</a></p>',
+    status: 'draft'
   })
   const title = ref()
 
   const categories = computed<string[]>(() => store.getters['data/recipeCategory'])
   const diets = computed<string[]>(() => store.getters['data/recipeDiet'])
-  const draftText = computed<string>(() => recipe.draft ? 'Draft mode active' : 'Draft mode disabled')
+  const draftText = computed<string>(
+    () => isDraft.value
+      ? 'Draft mode active'
+      : 'Draft mode disabled'
+  )
+  const isDraft = computed<boolean>(() => recipe.status === 'draft')
   const loggedIn = computed<boolean>(() => store.getters['user/loggedIn'])
   const me = computed<User>(() => store.getters['user/currentUser'])
   const mode = computed<string>(() => route.meta.mode ? route.meta.mode : '')
-  const saveBtnText = computed<string>(() => isSaving.value ? 'Saving...' : recipe.draft ? 'Save Draft' : 'Publish')
-  const saveDisabled = computed<boolean>(() => noChanges.value || isSaving.value ? true : false)
+  const saveBtnText = computed<string>(
+    () => isSaving.value
+      ? 'Saving...'
+      : isDraft.value
+        ? 'Save Draft'
+        : 'Publish'
+  )
+  const saveDisabled = computed<boolean>(() => noChanges.value || isSaving.value)
 
   // set owner before starting to watch 'recipe' for changes
   if (me.value) {
     recipe.owner = me.value.id
   }
 
+  watch(isDraftSelected, (current, old) => {
+    if (current) {
+      recipe.status = current
+        ? 'draft'
+        : 'published'
+    }
+  })
+
   // this WILL ignore the 'onBeforeRouteLeave' guard - we'll accept that for the time being...
   watch(loggedIn, () => {
-    if (!loggedIn.value) events.onCancel()
+    if (!loggedIn.value) {
+      events.onCancel()
+    }
   })
 
   // check for changes to the initial state of the `recipe` object
@@ -105,16 +127,16 @@
     theme: 'snow'
   }
 
-  const getCurrentRefId = () => route.params.refId.toString()
+  const getCurrentRecipeId = () => route.params.id.toString()
 
   const getCurrentRecipeData = async () => {
     // on component creation: check mode and get recipe data from Vuex or DB if we're in `edit` mode
     if (mode.value && mode.value === 'edit') {
-      const currentId = getCurrentRefId()
+      const currentId = getCurrentRecipeId()
       const currentItem = await getRecipeData(currentId)
 
-      return currentItem !== 'error' && currentItem.data
-        ? updateEditMode(currentItem.data)
+      return currentItem !== 'error' && currentItem
+        ? updateEditMode(currentItem)
         : events.onCancel()
     }
   }
@@ -143,18 +165,15 @@
       if (goHome || mode.value === 'create') {
         router.push({ name: 'Recipes' })
       } else {
-        return recipe.draft
+        return isDraft.value
           ? router.push({ name: 'Edit Mode' })
-          : router.push({ name: 'Recipe', params: { id: recipe.id, refId: getCurrentRefId() } })
+          : router.push({ name: 'Recipe', params: { slug: recipe.slug, id: getCurrentRecipeId() } })
       }
     },
 
     onEditClose(e: BeforeUnloadEvent) {
       if (!noChanges.value && !isSaving.value) {
-        e.preventDefault() // FF
-        e.returnValue = '' // Chrome
-      } else {
-        delete e['returnValue']
+        e.preventDefault()
       }
     },
 
@@ -165,7 +184,7 @@
         return alert('An image was selected, but not uploaded yet. Please upload or remove the image before saving.')
       }
 
-      if (!recipe.draft && !validateInput(required)) {
+      if (!isDraft.value && !validateInput(required)) {
         return alert(`Please fill all of the following fields: ${required.toString().replace(/\W/g,', ')}!`)
       }
 
@@ -179,10 +198,11 @@
 
       switch (mode.value) {
         case 'create':
-          publishedId = await store.dispatch('data/create', recipe) // returns: new refId
+          publishedId = await store.dispatch('data/create', recipe) // returns: new id
+
           if (publishedId !== 'error') {
-            if (!recipe.draft) {
-              router.push({ path: `/recipe/${recipe.id}/${publishedId}` })
+            if (!isDraft.value) {
+              router.push({ path: `/recipe/${recipe.slug}/${publishedId}` })
             } else {
               router.push({ path: `/edit/${publishedId}` })
             }
@@ -190,19 +210,22 @@
             // error; there will be a toast and the next line will re-enable the save button to try again
             isSaving.value = false
           }
+
           break
 
         case 'edit':
-          publishedId = route.params.refId.toString()
+          publishedId = route.params.id.toString()
           let updated = await store.dispatch('data/update', [publishedId, recipe])
-          if (!recipe.draft && updated !== 'error') {
+
+          if (!isDraft.value && updated !== 'error') {
             // navigate to the published recipe
-            router.push({ path: `/recipe/${recipe.id}/${publishedId}` })
+            router.push({ path: `/recipe/${recipe.slug}/${publishedId}` })
           } else {
             // stay on the page and work with local state
             // possibility to try again in case of an error
             isSaving.value = false
           }
+
           break
 
         default:
@@ -211,7 +234,7 @@
     },
 
     onTitleChange() {
-      recipe.id = slugify(recipe.title)
+      recipe.slug = slugify(recipe.title)
     },
 
     onUpdateRecipe(key: string, value: any) {
@@ -227,7 +250,7 @@
     <div class="w-full md:w-1/2">
       <h2>Image</h2>
       <img v-if="recipe.image" class="rounded-lg mt-4 mb-4" :src="recipe.image" :alt="recipe.title">
-      <RecipeImage :currentImage="recipe.image" :recipe="recipe.id" @update:image="events.onUpdateRecipe('image', $event)" class="mb-4" />
+      <RecipeImage :currentImage="recipe.image" :recipe="recipe.slug" @update:image="events.onUpdateRecipe('image', $event)" class="mb-4" />
     </div>
     <div class="w-full md:w-1/2 md:pl-8">
       <h2>Recipe Title</h2>
@@ -237,7 +260,7 @@
     </div>
     <div class="w-full md:w-1/2">
       <h2 class="mb-4">Metadata</h2>
-      <InputToggle v-model="recipe.draft" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">
+      <InputToggle v-model="isDraftSelected" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">
         {{ draftText }}
       </InputToggle>
       <InputSelect :current="recipe.category" :data="categories" name="category" class="relative mt-6 mb-4" @update:select="events.onUpdateRecipe('category', $event)">
@@ -281,7 +304,7 @@
           </ButtonDefault>
         </div>
         <div v-if="mode === 'edit'" class="flex mt-4 md:mt-0">
-          <ButtonDelete :id="getCurrentRefId()" :title="recipe.title" @event:delete="() => isDeleted = true" class="py-1 mr-4" />
+          <ButtonDelete :id="getCurrentRecipeId()" :title="recipe.title" @event:delete="() => isDeleted = true" class="py-1 mr-4" />
           <ButtonDuplicate :recipe="recipe" class="py-1" />
         </div>
       </div>

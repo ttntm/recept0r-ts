@@ -1,34 +1,50 @@
-const faunadb = require('faunadb')
+const fields = require('../_shared/fields.js')
 const fnHeaders = require('../_shared/headers.js')
+const spb = require('@supabase/supabase-js')
 
-module.exports = (event, context) => {
-  const client = new faunadb.Client({
-    secret: process.env.FAUNA_SECRET,
-    domain: 'db.us.fauna.com'
-  })
-  const q = faunadb.query
-
-  const { user } = event
-
+module.exports = async (event, context) => {
   console.log("Function 'readUser' invoked")
 
+  const headers = { ...fnHeaders }
+  const origin = event.headers.Origin || event.headers.origin
+  const supabase = spb.createClient(process.env.SPB_URL, process.env.SPB_API_KEY)
+  const { user } = event
+
+  headers['Access-Control-Allow-Origin'] = origin ? origin : '*'
+
   if (!user) {
-    return { statusCode: 400, headers: { ...fnHeaders }, body: 'Bad Request' }
+    return {
+      statusCode: 400,
+      headers: headers,
+      body: 'Bad Request'
+    }
   } else {
-    return client.query(q.Paginate(q.Match(q.Index('recipes_user'), `${user}`), { size: 500 }))
-      .then((response) => {
-        const listRefs = response.data
-        console.log(`${listRefs.length} entries found`)
-        // create new query out of list refs. http://bit.ly/2LG3MLg
-        const getListDataQuery = listRefs.map(ref => q.Get(ref))
-        // then query the refs
-        return client.query(getListDataQuery).then((records) => {
-          return { statusCode: 200, headers: { ...fnHeaders }, body: JSON.stringify(records) }
-        })
-      })
-      .catch((error) => {
-        console.log('error', error)
-        return { statusCode: 400, headers: { ...fnHeaders }, body: JSON.stringify(error) }
-      })
+    try {
+      const { data, error } = await supabase
+        .from(process.env.SPB_TABLE)
+        .select(fields.recipe_full)
+        .eq('owner', user)
+        .order('updated', { ascending: false })
+
+      if (error) {
+        throw JSON.stringify(error)
+      }
+
+      return {
+        statusCode: 200,
+        headers: headers,
+        body: JSON.stringify(data)
+      }
+    } catch (ex) {
+      console.log('error', ex)
+
+      return {
+        statusCode: 400,
+        headers: headers,
+        body: typeof ex === 'string'
+          ? ex
+          : JSON.stringify(ex)
+      }
+    }
   }
 }

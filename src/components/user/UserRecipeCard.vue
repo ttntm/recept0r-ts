@@ -1,31 +1,32 @@
 <script setup lang="ts">
   import { useBlurredPlaceholder } from '@/utils'
-  import type { RecipeDB } from '@/types'
+  import type { Recipe } from '@/types'
 
   import ButtonDelete from '@/components/button/ButtonDelete.vue'
   import ButtonDuplicate from '@/components/button/ButtonDuplicate.vue'
 
   const props = defineProps<{
-    recipe: RecipeDB
+    recipe: Recipe
   }>()
 
   const blurredSrc: string = useBlurredPlaceholder()
-  const target: string = props.recipe.data.draft ? 'Edit Recipe' : 'Recipe'
+  const isDraft: boolean = props.recipe.status === 'draft'
+  const target: string = isDraft ? 'Edit Recipe' : 'Recipe'
 </script>
 
 <template>
-  <div :class="{ 'list-card--draft' : recipe.data.draft }" class="list-card flex flex-col md:flex-row justify-between min-h-200px mb-8">
+  <div :class="{ 'list-card--draft' : isDraft }" class="list-card flex flex-col md:flex-row justify-between min-h-200px mb-8">
     <div class="w-full md:w-1/2 lg:w-1/3 rounded-t-lg md:rounded-t-none md:rounded-l-lg flex-shrink-0">
       <router-link
-        v-if="recipe.data.image"
-        :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }"
+        v-if="recipe.image"
+        :to="{ name: target, params: { slug: recipe.slug, id: recipe.id } }"
         class="block focus:shadow-none"
         title="View recipe"
       >
         <UnLazyImage
-          :class="{ 'opacity-75' : recipe.data.draft }"
-          :src-set="recipe.data.image"
-          :alt="recipe.data.title"
+          :class="{ 'opacity-75' : isDraft }"
+          :src-set="recipe.image"
+          :alt="recipe.title"
           :placeholder-src="blurredSrc"
           class="w-full rounded-t-lg md:rounded-t-none md:rounded-l-lg img-cover"
           height="200"
@@ -38,18 +39,18 @@
     </div>
     <div class="flex flex-col md:w-1/2 xl:w-2/3 justify-center p-8 md:py-4 xl:pl-12 xl:ml-12">
       <h2 class="h4 text-2xl">
-        <span v-if="recipe.data.draft" class="block text-cool-gray-700 uppercase text-xs font-light">
+        <span v-if="isDraft" class="block text-cool-gray-700 uppercase text-xs font-light">
           Draft
         </span>
-        <router-link :to="{ name: target, params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }">
-          {{ recipe.data.title }}
+        <router-link :to="{ name: target, params: { slug: recipe.slug, id: recipe.id } }">
+          {{ recipe.title }}
         </router-link>
       </h2>
-      <p>{{ recipe.data.description }}</p>
+      <p>{{ recipe.description }}</p>
       <div class="w-full flex flex-row items-center mt-4">
         <router-link
-          :to="{ name: 'Edit Recipe', params: { refId: recipe.ref['@ref'].id } }"
-          :title="recipe.data.draft ? 'Edit Draft' : 'Edit Recipe'"
+          :to="{ name: 'Edit Recipe', params: { id: recipe.id } }"
+          :title="isDraft ? 'Edit Draft' : 'Edit Recipe'"
           class="btn btn-gray btn-outline rounded-md p-1"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="icon pointer-events-none" width="32" height="32" viewBox="0 0 200 200">
@@ -57,12 +58,12 @@
           </svg>
         </router-link>
         <ButtonDuplicate
-          :recipe="recipe.data"
+          :recipe="recipe"
           class="btn-outline rounded-md opacity-100 p-1 mx-4"
         />
         <ButtonDelete
-          :id="recipe.ref['@ref'].id"
-          :title="recipe.data.title"
+          :id="recipe.id"
+          :title="recipe.title"
           class="btn-outline rounded-md opacity-100 p-1"
         />
       </div>

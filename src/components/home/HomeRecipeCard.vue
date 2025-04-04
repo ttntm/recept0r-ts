@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useBlurredPlaceholder } from '@/utils'
-  import type { RecipeDB } from '@/types'
+  import type { Recipe } from '@/types'
 
   const props = defineProps<{
-    recipe: RecipeDB
+    recipe: Recipe
   }>()
 
   const blurredSrc: string = useBlurredPlaceholder()
@@ -11,12 +11,12 @@
 
 <template>
   <router-link
-    :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }"
+    :to="{ name: 'Recipe', params: { slug: recipe.slug, id: recipe.id } }"
     class="img-link focus:shadow-none"
   >
     <UnLazyImage
-      :src-set="recipe.data.image"
-      :alt="recipe.data.title"
+      :src-set="recipe.image"
+      :alt="recipe.title"
       :placeholder-src="blurredSrc"
       class="recipe-card-img"
       auto-sizes
@@ -25,14 +25,14 @@
   <div class="px-8 py-4">
     <h2 class="h3 font-bold text-2xl tracking-wide text-blue-500 hover:text-blue-600">
       <router-link
-        :to="{ name: 'Recipe', params: { id: recipe.data.id, refId: recipe.ref['@ref'].id } }"
+        :to="{ name: 'Recipe', params: { slug: recipe.slug, id: recipe.id } }"
         tabindex="-1"
       >
-        {{ recipe.data.title }}
+        {{ recipe.title }}
       </router-link>
     </h2>
     <p class="text-blue-600 mt-4">
-      {{ recipe.data.description }}
+      {{ recipe.description }}
     </p>
   </div>
 </template>

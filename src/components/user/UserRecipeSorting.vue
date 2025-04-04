@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useStore } from '@/store'
-  import type { RecipeDB, SortOption } from '@/types'
+  import type { Recipe, SortOption } from '@/types'
   import { getArrayIndex, objectSort } from '@/utils'
 
   import ButtonSort from '@/components/button/ButtonSort.vue'
@@ -14,7 +14,7 @@
 
   const currentSortState = ref<string[]>(['date', 'desc'])
 
-  const cachedList = computed<RecipeDB[]>(() => store.getters['data/userRecipes'])
+  const cachedList = computed<Recipe[]>(() => store.getters['data/userRecipes'])
   const sortButtons = computed<SortOption[]>(() => store.getters['data/userSortOptions'])
 
   const isActiveBtn = (data: string, type: string) => {
@@ -24,26 +24,25 @@
 
   const onSortButtonClick = (data: string, type: string) => {
     const input = [...cachedList.value.slice()]
-    
+
     currentSortState.value = [data, type]
-    
+
     switch (data) {
       case 'abc':
         if (type === 'asc') {
           emit('update:list', input.sort(objectSort('title', false, (a:string) =>  a.toUpperCase())))
         } else {
-          // new -> old = reversed default
           emit('update:list', input.sort(objectSort('title', true, (a:string) =>  a.toUpperCase())))
         }
         break
 
       case 'date':
         if (type === 'asc') {
-          // old -> new = Fauna's default
-          emit('update:list', [...input])
-        } else {
-          // new -> old = reversed default
+          // old -> new = reversed default
           emit('update:list', [...input.reverse()])
+        } else {
+          // new -> old = default
+          emit('update:list', [...input])
         }
         break
 
@@ -56,14 +55,14 @@
 <template>
   <div class="flex flex-row flex-wrap justify-center md:justify-evenly items-center mb-12">
     <h4 class="hidden md:block text-cool-gray-500 m-0">Display:</h4>
-    <ButtonSort 
+    <ButtonSort
       v-for="(item, index) in sortButtons"
       :class="{ 'bg-cool-gray-500' : isActiveBtn(item.data, item.type) }"
       :disabled="isActiveBtn(item.data, item.type)"
-      :icon="item.type" 
-      :key="index" 
-      :tip="item.tooltip" 
-      class="mx-2 mb-4 md:m-0" 
+      :icon="item.type"
+      :key="index"
+      :tip="item.tooltip"
+      class="mx-2 mb-4 md:m-0"
       @click="onSortButtonClick(item.data, item.type)"
     >
       {{ item.text }}
