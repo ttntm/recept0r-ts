@@ -1,28 +1,55 @@
-const faunadb = require('faunadb')
 const fnHeaders = require('../_shared/headers.js')
+const spb = require('@supabase/supabase-js')
 
-module.exports = (event, context) => {
-  const client = new faunadb.Client({
-    secret: process.env.FAUNA_SECRET,
-    domain: 'db.us.fauna.com'
+module.exports = async (event, context) => {
+  const { body } = event
+  const headers = { ...fnHeaders }
+  const origin = event.headers.Origin || event.headers.origin
+  const recipe = JSON.parse(body)
+  const supabase = spb.createClient(process.env.SPB_URL, process.env.SPB_API_KEY, {
+    auth: {
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+      persistSession: false
+    }
   })
-  const q = faunadb.query
 
-  const newEntry = { data: JSON.parse(event.body) }
+  headers['Access-Control-Allow-Origin'] = origin ? origin : '*'
 
-  console.log(`Function 'create' invoked. ${newEntry}`)
+  console.log(`Function 'create' invoked. ${recipe?.title}`)
 
-  if (!newEntry) {
-    return { statusCode: 400, headers: { ...fnHeaders }, body: 'Bad Request' }
+  if (!recipe) {
+    return {
+      statusCode: 400,
+      headers: { ...fnHeaders },
+      body: 'Bad Request'
+    }
   } else {
-    return client.query(q.Create(q.Ref(`collections/recipes`), newEntry))
-      .then((response) => {
-        console.log('success', response)
-        return { statusCode: 200, headers: { ...fnHeaders }, body: JSON.stringify(response) }
-      })
-      .catch((error) => {
-        console.log('error', error)
-        return { statusCode: 400, headers: { ...fnHeaders }, body: JSON.stringify(error) }
-      })
+    try {
+      const { data, error } = await supabase
+        .from(process.env.SPB_TABLE)
+        .insert(recipe)
+        .select()
+
+      if (error) {
+        throw JSON.stringify(error)
+      }
+
+      return {
+        statusCode: 200,
+        headers: headers,
+        body: JSON.stringify(data)
+      }
+    } catch (ex) {
+      console.log('error', ex)
+
+      return {
+        statusCode: 400,
+        headers: headers,
+        body: typeof ex === 'string'
+          ? ex
+          : JSON.stringify(ex)
+      }
+    }
   }
 }

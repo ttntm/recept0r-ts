@@ -1,4 +1,4 @@
-import { getArrayIndex, getArrayIndexList } from '@/utils'
+import { getArrayIndex, getArrayIndexList, objectSort } from '@/utils'
 import { apiRequest } from '@/utils/useAPI'
 
 export default {
@@ -199,19 +199,19 @@ export default {
 
     async create({ commit, dispatch, getters }, recipe) {
       const apiResponse = await apiRequest('POST', recipe)
-      const created = apiResponse ? apiResponse.id : null
 
-      if (created) {
+      if (apiResponse && apiResponse?.length > 0) {
+        const created = apiResponse[0]
         // it's always a new recipe, let's add it to the respective local state
         // keep in mind that `allRecipes` doesn't include drafts
         // NB: this _doesn't_ consider concurrency at all, due to the (intentionally) small amount of users
         const getTarget = () => {
-          const isDraft = apiResponse.status === 'draft'
+          const isDraft = created.status === 'draft'
 
           if (getters.userRecipesLength <= 0 && !isDraft) {
-            return 'all'
+            return 'ALL'
           } else if (getters.userRecipesLength > 0) {
-            return isDraft ? 'user' : 'both'
+            return isDraft ? 'USER' : 'BOTH'
           } else {
             return undefined
           }
@@ -220,22 +220,25 @@ export default {
         const target = getTarget()
 
         if (target && !getters.filterActive) {
-          commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
+          commit(`ADD_RECIPE_${target}`, created)
         }
 
-        if (getters.filterActive && (target === 'all' || target === 'both')) {
-          commit('ADD_RECIPE_CACHE', apiResponse)
+        if (getters.filterActive && (target === 'ALL' || target === 'BOTH')) {
+          commit('ADD_RECIPE_CACHE', created)
           dispatch('applyFilter', [getters.filterData])
         }
 
+        // necessary for correctly updated list position
+        dispatch('updateLocalRecipes', ['update', created])
+
         dispatch('app/sendToastMessage', {
-            text: `"${apiResponse.data.title}" successfully created.`,
+            text: `"${created.title}" successfully created.`,
             type: 'success'
           },
           { root: true }
         )
 
-        return created
+        return created.id
       } else {
         dispatch('app/sendToastMessage', {
             text: `An error occurred. Please try again later.`,
@@ -318,8 +321,6 @@ export default {
       const [id, update] = args
       const apiResponse = await apiRequest('PUT', update, id)
 
-      console.log(apiResponse)
-
       if (apiResponse && apiResponse?.length > 0) {
         const updated = apiResponse[0]
         // we edited a recipe that was already fetched from the DB at some point; either via `allRecipes` or as a single read
@@ -347,14 +348,27 @@ export default {
 
     async delete({ dispatch }, id) {
       const apiResponse = await apiRequest('DELETE', null, id)
-      const deleted = apiResponse ? apiResponse.id : null
 
-      if (deleted) {
-        dispatch('updateLocalRecipes', ['remove', apiResponse])
-        dispatch('app/sendToastMessage', { text: `Deleted recipe "${apiResponse.data.title}".`, type: 'success' }, { root: true })
+      if (apiResponse && apiResponse?.length > 0) {
+        const deleted = apiResponse[0]
+
+        dispatch('updateLocalRecipes', ['remove', deleted])
+        dispatch('app/sendToastMessage', {
+            text: `Deleted recipe "${deleted.title}".`,
+            type: 'success'
+          },
+          { root: true }
+        )
+
         return 'success'
       } else {
-        dispatch('app/sendToastMessage', { text: `Error deleting the recipe. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `Error deleting the recipe. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
@@ -386,7 +400,7 @@ export default {
       const cachedRecipes = getters.filterCache
       const userRecipes = getters.userRecipes
       const id = recipeUpdate.id
-      const isDraft = recipeUpdate.status === 'draft'
+      const isDraft = recipeUpdate?.status === 'draft'
 
       const mustUpdateUR = () => userRecipes.length > 0
 
@@ -433,6 +447,7 @@ export default {
           updatedUsrArr = mustUpdateUR()
             ? upsertRecord(userRecipes, id, recipeUpdate)
             : updatedUsrArr
+
           break
 
         case 'remove':
@@ -452,6 +467,7 @@ export default {
           updatedUsrArr = mustUpdateUR()
             ? removeRecord(userRecipes, id)
             : updatedUsrArr
+
           break
 
         default:
@@ -462,17 +478,17 @@ export default {
 
       if (allRecipes.length > 0 && updatedArr.length > 0) {
         // update 'allRecipes' if the update isn't 0 length (see case: 'remove')
-        commit('SET_ALL_RECIPES', updatedArr)
+        commit('SET_ALL_RECIPES', updatedArr.sort(objectSort('updated', true, (x) => new Date(x))))
       }
 
       if (updatedCache.length > 0) {
         // update cache if an update was done
-        commit('SET_FILTER_CACHE', updatedCache)
+        commit('SET_FILTER_CACHE', updatedCache.sort(objectSort('updated', true, (x) => new Date(x))))
       }
 
       if (mustUpdateUR()) {
         // update user recipes whenever we have any
-        commit('SET_USER_RECIPES', updatedUsrArr)
+        commit('SET_USER_RECIPES', updatedUsrArr.sort(objectSort('updated', true, (x) => new Date(x))))
       }
     }
   }

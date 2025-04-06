@@ -157,7 +157,7 @@
       }
     })
 
-    return missing <= 0 ? true : false
+    return missing <= 0
   }
 
   const events = {
@@ -194,21 +194,22 @@
       }
 
       let publishedId = ''
+      events.onUpdateRecipe('updated', (new Date()).toISOString())
       isSaving.value = true
 
       switch (mode.value) {
         case 'create':
           publishedId = await store.dispatch('data/create', recipe) // returns: new id
 
-          if (publishedId !== 'error') {
-            if (!isDraft.value) {
-              router.push({ path: `/recipe/${recipe.slug}/${publishedId}` })
-            } else {
-              router.push({ path: `/edit/${publishedId}` })
-            }
-          } else {
-            // error; there will be a toast and the next line will re-enable the save button to try again
+          if (publishedId === 'error') {
+            // there will be a toast msg; this line will re-enable the save button
             isSaving.value = false
+          }
+
+          if (!isDraft.value) {
+            router.push({ path: `/recipe/${recipe.slug}/${publishedId}` })
+          } else {
+            router.push({ path: `/edit/${publishedId}` })
           }
 
           break

@@ -18,3 +18,21 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
+
+[[redirects]]
+  from = "/api/read"
+  to = "/.netlify/functions/read"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/read-all"
+  to = "/.netlify/functions/read-all"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true

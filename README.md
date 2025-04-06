@@ -6,15 +6,21 @@ Re-written from scratch using Vue 3 with TypeScript.
 
 A little background info in an article I wrote: [How I Built a Serverless Recipes App with FaunaDB and Vue.js](https://ttntm.me/blog/serverless-recipes-app-faunadb-vuejs/) (a little outdated in terms of the code samples, but the app's architecture is still the same)
 
+**IMPORTANT: Fauna EoL'd their database service, and shuts down on May 30, 2025.**
+
+In response to that, this application has moved to supabase.
+
 ## Deployment
 
 If you'd like to fork this repository and deploy your own recipes app:
 
-1. Sign up @ Cloudinary, Fauna & Netlify
-2. Create a new db + necessary indexes in Fauna
+1. Sign up @ Cloudinary, Netlify, and supabase
+2. Create a new database and a table called `recipes` in supabase
     - Refer to everything in `./functions` to see what's required or get in touch
 3. Configure necessary environment variables
-    - `FAUNA_SECRET`: your Fauna secret
+    - `SPB_API_KEY`: supabase API key (Project > Data API > `service_role`)
+    - `SPB_TABLE`: name of your supabase table (i.e. `recipes`)
+    - `SPB_URL`: your supabase Project URL
     - `VITE_APP_API`: something like `/.netlify/functions/api`
     - `VITE_APP_CDNRY`: something like `https://api.cloudinary.com/v1_1/USERNAME/image/upload`
     - `VITE_APP_CDNRY_UPRESET`: a short ID generated in Cloudinary

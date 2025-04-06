@@ -1,4 +1,8 @@
 module.exports = {
+  recipe_deleted: `
+    id,
+    title
+  `,
   recipe_full: `
     id,
     slug,

@@ -36,7 +36,9 @@
         // avoid hitting 'onBeforeRouteLeave' in the parent
         emit('event:delete', true)
         // redirect home if currently viewing the deleted recipe's dedicated view/edit route
-        if (route.params.id?.toString()?.length > 0) router.push({ name: 'All Recipes', replace: true })
+        if (route.params.id?.toString()?.length > 0) {
+          router.push({ name: 'Recipes', replace: true })
+        }
       } else {
         btnState.disabled = false
         btnState.loading = false
