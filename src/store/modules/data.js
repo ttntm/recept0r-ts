@@ -476,19 +476,21 @@ export default {
 
       commit('SET_LAST_UPDATED', String(new Date))
 
+      const sortFn = objectSort('updated', true, (x) => new Date(x))
+
       if (allRecipes.length > 0 && updatedArr.length > 0) {
         // update 'allRecipes' if the update isn't 0 length (see case: 'remove')
-        commit('SET_ALL_RECIPES', updatedArr.sort(objectSort('updated', true, (x) => new Date(x))))
+        commit('SET_ALL_RECIPES', updatedArr.sort(sortFn))
       }
 
       if (updatedCache.length > 0) {
         // update cache if an update was done
-        commit('SET_FILTER_CACHE', updatedCache.sort(objectSort('updated', true, (x) => new Date(x))))
+        commit('SET_FILTER_CACHE', updatedCache.sort(sortFn))
       }
 
       if (mustUpdateUR()) {
         // update user recipes whenever we have any
-        commit('SET_USER_RECIPES', updatedUsrArr.sort(objectSort('updated', true, (x) => new Date(x))))
+        commit('SET_USER_RECIPES', updatedUsrArr.sort(sortFn))
       }
     }
   }
