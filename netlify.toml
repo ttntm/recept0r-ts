@@ -20,6 +20,12 @@
     X-XSS-Protection = "1; mode=block"
 
 [[redirects]]
+  from = "/api/backup"
+  to = "/.netlify/functions/backup"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/api/read"
   to = "/.netlify/functions/read"
   status = 200
