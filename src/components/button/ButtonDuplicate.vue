@@ -19,14 +19,17 @@
 
   const onDuplicate = async () => {
     const confirmDuplicate = window.confirm(`This will duplicate the recipe "${props.recipe.title}" - are you sure?`)
+
     if (confirmDuplicate) {
       btnState.disabled = true
       btnState.loading = true
 
       const duplicate: Recipe = { ...props.recipe }
-        duplicate.id = `${duplicate.id}-copy`
-        duplicate.title = `${duplicate.title} Copy`
-        duplicate.draft = true
+      duplicate.status = 'draft'
+      duplicate.slug = `${duplicate.slug}-copy`
+      duplicate.title = `${duplicate.title} Copy`
+      duplicate.updated = (new Date()).toISOString()
+      delete duplicate.id
 
       const duplicated = await store.dispatch('data/create', duplicate)
 

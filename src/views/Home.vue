@@ -2,7 +2,7 @@
   import { computed, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from '@/store'
-  import type { RecipeDB } from '@/types'
+  import type { Recipe } from '@/types'
   import { showWindow, useRecipeSearch } from '@/utils'
 
   import ButtonFilter from '@/components/button/ButtonFilter.vue'
@@ -19,11 +19,11 @@
   const forceUpdate = route.query.force || null
   const searchTerm = ref('')
 
-  const allRecipes = computed<RecipeDB[]>(() => store.getters['data/allRecipes'])
-  const displayedRecipes = computed<RecipeDB[]>(() => {
-    const reversed: RecipeDB[] = allRecipes.value.slice().reverse()
+  const allRecipes = computed<Recipe[]>(() => store.getters['data/allRecipes'])
+  const displayedRecipes = computed<Recipe[]>(() => {
+    // const reversed: Recipe[] = allRecipes.value.slice().reverse()
     const term = searchTerm.value
-    return term && term.length > 0 ? useRecipeSearch(reversed, term) : reversed
+    return term && term.length > 0 ? useRecipeSearch(allRecipes.value, term) : allRecipes.value
   })
   const filterActive = computed<boolean>(() => store.getters['data/filterActive'])
   const isLoading = computed<boolean>(() => allRecipes.value.length > 0 ? false : true)
@@ -90,7 +90,7 @@
       <p v-if="searchTerm && displayedRecipes.length === 0" class="text-center text-cool-gray-500 m-0">No results for your search query :(</p>
     </transition>
     <transition-group name="list" tag="div" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <LazyWrapper v-for="recipe in displayedRecipes" :key="recipe.ref['@ref'].id" element="article" className="recipe-card rounded-lg">
+      <LazyWrapper v-for="recipe in displayedRecipes" :key="recipe.id" element="article" className="recipe-card rounded-lg">
         <HomeRecipeCard :recipe="recipe" />
       </LazyWrapper>
     </transition-group>

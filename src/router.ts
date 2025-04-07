@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/recipe/:id/:refId',
+    path: '/recipe/:slug/:id',
     name: 'Recipe',
     component: () => import('@/views/RecipeReadonly.vue'),
     meta: {
@@ -70,7 +70,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/edit/:refId',
+    path: '/edit/:id',
     name: 'Edit Recipe',
     component: () => import('@/views/RecipeEditable.vue'),
     meta: {
@@ -113,7 +113,9 @@ router.beforeEach((to, from, next) => {
   // close open windows
   showWindow(0)
   // global navigation guard for all routes that require user authentication
-  if (!to.meta.authRequired) return next()
+  if (!to.meta.authRequired) {
+    return next()
+  }
 
   if (to.meta.authRequired && store.getters['user/loggedIn']) {
     return next()

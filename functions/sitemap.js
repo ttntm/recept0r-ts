@@ -34,17 +34,17 @@ exports.handler = async (event, context) => {
   try {
     console.log('Fetching database content')
 
-    const rRequest = await fetch(`${site}${readAll}`, { method: 'GET' })
-    let rResponse = await rRequest.json()
+    const request = await fetch(`${site}${readAll}`, { method: 'GET' })
+    let response = await request.json()
 
     // Process dynamic content from the db (if there is any)
-    if (rResponse && rResponse.length > 0) {
+    if (response && response.length > 0) {
       console.log('Processing database content')
-      
-      // Processing type RecipeDB[] here; see: ./src/types.d.ts
-      rResponse.forEach(el => {
+
+      // Processing type Recipe[] here; see: ./src/types.d.ts
+      response.forEach(el => {
         const itemURL = `${site}/recipe/${el.data.id}/${el.ref['@ref'].id}`
-        
+
         sitemap.mid += `<url>
           <loc>${itemURL}</loc>
           <changefreq>yearly</changefreq>
@@ -56,7 +56,7 @@ exports.handler = async (event, context) => {
     }
   } catch (error) {
     console.log('Error building sitemap: ', error)
-    
+
     return {
       statusCode: 400,
       headers: jsonHeaders,
@@ -64,7 +64,7 @@ exports.handler = async (event, context) => {
     }
   } finally {
     const sitemapFinal = `${sitemap.start}${sitemap.mid}${sitemap.end}`
-    
+
     console.log('Sitemap complete: ', sitemapFinal)
 
     return {

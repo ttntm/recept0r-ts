@@ -5,7 +5,7 @@ import type {
   Credentials,
   IntersectionObserverOptions,
   IntersectionObserverReturn,
-  RecipeDB,
+  Recipe,
 } from '@/types'
 
 const noop: () => void = () => {}
@@ -45,8 +45,9 @@ export function getArrayIndexList(arr: string[], list: string[]): number {
  * Get recipe data from Vuex or DB
  * Used for both editable and readonly recipe views
  */
-export async function getRecipeData(id: string): Promise<RecipeDB | 'error'> {
-  const existing: RecipeDB[] = await store.dispatch('data/getRecipeById', id)
+export async function getRecipeData(id: string): Promise<Recipe | 'error'> {
+  const existing: Recipe[] = await store.dispatch('data/getRecipeById', id)
+
   return existing.length > 0
     ? existing[0]
     : await store.dispatch('data/read', id)
@@ -57,8 +58,8 @@ export async function getRecipeData(id: string): Promise<RecipeDB | 'error'> {
  */
 export function objectSort(field: any, reverse: boolean, primer: Function) {
   const key = primer
-    ? (x: any) => primer(x.data[field])
-    : (x: any) => x.data[field]
+    ? (x: any) => primer(x[field])
+    : (x: any) => x[field]
 
   const reversed = !reverse ? 1 : -1
 
@@ -160,19 +161,19 @@ export function useLogout() {
  * Check both `title` and `description` of recipes
  */
 export function useRecipeSearch(
-  data: RecipeDB[],
+  data: Recipe[],
   term: string,
   useDraft: boolean = false
-): RecipeDB[] {
+): Recipe[] {
   const currentTerm: string = term.toLowerCase()
-  return data.filter((item: RecipeDB) => {
+  return data.filter((item: Recipe) => {
     if (useDraft && currentTerm === 'draft') {
       // option for keyword "draft" entered in search is active
       // > check draft status; otherwise proceed with regular search
-      return item.data?.draft === true
+      return item.status === 'draft'
     } else {
-      if (item.data.title.toLowerCase().indexOf(currentTerm) === -1) {
-        return item.data.description.toLowerCase().indexOf(currentTerm) !== -1
+      if (item.title.toLowerCase().indexOf(currentTerm) === -1) {
+        return item.description.toLowerCase().indexOf(currentTerm) !== -1
       } else {
         return true
       }

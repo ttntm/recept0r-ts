@@ -1,4 +1,4 @@
-import { getArrayIndex, getArrayIndexList } from '@/utils'
+import { getArrayIndex, getArrayIndexList, objectSort } from '@/utils'
 import { apiRequest } from '@/utils/useAPI'
 
 export default {
@@ -137,13 +137,13 @@ export default {
         const fDataLength = Object.keys(fData).length
 
         return input.filter((item) => {
-          const dietList = typeof item.data.diet === 'string'
-            ? [item.data.diet]
-            : item.data.diet
+          const dietList = typeof item.diet === 'string'
+            ? [item.diet]
+            : item.diet
 
           const cat = fData.category?.length === 0
             ? 0
-            : getArrayIndex(fData.category, item.data.category)
+            : getArrayIndex(fData.category, item.category)
 
           const dt = fData.diet?.length === 0
             ? 0
@@ -199,16 +199,19 @@ export default {
 
     async create({ commit, dispatch, getters }, recipe) {
       const apiResponse = await apiRequest('POST', recipe)
-      const created = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
-      if (created) {
+      if (apiResponse && apiResponse?.length > 0) {
+        const created = apiResponse[0]
         // it's always a new recipe, let's add it to the respective local state
         // keep in mind that `allRecipes` doesn't include drafts
         // NB: this _doesn't_ consider concurrency at all, due to the (intentionally) small amount of users
         const getTarget = () => {
-          if (getters.userRecipesLength <= 0 && !apiResponse.data.draft) return 'all'
-          if (getters.userRecipesLength > 0) {
-            return apiResponse.data.draft ? 'user' : 'both'
+          const isDraft = created.status === 'draft'
+
+          if (getters.userRecipesLength <= 0 && !isDraft) {
+            return 'ALL'
+          } else if (getters.userRecipesLength > 0) {
+            return isDraft ? 'USER' : 'BOTH'
           } else {
             return undefined
           }
@@ -217,18 +220,33 @@ export default {
         const target = getTarget()
 
         if (target && !getters.filterActive) {
-          commit(`ADD_RECIPE_${target.toUpperCase()}`, apiResponse)
+          commit(`ADD_RECIPE_${target}`, created)
         }
 
-        if (getters.filterActive && (target === 'all' || target === 'both')) {
-          commit('ADD_RECIPE_CACHE', apiResponse)
+        if (getters.filterActive && (target === 'ALL' || target === 'BOTH')) {
+          commit('ADD_RECIPE_CACHE', created)
           dispatch('applyFilter', [getters.filterData])
         }
 
-        dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully created.`, type: 'success' }, { root: true })
-        return created
+        // necessary for correctly updated list position
+        dispatch('updateLocalRecipes', ['update', created])
+
+        dispatch('app/sendToastMessage', {
+            text: `"${created.title}" successfully created.`,
+            type: 'success'
+          },
+          { root: true }
+        )
+
+        return created.id
       } else {
-        dispatch('app/sendToastMessage', { text: `An error occurred. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `An error occurred. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
@@ -237,7 +255,7 @@ export default {
       const fn = rootGetters['app/functions']
       const request = await fetch(`${fn.read}/${id}`, { method: 'GET' })
       const response = await request.json()
-      const current = response.ref ? response.ref['@ref'].id : null
+      const current = response ? response.id : null
 
       if (current) {
         // -- questionable use case >> breaks persistent filtered list --
@@ -245,7 +263,13 @@ export default {
         // commit(`ADD_RECIPE_ALL`, response)
         return response
       } else {
-        dispatch('app/sendToastMessage', { text: `Couldn't get recipe data. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `Couldn't get recipe data. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
@@ -265,7 +289,13 @@ export default {
 
         commit('SET_LAST_UPDATED', String(new Date))
       } else {
-        dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `Error loading recipes. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
@@ -276,7 +306,13 @@ export default {
       if (apiResponse.length > 0) {
         commit('SET_USER_RECIPES', apiResponse)
       } else {
-        dispatch('app/sendToastMessage', { text: `Error loading recipes. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `Error loading recipes. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
@@ -284,30 +320,55 @@ export default {
     async update({ dispatch }, args) {
       const [id, update] = args
       const apiResponse = await apiRequest('PUT', update, id)
-      const updated = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
-      if (updated) {
+      if (apiResponse && apiResponse?.length > 0) {
+        const updated = apiResponse[0]
         // we edited a recipe that was already fetched from the DB at some point; either via `allRecipes` or as a single read
         // we know for sure that it's in `allRecipes` by now, so we should update the local state without further DB reads
-        dispatch('updateLocalRecipes', ['update', apiResponse])
-        dispatch('app/sendToastMessage', { text: `"${apiResponse.data.title}" successfully updated.`, type: 'success' }, { root: true })
+        dispatch('updateLocalRecipes', ['update', updated])
+        dispatch('app/sendToastMessage', {
+            text: `"${updated.title}" successfully updated.`,
+            type: 'success'
+          },
+          { root: true }
+        )
+
         return 'success'
       } else {
-        dispatch('app/sendToastMessage', { text: `Couldn't update the recipe. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `Couldn't update the recipe. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
 
     async delete({ dispatch }, id) {
       const apiResponse = await apiRequest('DELETE', null, id)
-      const deleted = apiResponse.ref ? apiResponse.ref['@ref'].id : null
 
-      if (deleted) {
-        dispatch('updateLocalRecipes', ['remove', apiResponse])
-        dispatch('app/sendToastMessage', { text: `Deleted recipe "${apiResponse.data.title}".`, type: 'success' }, { root: true })
+      if (apiResponse && apiResponse?.length > 0) {
+        const deleted = apiResponse[0]
+
+        dispatch('updateLocalRecipes', ['remove', deleted])
+        dispatch('app/sendToastMessage', {
+            text: `Deleted recipe "${deleted.title}".`,
+            type: 'success'
+          },
+          { root: true }
+        )
+
         return 'success'
       } else {
-        dispatch('app/sendToastMessage', { text: `Error deleting the recipe. Please try again later.`, type: 'error' }, { root: true })
+        dispatch('app/sendToastMessage', {
+            text: `Error deleting the recipe. Please try again later.`,
+            type: 'error'
+          },
+          { root: true }
+        )
+
         return 'error'
       }
     },
@@ -317,7 +378,7 @@ export default {
       const userRecipes = getters.userRecipes
       const result = []
 
-      const getRecipe = (source, lookup) => source.find(item => item.ref['@ref'].id === lookup)
+      const getRecipe = (source, lookup) => source.find(item => item.id === lookup)
 
       if (allRecipes.length > 0) {
         const inAll = getRecipe(allRecipes, id)
@@ -338,16 +399,17 @@ export default {
       const allRecipes = getters.allRecipes
       const cachedRecipes = getters.filterCache
       const userRecipes = getters.userRecipes
-      const id = recipeUpdate.ref['@ref'].id
+      const id = recipeUpdate.id
+      const isDraft = recipeUpdate?.status === 'draft'
 
       const mustUpdateUR = () => userRecipes.length > 0
 
-      const removeRecord = (input, removalId) => input.filter(item => item.ref['@ref'].id !== removalId)
+      const removeRecord = (input, removalId) => input.filter(item => item.id !== removalId)
 
       const upsertRecord = (input, recordId, recordData) => {
         let replaced = false
         let processed = input.map(item => {
-          if (item.ref['@ref'].id !== recordId) {
+          if (item.id !== recordId) {
             return item
           } else {
             replaced = true
@@ -370,28 +432,42 @@ export default {
       switch (mode) {
         case 'update':
           // keep in mind that we have to remove drafts from `allRecipes`
-          updatedArr = recipeUpdate.data.draft ? removeRecord(allRecipes, id) : upsertRecord(allRecipes, id, recipeUpdate)
+          updatedArr = isDraft
+            ? removeRecord(allRecipes, id)
+            : upsertRecord(allRecipes, id, recipeUpdate)
 
           // update cached recipes if a filter is active
           if (cachedRecipes && cachedRecipes.length > 0) {
-            updatedCache = recipeUpdate.data.draft ? removeRecord(cachedRecipes, id) : upsertRecord(cachedRecipes, id, recipeUpdate)
+            updatedCache = isDraft
+              ? removeRecord(cachedRecipes, id)
+              : upsertRecord(cachedRecipes, id, recipeUpdate)
           }
 
           // update user recipes whenever we have any
-          updatedUsrArr = mustUpdateUR() ? upsertRecord(userRecipes, id, recipeUpdate) : updatedUsrArr
+          updatedUsrArr = mustUpdateUR()
+            ? upsertRecord(userRecipes, id, recipeUpdate)
+            : updatedUsrArr
+
           break
 
         case 'remove':
           // deleting a draft: not necessary in 'allRecipes' - drafts aren't in there
-          updatedArr = recipeUpdate.data.draft ? updatedArr : removeRecord(allRecipes, id)
+          updatedArr = isDraft
+            ? updatedArr
+            : removeRecord(allRecipes, id)
 
           // update cached recipes if a filter is active
           if (cachedRecipes && cachedRecipes.length > 0) {
-            updatedCache = recipeUpdate.data.draft ? updatedCache : removeRecord(cachedRecipes, id)
+            updatedCache = isDraft
+              ? updatedCache
+              : removeRecord(cachedRecipes, id)
           }
 
           // update user recipes whenever we have any
-          updatedUsrArr = mustUpdateUR() ? removeRecord(userRecipes, id) : updatedUsrArr
+          updatedUsrArr = mustUpdateUR()
+            ? removeRecord(userRecipes, id)
+            : updatedUsrArr
+
           break
 
         default:
@@ -400,19 +476,21 @@ export default {
 
       commit('SET_LAST_UPDATED', String(new Date))
 
+      const sortFn = objectSort('updated', true, (x) => new Date(x))
+
       if (allRecipes.length > 0 && updatedArr.length > 0) {
         // update 'allRecipes' if the update isn't 0 length (see case: 'remove')
-        commit('SET_ALL_RECIPES', updatedArr)
+        commit('SET_ALL_RECIPES', updatedArr.sort(sortFn))
       }
 
       if (updatedCache.length > 0) {
         // update cache if an update was done
-        commit('SET_FILTER_CACHE', updatedCache)
+        commit('SET_FILTER_CACHE', updatedCache.sort(sortFn))
       }
 
       if (mustUpdateUR()) {
         // update user recipes whenever we have any
-        commit('SET_USER_RECIPES', updatedUsrArr)
+        commit('SET_USER_RECIPES', updatedUsrArr.sort(sortFn))
       }
     }
   }

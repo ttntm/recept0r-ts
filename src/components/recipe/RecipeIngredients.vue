@@ -7,10 +7,15 @@
   import ButtonX from '@/components/button/ButtonX.vue'
   import GripVertical from '@/components/icon/grip-vertical.vue'
 
-  const props = defineProps<{
-    input: string[],
+  interface Props {
+    input: string[]
     mode: string
-  }>()
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    input: () => ['ingredient'],
+    mode: ''
+  })
 
   const emit = defineEmits<{
     (e: 'update:ingredients', val?: string[]): void
@@ -36,6 +41,10 @@
   }
 
   const objectify = (arr: string[]): SortableEl[] => {
+    if (!arr) {
+      return []
+    }
+
     return arr.map((el, index) => {
       return { id: index, name: el }
     })
@@ -78,6 +87,7 @@
   <h2 class="mb-2">Ingredients</h2>
   <div id="recipe-ingredients">
     <draggable
+      v-if="ingredients.length"
       v-model="ingredients"
       :component-data="{
         tag: 'ul',

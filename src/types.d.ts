@@ -44,8 +44,7 @@ export interface IntersectionObserverReturn {
 }
 
 export interface Recipe extends GenObj {
-  id: string
-  draft?: boolean
+  slug: string
   owner: string
   title: string
   description: string
@@ -58,26 +57,7 @@ export interface Recipe extends GenObj {
   category: string
   ingredients: string[]
   body: string
-}
-
-export type RecipeDB = {
-  ref: {
-    '@ref': {
-      id: string
-      collection: {
-        '@ref': {
-          id: string
-          collection: {
-            '@ref': {
-              id: string
-            }
-          }
-        }
-      }
-    }
-  }
-  ts: number
-  data: Recipe
+  status: 'draft' | 'published'
 }
 
 export type SortableEl = {
