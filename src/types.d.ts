@@ -44,6 +44,7 @@ export interface IntersectionObserverReturn {
 }
 
 export interface Recipe extends GenObj {
+  id: string
   slug: string
   owner: string
   title: string

@@ -42,8 +42,8 @@ exports.handler = async (event, context) => {
       console.log('Processing database content')
 
       // Processing type Recipe[] here; see: ./src/types.d.ts
-      response.forEach(el => {
-        const itemURL = `${site}/recipe/${el.data.id}/${el.ref['@ref'].id}`
+      response.forEach((el) => {
+        const itemURL = `${site}/recipe/${el.slug}/${el.id}`
 
         sitemap.mid += `<url>
           <loc>${itemURL}</loc>

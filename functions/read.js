@@ -6,14 +6,13 @@ const spb = require('@supabase/supabase-js')
 const getPath = (urlPath) => urlPath.match(/([^\/]*)\/*$/)[0]
 
 exports.handler = async (event, context) => {
-  console.log(`Function 'read' invoked. Read id: ${target}`)
-
   const headers = { ...fnHeaders }
   const origin = event.headers.Origin || event.headers.origin
   const supabase = spb.createClient(process.env.SPB_URL, process.env.SPB_API_KEY)
   const target = getPath(event.path)
-
   headers['Access-Control-Allow-Origin'] = origin ? origin : '*'
+
+  console.log(`Function 'read' invoked. Read id: ${target}`)
 
   if (!target) {
     return {

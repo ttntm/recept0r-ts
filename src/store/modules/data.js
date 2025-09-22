@@ -255,13 +255,13 @@ export default {
       const fn = rootGetters['app/functions']
       const request = await fetch(`${fn.read}/${id}`, { method: 'GET' })
       const response = await request.json()
-      const current = response ? response.id : null
+      const current = response ? response[0].id : null
 
       if (current) {
         // -- questionable use case >> breaks persistent filtered list --
         // add the record to `allRecipes` before returning the data to the view
         // commit(`ADD_RECIPE_ALL`, response)
-        return response
+        return response[0]
       } else {
         dispatch('app/sendToastMessage', {
             text: `Couldn't get recipe data. Please try again later.`,

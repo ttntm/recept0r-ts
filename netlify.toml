@@ -26,8 +26,8 @@
   force = true
 
 [[redirects]]
-  from = "/api/read"
-  to = "/.netlify/functions/read"
+  from = "/api/read/*"
+  to = "/.netlify/functions/read/:splat"
   status = 200
   force = true
 
