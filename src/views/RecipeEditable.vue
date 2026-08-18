@@ -71,11 +71,7 @@
   }
 
   watch(isDraftSelected, (current, old) => {
-    if (current) {
-      recipe.status = current
-        ? 'draft'
-        : 'published'
-    }
+    recipe.status = !!current ? 'draft' : 'published'
   })
 
   // this WILL ignore the 'onBeforeRouteLeave' guard - we'll accept that for the time being...
@@ -261,7 +257,7 @@
     </div>
     <div class="w-full md:w-1/2">
       <h2 class="mb-4">Metadata</h2>
-      <InputToggle v-model="isDraftSelected" name="draft" @update:modelValue="events.onUpdateRecipe('draft', $event)">
+      <InputToggle v-model="isDraftSelected" name="draft">
         {{ draftText }}
       </InputToggle>
       <InputSelect :current="recipe.category" :data="categories" name="category" class="relative mt-6 mb-4" @update:select="events.onUpdateRecipe('category', $event)">
